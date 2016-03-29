@@ -3,7 +3,6 @@ import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSear
 import {Observable} from "rxjs/Observable";
 
 
-
 export interface ResourceParamsBase {
 	url?:string,
 	path?:string,
@@ -17,8 +16,6 @@ export interface ResourceActionBase extends ResourceParamsBase {
 }
 
 export class Resource {
-
-	static urlRegex:RegExp = new RegExp('{.*(.*)}','gm');
 
 	constructor(@Inject(Http)
 							protected http:Http) {
@@ -41,7 +38,10 @@ export class Resource {
 	}
 
 	getHeaders():any {
-		return null;
+		return {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		};
 	}
 
 	getParams():any {
@@ -61,7 +61,7 @@ export class Resource {
 	@ResourceAction({
 		method: RequestMethod.Post
 	})
-	public save(data?:any):Observable<any> {
+	save(data?:any):Observable<any> {
 		return null;
 	}
 
@@ -70,7 +70,7 @@ export class Resource {
 		method: RequestMethod.Get,
 		isArray: true
 	})
-	public query(data?:any):Observable<any> {
+	query(data?:any):Observable<any> {
 		return null;
 	}
 
@@ -78,20 +78,48 @@ export class Resource {
 	@ResourceAction({
 		method: RequestMethod.Delete
 	})
-	public remove(data?:any):Observable<any> {
+	delete(data?:any):Observable<any> {
 		return null;
 	}
 
-
-	@ResourceAction({
-		method: RequestMethod.Delete
-	})
-	public delete(data?:any):Observable<any> {
-		return null;
+	remove(data?:any):Observable<any> {
+		return this.delete(data);
 	}
 
 }
 
+function extendObj(dst: any, ...srcs: any[]) {
+
+	srcs.map(src => {
+		if (!src) {
+			return src;
+		}
+		for (let key in src) {
+			dst[key] = src[key];
+		}
+		return src;
+	});
+
+	return dst;
+
+}
+
+function parseUrl(url):any[] {
+	let params = [];
+	let index:number = url.indexOf('{');
+	let lastIndex:number;
+	while (index > -1) {
+		lastIndex = url.indexOf('}', index);
+		if (lastIndex == -1) {
+			return params;
+		}
+		lastIndex++;
+		params.push(url.substring(index, lastIndex));
+		index = url.indexOf('{', lastIndex);
+	}
+
+	return params;
+}
 
 export function ResourceAction(action?:ResourceActionBase) {
 	return function (target: Resource, propertyKey: string, descriptor: PropertyDescriptor) {
@@ -113,39 +141,47 @@ export function ResourceAction(action?:ResourceActionBase) {
 			let headers = new Headers(action.headers || this.getHeaders());
 
 			// Setting data
-			let data = args.length ? args[0] : {};
+			let data = args.length ? args[0] : null;
+			let params = extendObj({}, action.params || this.getParams() || null);
 
-			let params = action.params || this.getParams() || {};
+			let mapParam = {};
+
+			// Merging default params with data
+			for (let key in params) {
+				if (typeof params[key] == 'string' && params[key][0] == '@') {
+					mapParam[key] = params[key];
+					delete params[key];
+				}
+			}
+
+			let usedPathParams = {};
 
 			// Parsing url for params
-			url.match(Resource.urlRegex)
+			parseUrl(url)
 				.map(param => {
 
 					let key:string = param.substr(1, param.length-2);
 					let value:string = null;
 
 					// Do we have mapped path param key
-					if (params[key] && params[key][0] == '@') {
-						key = params[key].substr(1);
+					if (mapParam[key]) {
+						key = mapParam[key].substr(1);
 					}
 
 					// Getting value from data body
-					if (data[key] && !(data[key] instanceof Object)) {
+					if (data && data[key] && !(data[key] instanceof Object)) {
 						value = data[key];
-						if (!isGetRequest) {
-							delete data[key];
-						}
+						usedPathParams[key] = value;
 					}
 
-					// If we don't have value, check default value
-					if (!value && params[key]) {
+					// Getting default value from params
+					if (!value && params[key] && !(params[key] instanceof Object)) {
 						value = params[key];
+						usedPathParams[key] = value;
 					}
 
 					// Well, all is bad and setting value to empty string
 					value = value || '';
-
-					console.log(param, key, value);
 
 					// Replacing in the url
 					url = url.replace(param, value);
@@ -153,21 +189,49 @@ export function ResourceAction(action?:ResourceActionBase) {
 				});
 
 
-			// Default search params
-			// TODO generate new data
-			let search:URLSearchParams;
-			if (params)
-
-			if (isGetRequest) {
-				search = new URLSearchParams();
+			// Removing doulble slashed from final url
+			let urlParts: string[] = url.split('//').filter(val => val !== '');
+			url = urlParts[0];
+			if (urlParts.length > 1) {
+				url += '//' + urlParts.slice(1).join('/');
 			}
+
+
+			// Default search params or data
+
+			let body = null;
+
+			let searchParams;
+			if (isGetRequest) {
+				// GET
+				searchParams = extendObj({}, params, data);
+			} else {
+				// NON GET
+				if (data) {
+					body = JSON.stringify(data);
+				}
+				searchParams = params;
+			}
+
+
+			let search:URLSearchParams = new URLSearchParams();
+			for (let key in searchParams) {
+				if (!usedPathParams[key]) {
+					let value = searchParams[key];
+					if (value instanceof Object) {
+						value = JSON.stringify(value);
+					}
+					search.append(key, value);
+				}
+			}
+
 
 
 
 			let requestOptions = new RequestOptions({
 				method: action.method,
 				headers: headers,
-				body: data ? JSON.stringify(data) : null,
+				body: body,
 				url: url,
 				search: search
 			});
@@ -197,21 +261,29 @@ export function ResourceParams(params:ResourceParamsBase) {
 			deps: [Http]
 		}));
 
-		target.prototype.getUrl = function() {
-			return params.url || '';
-		};
+		if (params.url) {
+			target.prototype.getUrl = function() {
+				return params.url || '';
+			};
+		}
 
-		target.prototype.getPath = function() {
-			return params.path || '';
-		};
+		if (params.path) {
+			target.prototype.getPath = function () {
+				return params.path || '';
+			};
+		}
 
-		target.prototype.getHeaders = function() {
-			return params.headers || null;
-		};
+		if (params.headers) {
+			target.prototype.getHeaders = function () {
+				return params.headers || null;
+			};
+		}
 
-		target.prototype.getParams = function() {
-			return params.params || null;
-		};
+		if (params.params) {
+			target.prototype.getParams = function () {
+				return params.params || null;
+			};
+		}
 
 	};
 }

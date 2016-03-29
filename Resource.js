@@ -31,7 +31,10 @@ var Resource = (function () {
         return '';
     };
     Resource.prototype.getHeaders = function () {
-        return null;
+        return {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        };
     };
     Resource.prototype.getParams = function () {
         return null;
@@ -45,13 +48,12 @@ var Resource = (function () {
     Resource.prototype.query = function (data) {
         return null;
     };
-    Resource.prototype.remove = function (data) {
-        return null;
-    };
     Resource.prototype.delete = function (data) {
         return null;
     };
-    Resource.urlRegex = new RegExp('{.*(.*)}', 'gm');
+    Resource.prototype.remove = function (data) {
+        return this.delete(data);
+    };
     __decorate([
         ResourceAction({
             method: http_1.RequestMethod.Get
@@ -84,14 +86,6 @@ var Resource = (function () {
         __metadata('design:type', Function), 
         __metadata('design:paramtypes', [Object]), 
         __metadata('design:returntype', Observable_1.Observable)
-    ], Resource.prototype, "remove", null);
-    __decorate([
-        ResourceAction({
-            method: http_1.RequestMethod.Delete
-        }), 
-        __metadata('design:type', Function), 
-        __metadata('design:paramtypes', [Object]), 
-        __metadata('design:returntype', Observable_1.Observable)
     ], Resource.prototype, "delete", null);
     Resource = __decorate([
         __param(0, core_1.Inject(http_1.Http)), 
@@ -100,6 +94,37 @@ var Resource = (function () {
     return Resource;
 }());
 exports.Resource = Resource;
+function extendObj(dst) {
+    var srcs = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        srcs[_i - 1] = arguments[_i];
+    }
+    srcs.map(function (src) {
+        if (!src) {
+            return src;
+        }
+        for (var key in src) {
+            dst[key] = src[key];
+        }
+        return src;
+    });
+    return dst;
+}
+function parseUrl(url) {
+    var params = [];
+    var index = url.indexOf('{');
+    var lastIndex;
+    while (index > -1) {
+        lastIndex = url.indexOf('}', index);
+        if (lastIndex == -1) {
+            return params;
+        }
+        lastIndex++;
+        params.push(url.substring(index, lastIndex));
+        index = url.indexOf('{', lastIndex);
+    }
+    return params;
+}
 function ResourceAction(action) {
     return function (target, propertyKey, descriptor) {
         // console.log('ResourceAction target: ', target);
@@ -118,45 +143,75 @@ function ResourceAction(action) {
             // Creating Headers
             var headers = new http_1.Headers(action.headers || this.getHeaders());
             // Setting data
-            var data = args.length ? args[0] : {};
-            var params = action.params || this.getParams() || {};
+            var data = args.length ? args[0] : null;
+            var params = extendObj({}, action.params || this.getParams() || null);
+            var mapParam = {};
+            // Merging default params with data
+            for (var key in params) {
+                if (typeof params[key] == 'string' && params[key][0] == '@') {
+                    mapParam[key] = params[key];
+                    delete params[key];
+                }
+            }
+            var usedPathParams = {};
             // Parsing url for params
-            url.match(Resource.urlRegex)
+            parseUrl(url)
                 .map(function (param) {
                 var key = param.substr(1, param.length - 2);
                 var value = null;
                 // Do we have mapped path param key
-                if (params[key] && params[key][0] == '@') {
-                    key = params[key].substr(1);
+                if (mapParam[key]) {
+                    key = mapParam[key].substr(1);
                 }
                 // Getting value from data body
-                if (data[key] && !(data[key] instanceof Object)) {
+                if (data && data[key] && !(data[key] instanceof Object)) {
                     value = data[key];
-                    if (!isGetRequest) {
-                        delete data[key];
-                    }
+                    usedPathParams[key] = value;
                 }
-                // If we don't have value, check default value
-                if (!value && params[key]) {
+                // Getting default value from params
+                if (!value && params[key] && !(params[key] instanceof Object)) {
                     value = params[key];
+                    usedPathParams[key] = value;
                 }
                 // Well, all is bad and setting value to empty string
                 value = value || '';
-                console.log(param, key, value);
                 // Replacing in the url
                 url = url.replace(param, value);
             });
-            // Default search params
-            // TODO generate new data
-            var search;
-            if (params)
-                if (isGetRequest) {
-                    search = new http_1.URLSearchParams();
+            // Removing doulble slashed from final url
+            var urlParts = url.split('//').filter(function (val) { return val !== ''; });
+            url = urlParts[0];
+            if (urlParts.length > 1) {
+                url += '//' + urlParts.slice(1).join('/');
+            }
+            // Default search params or data
+            var body = null;
+            var searchParams;
+            if (isGetRequest) {
+                // GET
+                searchParams = extendObj({}, params, data);
+            }
+            else {
+                // NON GET
+                if (data) {
+                    body = JSON.stringify(data);
                 }
+                searchParams = params;
+            }
+            var search = new http_1.URLSearchParams();
+            for (var key in searchParams) {
+                if (!usedPathParams[key]) {
+                    var value = searchParams[key];
+                    if (value instanceof Object) {
+                        value = JSON.stringify(value);
+                    }
+                    search.append(key, value);
+                }
+            }
             var requestOptions = new http_1.RequestOptions({
                 method: action.method,
                 headers: headers,
-                body: data ? JSON.stringify(data) : null,
+                body: body,
                 url: url,
                 search: search
             });
@@ -176,18 +231,26 @@ function ResourceParams(params) {
             useFactory: function (http) { return new target(http); },
             deps: [http_1.Http]
         }));
-        target.prototype.getUrl = function () {
-            return params.url || '';
-        };
-        target.prototype.getPath = function () {
-            return params.path || '';
-        };
-        target.prototype.getHeaders = function () {
-            return params.headers || null;
-        };
-        target.prototype.getParams = function () {
-            return params.params || null;
-        };
+        if (params.url) {
+            target.prototype.getUrl = function () {
+                return params.url || '';
+            };
+        }
+        if (params.path) {
+            target.prototype.getPath = function () {
+                return params.path || '';
+            };
+        }
+        if (params.headers) {
+            target.prototype.getHeaders = function () {
+                return params.headers || null;
+            };
+        }
+        if (params.params) {
+            target.prototype.getParams = function () {
+                return params.params || null;
+            };
+        }
     };
 }
 exports.ResourceParams = ResourceParams;

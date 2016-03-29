@@ -13,7 +13,6 @@ export interface ResourceActionBase extends ResourceParamsBase {
 }
 export declare class Resource {
     protected http: Http;
-    static urlRegex: RegExp;
     constructor(http: Http);
     protected requestInterceptor(req: Request): void;
     protected responseInterceptor(observable: Observable<any>): Observable<any>;
@@ -24,8 +23,8 @@ export declare class Resource {
     get(data?: any): Observable<any>;
     save(data?: any): Observable<any>;
     query(data?: any): Observable<any>;
-    remove(data?: any): Observable<any>;
     delete(data?: any): Observable<any>;
+    remove(data?: any): Observable<any>;
 }
 export declare function ResourceAction(action?: ResourceActionBase): (target: Resource, propertyKey: string, descriptor: PropertyDescriptor) => void;
 export declare let RESOURCE_PROVIDERS: Provider[];
