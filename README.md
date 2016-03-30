@@ -127,15 +127,39 @@ Default resource path/get params<br>
 **Default**: *null*<br>
 **Ex**: ```{"mode": "user", "id": "@id"}```
 
+#### requestInterceptor
+`(req: Request): any;`
+
+Default request interceptor is a function which recieves `Request` object from `anglar2/http`<br>
+**Default**: *doing nothing*
+
+#### responseInterceptor
+`(observable:Observable<any>):Observable<any>;`
+
+Default responce interceptor is a function which receives `Observable` object from `rxjs/Observable` and returns also `Observable` object.<br>
+**Default**: 
+```javascript
+function (observable:Observable<any>):Observable<any> {
+	observable.map(res => res.json());
+	return observable;
+}
+```
 
 <br><br>
 
 ### ResourceActionBase
 ```javascript
 export interface ResourceActionBase extends ResourceParamsBase {
-	method:RequestMethod
+	method:RequestMethod // from angular `angular2/http`
 }
 ```
+
+All parametes will overwrite default one from `ResourceParamsBase`
+
+#### method ***is mondatory***
+Http request method of the action.<br>
+**Ex**: method: RequestMethod.Get
+
 
 
 
