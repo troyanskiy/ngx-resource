@@ -50,11 +50,59 @@ export class MyApp {
 
 			StatusBar.styleDefault();
 
+			// Will make GET request to https://domain.net/api/users
 			this.userRes.get()
 				.subscribe(
 					res => console.log(res),
 					err => console.log('Err', err)
 				);
+				
+			// Will make GET request to https://domain.net/api/users/1
+			this.userRes.get({id: 1})
+				.subscribe(
+					res => console.log(res),
+					err => console.log('Err', err)
+				);
+				
+				
+			// Will make GET request to https://domain.net/api/users?firstName=John
+			this.userRes.get({firstName: 'John'})
+				.subscribe(
+					res => console.log(res),
+					err => console.log('Err', err)
+				);
+			
+			// Will make POST request to https://domain.net/api/users
+			// with stringify json data in the body
+			this.userRes.save({firstName: 'John', lastName: 'Smith'})
+				.subscribe(
+					res => console.log(res),
+					err => console.log('Err', err)
+				);
+			
+			// Will make POST request to https://domain.net/api/users/1
+			// with stringify json data in the body
+			this.userRes.save({id: 1, firstName: 'John', lastName: 'Smith'})
+				.subscribe(
+					res => console.log(res),
+					err => console.log('Err', err)
+				);
+			
+			// Will make PUT request to https://domain.net/api/users/1
+			// with stringify json data in the body
+			this.userRes.update({id: 1, firstName: 'John', lastName: 'Smith'})
+				.subscribe(
+					res => console.log(res),
+					err => console.log('Err', err)
+				);
+			
+			// Will make DELETE request to https://domain.net/api/users/1
+			this.userRes.remove({id: 1}) // also alias is availabe to this.userRes.delete
+				.subscribe(
+					res => console.log(res),
+					err => console.log('Err', err)
+				);
+
 
 		});
 	}
