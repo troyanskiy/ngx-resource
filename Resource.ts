@@ -3,26 +3,34 @@ import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSear
 import {Observable} from "rxjs/Observable";
 
 
+
+export interface ResourceRequestInterceptor {
+	(req: Request): any;
+}
+
+export interface ResourceResponseInterceptor {
+	(observable:Observable<any>):Observable<any>;
+}
+
 export interface ResourceParamsBase {
 	url?:string,
 	path?:string,
 	headers?:any,
-	params?:any
+	params?:any,
+	requestInterceptor?:ResourceRequestInterceptor,
+	responseInterceptor?:ResourceResponseInterceptor
 }
 
 export interface ResourceActionBase extends ResourceParamsBase {
-	method:RequestMethod,
-	isArray?:boolean
+	method:RequestMethod
 }
+
 
 export class Resource {
 
-	constructor(@Inject(Http)
-							protected http:Http) {
-	}
+	constructor(@Inject(Http) protected http:Http) {}
 
-	protected requestInterceptor(req:Request) {
-	}
+	protected requestInterceptor(req:Request) {}
 
 	protected responseInterceptor(observable:Observable<any>):Observable<any> {
 		observable.map(res => res.json());
@@ -67,10 +75,9 @@ export class Resource {
 
 
 	@ResourceAction({
-		method: RequestMethod.Get,
-		isArray: true
+		method: RequestMethod.Put
 	})
-	query(data?:any):Observable<any> {
+	update(data?:any):Observable<any> {
 		return null;
 	}
 
@@ -78,31 +85,17 @@ export class Resource {
 	@ResourceAction({
 		method: RequestMethod.Delete
 	})
-	delete(data?:any):Observable<any> {
+	remove(data?:any):Observable<any> {
 		return null;
 	}
 
-	remove(data?:any):Observable<any> {
-		return this.delete(data);
+
+	delete(data?:any):Observable<any> {
+		return this.remove(data);
 	}
 
 }
 
-function extendObj(dst: any, ...srcs: any[]) {
-
-	srcs.map(src => {
-		if (!src) {
-			return src;
-		}
-		for (let key in src) {
-			dst[key] = src[key];
-		}
-		return src;
-	});
-
-	return dst;
-
-}
 
 function parseUrl(url):any[] {
 	let params = [];
@@ -121,11 +114,10 @@ function parseUrl(url):any[] {
 	return params;
 }
 
+
+
 export function ResourceAction(action?:ResourceActionBase) {
 	return function (target: Resource, propertyKey: string, descriptor: PropertyDescriptor) {
-		// console.log('ResourceAction target: ', target);
-		// console.log('ResourceAction propertyKey: ', propertyKey);
-		// console.log('ResourceAction descriptor: ', descriptor);
 
 		descriptor.value = function(...args: any[]) {
 			console.log(args);
@@ -142,7 +134,7 @@ export function ResourceAction(action?:ResourceActionBase) {
 
 			// Setting data
 			let data = args.length ? args[0] : null;
-			let params = extendObj({}, action.params || this.getParams() || null);
+			let params = Object.assign({}, action.params || this.getParams() || null);
 
 			let mapParam = {};
 
@@ -204,7 +196,7 @@ export function ResourceAction(action?:ResourceActionBase) {
 			let searchParams;
 			if (isGetRequest) {
 				// GET
-				searchParams = extendObj({}, params, data);
+				searchParams = Object.assign({}, params, data);
 			} else {
 				// NON GET
 				if (data) {
@@ -238,11 +230,16 @@ export function ResourceAction(action?:ResourceActionBase) {
 
 			let req = new Request(requestOptions);
 
-			this.requestInterceptor(req);
-			let observable: Observable<Response> = this.http.request(req);
-			observable = this.responseInterceptor(observable);
+			if (action.requestInterceptor) {
+				action.requestInterceptor(req);
+			} else {
+				this.requestInterceptor(req);
+			}
 
-			return observable;
+			let observable: Observable<Response> = this.http.request(req);
+
+			return action.responseInterceptor ?
+				action.responseInterceptor(observable) : this.responseInterceptor(observable);
 
 		}
 
@@ -263,26 +260,34 @@ export function ResourceParams(params:ResourceParamsBase) {
 
 		if (params.url) {
 			target.prototype.getUrl = function() {
-				return params.url || '';
+				return params.url;
 			};
 		}
 
 		if (params.path) {
 			target.prototype.getPath = function () {
-				return params.path || '';
+				return params.path;
 			};
 		}
 
 		if (params.headers) {
 			target.prototype.getHeaders = function () {
-				return params.headers || null;
+				return params.headers;
 			};
 		}
 
 		if (params.params) {
 			target.prototype.getParams = function () {
-				return params.params || null;
+				return params.params;
 			};
+		}
+
+		if (params.requestInterceptor) {
+			target.prototype.requestInterceptor = params.requestInterceptor;
+		}
+
+		if (params.responseInterceptor) {
+			target.prototype.responseInterceptor = params.responseInterceptor;
 		}
 
 	};

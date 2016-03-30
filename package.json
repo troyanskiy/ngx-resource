@@ -1,23 +1,24 @@
 {
-  "name": "ng2-resource",
-  "version": "0.1.0",
-  "description": "Angular2 Resource",
+  "name": "ng2-resource-rest",
+  "version": "0.1.1",
+  "description": "Angular2 resource module with simple decorators",
+  "keywords": ["ng2-resource", "ng2-resource-rest", "ng2", "ng2-rest", "Angular2", "Resource"],
   "main": "Resource.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/troyanskiy/ng2-resource.git"
+    "url": "git+https://github.com/troyanskiy/ng2-resource-rest.git"
   },
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/troyanskiy/ng2-resource/issues"
+    "url": "https://github.com/troyanskiy/ng2-resource-rest/issues"
   },
-  "homepage": "https://github.com/troyanskiy/ng2-resource#readme",
-  "dependencies": {
+  "homepage": "https://github.com/troyanskiy/ng2-resource-rest#readme",
+  "devDependencies": {
     "angular2": "^2.0.0-beta.12",
-    "rxjs": "^5.0.0-beta.4"
+    "rxjs": "^5.0.0-beta.2"
   }
 }

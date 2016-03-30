@@ -18,8 +18,7 @@ var Resource = (function () {
     function Resource(http) {
         this.http = http;
     }
-    Resource.prototype.requestInterceptor = function (req) {
-    };
+    Resource.prototype.requestInterceptor = function (req) { };
     Resource.prototype.responseInterceptor = function (observable) {
         observable.map(function (res) { return res.json(); });
         return observable;
@@ -45,14 +44,14 @@ var Resource = (function () {
     Resource.prototype.save = function (data) {
         return null;
     };
-    Resource.prototype.query = function (data) {
-        return null;
-    };
-    Resource.prototype.delete = function (data) {
+    Resource.prototype.update = function (data) {
         return null;
     };
     Resource.prototype.remove = function (data) {
-        return this.delete(data);
+        return null;
+    };
+    Resource.prototype.delete = function (data) {
+        return this.remove(data);
     };
     __decorate([
         ResourceAction({
@@ -72,13 +71,12 @@ var Resource = (function () {
     ], Resource.prototype, "save", null);
     __decorate([
         ResourceAction({
-            method: http_1.RequestMethod.Get,
-            isArray: true
+            method: http_1.RequestMethod.Put
         }), 
         __metadata('design:type', Function), 
         __metadata('design:paramtypes', [Object]), 
         __metadata('design:returntype', Observable_1.Observable)
-    ], Resource.prototype, "query", null);
+    ], Resource.prototype, "update", null);
     __decorate([
         ResourceAction({
             method: http_1.RequestMethod.Delete
@@ -86,7 +84,7 @@ var Resource = (function () {
         __metadata('design:type', Function), 
         __metadata('design:paramtypes', [Object]), 
         __metadata('design:returntype', Observable_1.Observable)
-    ], Resource.prototype, "delete", null);
+    ], Resource.prototype, "remove", null);
     Resource = __decorate([
         __param(0, core_1.Inject(http_1.Http)), 
         __metadata('design:paramtypes', [http_1.Http])
@@ -94,22 +92,6 @@ var Resource = (function () {
     return Resource;
 }());
 exports.Resource = Resource;
-function extendObj(dst) {
-    var srcs = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        srcs[_i - 1] = arguments[_i];
-    }
-    srcs.map(function (src) {
-        if (!src) {
-            return src;
-        }
-        for (var key in src) {
-            dst[key] = src[key];
-        }
-        return src;
-    });
-    return dst;
-}
 function parseUrl(url) {
     var params = [];
     var index = url.indexOf('{');
@@ -127,9 +109,6 @@ function parseUrl(url) {
 }
 function ResourceAction(action) {
     return function (target, propertyKey, descriptor) {
-        // console.log('ResourceAction target: ', target);
-        // console.log('ResourceAction propertyKey: ', propertyKey);
-        // console.log('ResourceAction descriptor: ', descriptor);
         descriptor.value = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -144,7 +123,7 @@ function ResourceAction(action) {
             var headers = new http_1.Headers(action.headers || this.getHeaders());
             // Setting data
             var data = args.length ? args[0] : null;
-            var params = extendObj({}, action.params || this.getParams() || null);
+            var params = Object.assign({}, action.params || this.getParams() || null);
             var mapParam = {};
             // Merging default params with data
             for (var key in params) {
@@ -189,7 +168,7 @@ function ResourceAction(action) {
             var searchParams;
             if (isGetRequest) {
                 // GET
-                searchParams = extendObj({}, params, data);
+                searchParams = Object.assign({}, params, data);
             }
             else {
                 // NON GET
@@ -216,10 +195,15 @@ function ResourceAction(action) {
                 search: search
             });
             var req = new http_1.Request(requestOptions);
-            this.requestInterceptor(req);
+            if (action.requestInterceptor) {
+                action.requestInterceptor(req);
+            }
+            else {
+                this.requestInterceptor(req);
+            }
             var observable = this.http.request(req);
-            observable = this.responseInterceptor(observable);
-            return observable;
+            return action.responseInterceptor ?
+                action.responseInterceptor(observable) : this.responseInterceptor(observable);
         };
     };
 }
@@ -233,23 +217,29 @@ function ResourceParams(params) {
         }));
         if (params.url) {
             target.prototype.getUrl = function () {
-                return params.url || '';
+                return params.url;
             };
         }
         if (params.path) {
             target.prototype.getPath = function () {
-                return params.path || '';
+                return params.path;
             };
         }
         if (params.headers) {
             target.prototype.getHeaders = function () {
-                return params.headers || null;
+                return params.headers;
             };
         }
         if (params.params) {
             target.prototype.getParams = function () {
-                return params.params || null;
+                return params.params;
             };
+        }
+        if (params.requestInterceptor) {
+            target.prototype.requestInterceptor = params.requestInterceptor;
+        }
+        if (params.responseInterceptor) {
+            target.prototype.responseInterceptor = params.responseInterceptor;
         }
     };
 }
