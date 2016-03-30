@@ -63,7 +63,7 @@ export class MyApp {
 ```
 
 
-# Docs
+# Docs (WIP)
 
 ##  Build in methods
 
@@ -73,6 +73,71 @@ By default implemented 4 main methods:
 2. save(data) to execute POST request;
 3. update(data) to execute PUT request;
 4. remove(data) or delete(data) to execute DELETE request.
+
+
+## @ResourceParams class decorator
+```@ResourceParams(options: ResourceParamsBase)```
+
+The decorator is used to define default resource parameters (can be overwritten with method parameters) and register the class in providers array. @ResourceParams accepts object `ResourceParamsBase` type (description below).
+
+
+## @ResourceAction method decorator
+```@ResourceAction(options: ResourceActionBase)```
+
+Decorates methods. @ResourceAction accepts object `ResourceActionBase` type (description below). All default decorated options will be overwritten for the method.
+
+
+## Types
+
+### ResourceParamsBase
+```javascript
+export interface ResourceParamsBase {
+	url?:string,
+	path?:string,
+	headers?:any,
+	params?:any,
+	requestInterceptor?:ResourceRequestInterceptor,
+	responseInterceptor?:ResourceResponseInterceptor
+}
+```
+
+#### url
+Default resource common address<br>
+**Default**: *empty*<br>
+**Ex**: https://domain.com/api
+
+#### path
+Default resource path to api<br>
+**Default**: *empty*<br>
+**Ex**: /users
+
+#### headers
+Default resource HTTP headers.<br>
+It should be object where key is header name and value is header value<br>
+**Default**: 
+```javascript
+{
+	'Accept': 'application/json',
+	'Content-Type': 'application/json'
+}
+```
+
+#### params
+Default resource path/get params<br>
+**Default**: *null*<br>
+**Ex**: ```{"mode": "user", "id": "@id"}```
+
+
+
+
+### ResourceActionBase
+```javascript
+export interface ResourceActionBase extends ResourceParamsBase {
+	method:RequestMethod
+}
+```
+
+
 
 > Note: For all non GET request all data object will be send in the request body as json.
 > In case of GET requset the data object will be send as query parameters. Parameters, which are has been used for path params, will be removed from query list (only for GET request).
