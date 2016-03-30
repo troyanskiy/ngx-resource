@@ -6,8 +6,16 @@ To use the module install the module using below command
 `npm install ng2-resource-rest --save`
 
 **Build in methods**
-By default implemented 4 main methods
 
+By default implemented 4 main methods:
+
+1. get(data) to execute GET request;
+2. save(data) to execute POST request;
+3. update(data) to execute PUT request;
+4. remove(data) or delete(data) to execute DELETE request.
+
+> Note: For all non GET request all data object will be send in the request body as json.
+> In case of GET requset the data object will be send as query parameters. Parameters, which are has been used for path params, will be removed from query list (only for GET request).
 
 **Creating simple resource (./resources/UserRes.ts)**
 ```javascript
@@ -112,6 +120,7 @@ export class MyApp {
 	}
 }
 ```
+
 
 **Creating simple resource with custom methods (./resources/UserRes.ts)**
 ```javascript
