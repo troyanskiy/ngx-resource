@@ -109,7 +109,7 @@ Default resource common address<br>
 #### path
 Default resource path to api<br>
 **Default**: *empty*<br>
-**Ex**: /users
+**Ex**: /users/{id}
 
 #### headers
 Default resource HTTP headers.<br>
@@ -125,7 +125,7 @@ It should be object where key is header name and value is header value<br>
 #### params
 Default resource path/get params<br>
 **Default**: *null*<br>
-**Ex**: ```{"mode": "user", "id": "@id"}```
+**Ex**: ```{"mode": "user", "id": "@_id", "_id": 0}```
 
 #### requestInterceptor
 `(req: Request): any;`
@@ -145,7 +145,7 @@ function (observable:Observable<any>):Observable<any> {
 }
 ```
 
-<br><br>
+<br>
 
 ### ResourceActionBase
 ```javascript
@@ -161,6 +161,8 @@ Http request method of the action.<br>
 **Ex**: method: RequestMethod.Get
 
 
+
+<br>
 
 
 > Note: For all non GET request all data object will be send in the request body as json.
