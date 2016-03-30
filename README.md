@@ -5,19 +5,9 @@ To use the module install the module using below command
 
 `npm install ng2-resource-rest --save`
 
-**Build in methods**
+### How to use
 
-By default implemented 4 main methods:
-
-1. get(data) to execute GET request;
-2. save(data) to execute POST request;
-3. update(data) to execute PUT request;
-4. remove(data) or delete(data) to execute DELETE request.
-
-> Note: For all non GET request all data object will be send in the request body as json.
-> In case of GET requset the data object will be send as query parameters. Parameters, which are has been used for path params, will be removed from query list (only for GET request).
-
-**Creating simple resource (./resources/UserRes.ts)**
+***Creating simple resource (./resources/UserRes.ts)***
 ```javascript
 // Import necessary staff
 import {Resource, ResourceParams} from "ng2-resouce-rest";
@@ -37,6 +27,61 @@ import {Injectable} from "angular2/core";
 export class UserRes extends Resource {}
 ```
 
+***Using in your app. (In the case is Ionic)***
+```javascript
+import {App, Platform} from 'ionic-angular';
+import {StatusBar} from 'ionic-native';
+import {UserRes} from "./resources/UserRes";
+import {RESOURCE_PROVIDERS} from "ng2-resource-rest";
+
+@App({
+	templateUrl: 'build/app.html',
+	config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
+	providers: [
+		RESOURCE_PROVIDERS
+	]
+})
+export class MyApp {
+
+	constructor(private platform:Platform, private userRes:UserRes) {
+		this.initializeApp();
+	}
+
+	initializeApp() {
+		this.platform.ready().then(() => {
+		
+			// Will make GET request to https://domain.net/api/users
+			this.userRes.get()
+				.subscribe(
+					res => console.log(res),
+					err => console.log('Err', err)
+				);
+				
+		});
+	}
+}
+```
+
+
+# Docs
+
+##  Build in methods
+
+By default implemented 4 main methods:
+
+1. get(data) to execute GET request;
+2. save(data) to execute POST request;
+3. update(data) to execute PUT request;
+4. remove(data) or delete(data) to execute DELETE request.
+
+> Note: For all non GET request all data object will be send in the request body as json.
+> In case of GET requset the data object will be send as query parameters. Parameters, which are has been used for path params, will be removed from query list (only for GET request).
+
+
+
+
+
+# Examples
 
 **Using in your app. (In the case is Ionic)**
 ```javascript
@@ -160,3 +205,4 @@ this.userRes.login({login: 'login', password: 'password'})
 	);
 
 ```
+
