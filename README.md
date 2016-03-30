@@ -25,6 +25,7 @@ import {Injectable} from "angular2/core";
 export class UserRes extends Resource {}
 ```
 
+
 **Using in your app. (In the case is Ionic)**
 ```javascript
 import {App, Platform} from 'ionic-angular';
@@ -102,9 +103,47 @@ export class MyApp {
 					res => console.log(res),
 					err => console.log('Err', err)
 				);
-
-
+				
 		});
 	}
 }
+```
+
+**Creating simple resource with custom methods (./resources/UserRes.ts)**
+```javascript
+// Import necessary staff
+import {Resource, ResourceParams, ResourceAction} from "ng2-resouce-rest";
+import {Injectable} from "angular2/core";
+import {RequestMethod} from "angular2/http";
+import {Observable} from "rxjs/Observable";
+
+
+// Make it Injectable
+@Injectable()
+
+// Decorate the your resource class
+@ResourceParams({
+	// Url to api
+	url: 'https://domain.net/api',
+	// Api path
+	path: '/users/{id}'
+})
+export class UserRes extends Resource {
+
+	@ResourceAction({
+		method: RequestMethod.Post, // Mondatory field
+		path: '/auth' // Will overwrite default path
+	})
+	login(data:any): Observable<any> { return null; }
+
+}
+
+// Using in your app
+// Will make POST request to https://domain.net/api/auth with stringify json data in the body
+this.userRes.login({login: 'login', password: 'password'}) 
+	.subscribe(
+		res => console.log(res),
+		err => console.log('Err', err)
+	);
+
 ```
