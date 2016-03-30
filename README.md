@@ -5,6 +5,10 @@ To use the module install the module using below command
 
 `npm install ng2-resource-rest --save`
 
+**Build in methods**
+By default implemented 4 main methods
+
+
 **Creating simple resource (./resources/UserRes.ts)**
 ```javascript
 // Import necessary staff
