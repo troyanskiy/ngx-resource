@@ -101,15 +101,21 @@ export interface ResourceParamsBase {
 }
 ```
 
+<br>
+
 #### url
 Default resource common address<br>
 **Default**: *empty*<br>
 **Ex**: https://domain.com/api
 
+<br>
+
 #### path
 Default resource path to api<br>
 **Default**: *empty*<br>
 **Ex**: /users
+
+<br>
 
 #### headers
 Default resource HTTP headers.<br>
@@ -121,6 +127,7 @@ It should be object where key is header name and value is header value<br>
 	'Content-Type': 'application/json'
 }
 ```
+<br>
 
 #### params
 Default resource path/get params<br>
@@ -128,7 +135,7 @@ Default resource path/get params<br>
 **Ex**: ```{"mode": "user", "id": "@id"}```
 
 
-
+<br><br>
 
 ### ResourceActionBase
 ```javascript
@@ -144,7 +151,7 @@ export interface ResourceActionBase extends ResourceParamsBase {
 
 
 
-
+<br><br><br>
 
 # Examples
 
