@@ -135,7 +135,7 @@ Default resource path/get params<br>
 Default resource body params<br>
 The params will be added to data object if they does not exists<br>
 **Default**: *null*<br>
-**Ex**: ```{"mode": "user", "id": "@_id", "_id": 0}```
+**Ex**: ```{"mode": "user", "isActive": true}```
 
 #### requestInterceptor
 `(req: Request): any;`
