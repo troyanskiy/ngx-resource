@@ -135,10 +135,14 @@ function ResourceAction(action) {
             var usedPathParams = {};
             // Parsing url for params
             var pathParams = parseUrl(url);
-            for (var i = 0; i < pathParams.length; i++) {
+            var _loop_1 = function(i) {
                 var param = pathParams[i];
                 var key = param.substr(1, param.length - 2);
                 var value = null;
+                var isMandatory = key[0] == '!';
+                if (isMandatory) {
+                    key = key.substr(1);
+                }
                 // Do we have mapped path param key
                 if (mapParam[key]) {
                     key = mapParam[key].substr(1);
@@ -155,11 +159,21 @@ function ResourceAction(action) {
                 }
                 // Well, all is bad and setting value to empty string
                 if (!value) {
+                    if (isMandatory) {
+                        return { value: Observable_1.Observable.create(function (observer) {
+                            observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
+                        }) };
+                    }
                     url = url.substr(0, url.indexOf(param));
-                    break;
+                    return "break";
                 }
                 // Replacing in the url
                 url = url.replace(param, value);
+            };
+            for (var i = 0; i < pathParams.length; i++) {
+                var state_1 = _loop_1(i);
+                if (typeof state_1 === "object") return state_1.value;
+                if (state_1 === "break") break;
             }
             // Removing doulble slashed from final url
             var urlParts = url.split('//').filter(function (val) { return val !== ''; });

@@ -157,6 +157,10 @@ export function ResourceAction(action?:ResourceActionBase) {
 
 				let key:string = param.substr(1, param.length-2);
 				let value:string = null;
+				let isMandatory = key[0] == '!';
+				if (isMandatory) {
+					key = key.substr(1);
+				}
 
 				// Do we have mapped path param key
 				if (mapParam[key]) {
@@ -177,6 +181,11 @@ export function ResourceAction(action?:ResourceActionBase) {
 
 				// Well, all is bad and setting value to empty string
 				if (!value) {
+					if (isMandatory) {
+						return Observable.create(observer => {
+							observer.onError(new Error('Mandatory '+param+' path parameter is missing'));
+						});
+					}
 					url = url.substr(0, url.indexOf(param));
 					break;
 				}
