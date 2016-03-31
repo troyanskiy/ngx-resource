@@ -96,6 +96,7 @@ export interface ResourceParamsBase {
 	path?:string,
 	headers?:any,
 	params?:any,
+	data?:any,
 	requestInterceptor?:ResourceRequestInterceptor,
 	responseInterceptor?:ResourceResponseInterceptor
 }
@@ -107,9 +108,12 @@ Default resource common address<br>
 **Ex**: https://domain.com/api
 
 #### path
-Default resource path to api<br>
+Default resource path to api.<br>
+Can contain path params, which are between `{ }`.<br>
+If path param is with `!` prefix, then the param is mandatory<br>
 **Default**: *empty*<br>
-**Ex**: /users/{id}
+**Ex**: /users/{id}<br>
+**Ex2**: /users/{!id}<br>
 
 #### headers
 Default resource HTTP headers.<br>
@@ -124,6 +128,12 @@ It should be object where key is header name and value is header value<br>
 
 #### params
 Default resource path/get params<br>
+**Default**: *null*<br>
+**Ex**: ```{"mode": "user", "id": "@_id", "_id": 0}```
+
+#### data
+Default resource body params<br>
+The params will be added to data object if they does not exists<br>
 **Default**: *null*<br>
 **Ex**: ```{"mode": "user", "id": "@_id", "_id": 0}```
 
