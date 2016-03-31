@@ -38,6 +38,9 @@ var Resource = (function () {
     Resource.prototype.getParams = function () {
         return null;
     };
+    Resource.prototype.getData = function () {
+        return null;
+    };
     Resource.prototype.get = function (data) {
         return null;
     };
@@ -123,7 +126,16 @@ function ResourceAction(action) {
             var headers = new http_1.Headers(action.headers || this.getHeaders());
             // Setting data
             var data = args.length ? args[0] : null;
-            var params = Object.assign({}, action.params || this.getParams() || null);
+            var params = Object.assign({}, action.params || this.getParams());
+            var defData = action.data || this.getData();
+            if (defData) {
+                if (!data) {
+                    data = defData;
+                }
+                else {
+                    data = Object.assign(defData, data);
+                }
+            }
             var mapParam = {};
             // Merging default params with data
             for (var key in params) {
@@ -251,6 +263,11 @@ function ResourceParams(params) {
         if (params.params) {
             target.prototype.getParams = function () {
                 return params.params;
+            };
+        }
+        if (params.data) {
+            target.prototype.getData = function () {
+                return params.data;
             };
         }
         if (params.requestInterceptor) {

@@ -17,6 +17,7 @@ export interface ResourceParamsBase {
 	path?:string,
 	headers?:any,
 	params?:any,
+	data?:any,
 	requestInterceptor?:ResourceRequestInterceptor,
 	responseInterceptor?:ResourceResponseInterceptor
 }
@@ -53,6 +54,10 @@ export class Resource {
 	}
 
 	getParams():any {
+		return null;
+	}
+
+	getData():any {
 		return null;
 	}
 
@@ -134,7 +139,16 @@ export function ResourceAction(action?:ResourceActionBase) {
 
 			// Setting data
 			let data = args.length ? args[0] : null;
-			let params = Object.assign({}, action.params || this.getParams() || null);
+			let params = Object.assign({}, action.params || this.getParams());
+
+			let defData = action.data || this.getData();
+			if (defData) {
+				if (!data) {
+					data = defData;
+				} else {
+					data = Object.assign(defData, data);
+				}
+			}
 
 			let mapParam = {};
 
@@ -294,6 +308,12 @@ export function ResourceParams(params:ResourceParamsBase) {
 		if (params.params) {
 			target.prototype.getParams = function () {
 				return params.params;
+			};
+		}
+
+		if (params.data) {
+			target.prototype.getData = function () {
+				return params.data;
 			};
 		}
 

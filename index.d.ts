@@ -12,6 +12,7 @@ export interface ResourceParamsBase {
     path?: string;
     headers?: any;
     params?: any;
+    data?: any;
     requestInterceptor?: ResourceRequestInterceptor;
     responseInterceptor?: ResourceResponseInterceptor;
 }
@@ -27,6 +28,7 @@ export declare class Resource {
     getPath(): string;
     getHeaders(): any;
     getParams(): any;
+    getData(): any;
     get(data?: any): Observable<any>;
     save(data?: any): Observable<any>;
     update(data?: any): Observable<any>;
