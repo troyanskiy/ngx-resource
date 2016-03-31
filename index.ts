@@ -197,6 +197,7 @@ export function ResourceAction(action?:ResourceActionBase) {
 
 				// Well, all is bad and setting value to empty string
 				if (!value) {
+					// Checking if it's mandatory param
 					if (isMandatory) {
 						return Observable.create(observer => {
 							observer.onError(new Error('Mandatory '+param+' path parameter is missing'));
@@ -236,7 +237,7 @@ export function ResourceAction(action?:ResourceActionBase) {
 				searchParams = params;
 			}
 
-
+			// Setting search params
 			let search:URLSearchParams = new URLSearchParams();
 			for (let key in searchParams) {
 				if (!usedPathParams[key]) {
@@ -250,7 +251,7 @@ export function ResourceAction(action?:ResourceActionBase) {
 
 
 
-
+			// Creating request options
 			let requestOptions = new RequestOptions({
 				method: action.method,
 				headers: headers,
@@ -259,6 +260,7 @@ export function ResourceAction(action?:ResourceActionBase) {
 				search: search
 			});
 
+			// Creating request object
 			let req = new Request(requestOptions);
 
 			if (action.requestInterceptor) {
@@ -267,8 +269,9 @@ export function ResourceAction(action?:ResourceActionBase) {
 				this.requestInterceptor(req);
 			}
 
+			// Doing the request
 			let observable: Observable<Response> = this.http.request(req);
-
+			
 			return action.responseInterceptor ?
 				action.responseInterceptor(observable) : this.responseInterceptor(observable);
 
