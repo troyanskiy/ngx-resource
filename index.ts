@@ -141,6 +141,7 @@ export function ResourceAction(action?:ResourceActionBase) {
 			let data = args.length ? args[0] : null;
 			let params = Object.assign({}, action.params || this.getParams());
 
+			// Setting default data parameters
 			let defData = action.data || this.getData();
 			if (defData) {
 				if (!data) {
@@ -150,9 +151,10 @@ export function ResourceAction(action?:ResourceActionBase) {
 				}
 			}
 
-			let mapParam = {};
 
-			// Merging default params with data
+
+			// Splitting map params
+			let mapParam = {};
 			for (let key in params) {
 				if (typeof params[key] == 'string' && params[key][0] == '@') {
 					mapParam[key] = params[key];

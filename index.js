@@ -127,6 +127,7 @@ function ResourceAction(action) {
             // Setting data
             var data = args.length ? args[0] : null;
             var params = Object.assign({}, action.params || this.getParams());
+            // Setting default data parameters
             var defData = action.data || this.getData();
             if (defData) {
                 if (!data) {
@@ -136,8 +137,8 @@ function ResourceAction(action) {
                     data = Object.assign(defData, data);
                 }
             }
+            // Splitting map params
             var mapParam = {};
-            // Merging default params with data
             for (var key in params) {
                 if (typeof params[key] == 'string' && params[key][0] == '@') {
                     mapParam[key] = params[key];
