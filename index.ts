@@ -149,36 +149,42 @@ export function ResourceAction(action?:ResourceActionBase) {
 			let usedPathParams = {};
 
 			// Parsing url for params
-			parseUrl(url)
-				.map(param => {
+			var pathParams = parseUrl(url);
 
-					let key:string = param.substr(1, param.length-2);
-					let value:string = null;
+			for (let i=0; i<pathParams.length; i++) {
 
-					// Do we have mapped path param key
-					if (mapParam[key]) {
-						key = mapParam[key].substr(1);
-					}
+				let param = pathParams[i];
 
-					// Getting value from data body
-					if (data && data[key] && !(data[key] instanceof Object)) {
-						value = data[key];
-						usedPathParams[key] = value;
-					}
+				let key:string = param.substr(1, param.length-2);
+				let value:string = null;
 
-					// Getting default value from params
-					if (!value && params[key] && !(params[key] instanceof Object)) {
-						value = params[key];
-						usedPathParams[key] = value;
-					}
+				// Do we have mapped path param key
+				if (mapParam[key]) {
+					key = mapParam[key].substr(1);
+				}
 
-					// Well, all is bad and setting value to empty string
-					value = value || '';
+				// Getting value from data body
+				if (data && data[key] && !(data[key] instanceof Object)) {
+					value = data[key];
+					usedPathParams[key] = value;
+				}
 
-					// Replacing in the url
-					url = url.replace(param, value);
+				// Getting default value from params
+				if (!value && params[key] && !(params[key] instanceof Object)) {
+					value = params[key];
+					usedPathParams[key] = value;
+				}
 
-				});
+				// Well, all is bad and setting value to empty string
+				if (!value) {
+					url = url.substr(0, url.indexOf(param));
+					break;
+				}
+
+				// Replacing in the url
+				url = url.replace(param, value);
+
+			}
 
 
 			// Removing doulble slashed from final url

@@ -134,8 +134,9 @@ function ResourceAction(action) {
             }
             var usedPathParams = {};
             // Parsing url for params
-            parseUrl(url)
-                .map(function (param) {
+            var pathParams = parseUrl(url);
+            for (var i = 0; i < pathParams.length; i++) {
+                var param = pathParams[i];
                 var key = param.substr(1, param.length - 2);
                 var value = null;
                 // Do we have mapped path param key
@@ -153,10 +154,13 @@ function ResourceAction(action) {
                     usedPathParams[key] = value;
                 }
                 // Well, all is bad and setting value to empty string
-                value = value || '';
+                if (!value) {
+                    url = url.substr(0, url.indexOf(param));
+                    break;
+                }
                 // Replacing in the url
                 url = url.replace(param, value);
-            });
+            }
             // Removing doulble slashed from final url
             var urlParts = url.split('//').filter(function (val) { return val !== ''; });
             url = urlParts[0];
