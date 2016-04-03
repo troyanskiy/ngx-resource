@@ -172,7 +172,7 @@ export interface ResourceActionBase extends ResourceParamsBase {
 
 All parametes will overwrite default one from `ResourceParamsBase`
 
-#### method ***is mondatory***
+#### method ***is mandatory***
 Http request method of the action.<br>
 **Ex**: method: RequestMethod.Get
 
@@ -296,7 +296,7 @@ import {Observable} from "rxjs/Observable";
 export class UserRes extends Resource {
 
 	@ResourceAction({
-		method: RequestMethod.Post, // Mondatory field
+		method: RequestMethod.Post, // Mandatory field
 		path: '/auth' // Will overwrite default path
 	})
 	login(data:any): Observable<any> { return null; }
