@@ -283,8 +283,8 @@ export function ResourceAction(action?:ResourceActionBase) {
 
 export let RESOURCE_PROVIDERS:Provider[] = [];
 
-export function ResourceProvide() {
-	return function (target: Function) {
+export function ResourceProvide():Function {
+	return function (target: { new(http:Http): Resource }) {
 		RESOURCE_PROVIDERS.push(provide(target, {
 			useFactory: (http: Http) => new target(http),
 			deps: [Http]
@@ -295,7 +295,7 @@ export function ResourceProvide() {
 export function ResourceParams(params:ResourceParamsBase) {
 
 	return function (target: Function) {
-		
+
 		if (params.url) {
 			target.prototype.getUrl = function() {
 				return params.url;
