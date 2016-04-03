@@ -75,10 +75,16 @@ By default implemented 4 main methods:
 4. remove(data) or delete(data) to execute DELETE request.
 
 
+## @ResourceProvide class decorator
+```@ResourceParams()```
+
+The decorator is used to create provider for the resource and push it to RESOURCE_PROVIDERS
+
+
 ## @ResourceParams class decorator
 ```@ResourceParams(options: ResourceParamsBase)```
 
-The decorator is used to define default resource parameters (can be overwritten with method parameters) and register the class in providers array. @ResourceParams accepts object `ResourceParamsBase` type (description below).
+The decorator is used to define default resource parameters (can be overwritten with method parameters). @ResourceParams accepts object `ResourceParamsBase` type (description below).
 
 
 ## @ResourceAction method decorator
