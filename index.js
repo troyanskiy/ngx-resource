@@ -245,12 +245,17 @@ function ResourceAction(action) {
 }
 exports.ResourceAction = ResourceAction;
 exports.RESOURCE_PROVIDERS = [];
-function ResourceParams(params) {
+function ResourceProvide() {
     return function (target) {
         exports.RESOURCE_PROVIDERS.push(core_1.provide(target, {
             useFactory: function (http) { return new target(http); },
             deps: [http_1.Http]
         }));
+    };
+}
+exports.ResourceProvide = ResourceProvide;
+function ResourceParams(params) {
+    return function (target) {
         if (params.url) {
             target.prototype.getUrl = function () {
                 return params.url;
