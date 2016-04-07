@@ -5,6 +5,11 @@ To use the module install the module using below command
 
 `npm install ng2-resource-rest --save`
 
+
+# THE DOCUMENTATION IS NOT UP TO DATE
+# IT WILL BE UPDATED SOON
+
+
 ### How to use
 
 ***Creating simple resource (./resources/UserRes.ts)***
