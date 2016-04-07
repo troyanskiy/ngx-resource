@@ -1,3 +1,4 @@
+import "rxjs";
 import { Provider } from "angular2/core";
 import { Http, Request, RequestMethod } from "angular2/http";
 import { Observable } from "rxjs/Observable";
@@ -18,6 +19,12 @@ export interface ResourceParamsBase {
 }
 export interface ResourceActionBase extends ResourceParamsBase {
     method: RequestMethod;
+    isArray?: boolean;
+    isPending?: boolean;
+}
+export interface ResourceResult {
+    $resolved?: boolean;
+    $observable?: Observable<any>;
 }
 export declare class Resource {
     protected http: Http;
@@ -29,11 +36,12 @@ export declare class Resource {
     getHeaders(): any;
     getParams(): any;
     getData(): any;
-    get(data?: any): Observable<any>;
-    save(data?: any): Observable<any>;
-    update(data?: any): Observable<any>;
-    remove(data?: any): Observable<any>;
-    delete(data?: any): Observable<any>;
+    get(data?: any): ResourceResult;
+    query(data?: any): ResourceResult;
+    save(data?: any): ResourceResult;
+    update(data?: any): ResourceResult;
+    remove(data?: any): ResourceResult;
+    delete(data?: any): ResourceResult;
 }
 export declare function ResourceAction(action?: ResourceActionBase): (target: Resource, propertyKey: string, descriptor: PropertyDescriptor) => void;
 export declare let RESOURCE_PROVIDERS: Provider[];
