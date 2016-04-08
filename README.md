@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/ng2-resource-rest.svg)](http://badge.fury.io/js/ng2-resource-rest)
 # ng2-resource-rest
 Resource (REST) Client for Angular 2
 
@@ -15,7 +16,7 @@ To use the module install the module using below command
 ***Creating simple resource (./resources/UserRes.ts)***
 ```javascript
 // Import necessary staff
-import {Resource, ResourceParams} from "ng2-resouce-rest";
+import {Resource, ResourceParams} from "ng2-resource-rest";
 import {Injectable} from "angular2/core";
 
 
