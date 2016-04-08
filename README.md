@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/ng2-resource-rest.svg)](http://badge.fury.io/js/ng2-resource-rest)
 # ng2-resource-rest
 Resource (REST) Client for Angular 2
 
