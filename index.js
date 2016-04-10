@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-require("rxjs");
+require("rxjs/Rx");
 var core_1 = require("angular2/core");
 var http_1 = require("angular2/http");
 var Observable_1 = require("rxjs/Observable");
@@ -294,16 +294,19 @@ function ResourceAction(action) {
 exports.ResourceAction = ResourceAction;
 exports.RESOURCE_PROVIDERS = [];
 function ResourceProvide() {
-    return function (target) {
-        exports.RESOURCE_PROVIDERS.push(core_1.provide(target, {
-            useFactory: function (http) { return new target(http); },
-            deps: [http_1.Http]
-        }));
+    return function () {
+        console.warn('ResourceProvide decorator is deprecated.');
     };
 }
 exports.ResourceProvide = ResourceProvide;
 function ResourceParams(params) {
     return function (target) {
+        if (params.add2Provides !== false) {
+            exports.RESOURCE_PROVIDERS.push(core_1.provide(target, {
+                useFactory: function (http) { return new target(http); },
+                deps: [http_1.Http]
+            }));
+        }
         if (params.url) {
             target.prototype.getUrl = function () {
                 return params.url;

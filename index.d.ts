@@ -1,4 +1,4 @@
-import "rxjs";
+import "rxjs/Rx";
 import { Provider } from "angular2/core";
 import { Http, Request, RequestMethod } from "angular2/http";
 import { Observable } from "rxjs/Observable";
@@ -16,6 +16,7 @@ export interface ResourceParamsBase {
     data?: any;
     requestInterceptor?: ResourceRequestInterceptor;
     responseInterceptor?: ResourceResponseInterceptor;
+    add2Provides?: boolean;
 }
 export interface ResourceActionBase extends ResourceParamsBase {
     method: RequestMethod;

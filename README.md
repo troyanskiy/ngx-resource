@@ -113,7 +113,8 @@ export interface ResourceParamsBase {
 	params?:any,
 	data?:any,
 	requestInterceptor?:ResourceRequestInterceptor,
-	responseInterceptor?:ResourceResponseInterceptor
+	responseInterceptor?:ResourceResponseInterceptor,
+	add2Provides?: boolean
 }
 ```
 
@@ -168,6 +169,10 @@ function (observable:Observable<any>):Observable<any> {
 	return observable.map(res => res.json());
 }
 ```
+
+#### add2Provides
+To create provider the class and it to RESOURCE_PROVIDERS<br>
+**Default**: true<br>
 
 <br>
 

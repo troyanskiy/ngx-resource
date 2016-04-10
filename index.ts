@@ -1,4 +1,4 @@
-import "rxjs";
+import "rxjs/Rx";
 import {Inject, provide, Provider} from "angular2/core";
 import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "angular2/http";
 import {Observable} from "rxjs/Observable";
@@ -20,7 +20,8 @@ export interface ResourceParamsBase {
 	params?: any,
 	data?: any,
 	requestInterceptor?: ResourceRequestInterceptor,
-	responseInterceptor?: ResourceResponseInterceptor
+	responseInterceptor?: ResourceResponseInterceptor,
+	add2Provides?: boolean
 }
 
 export interface ResourceActionBase extends ResourceParamsBase {
@@ -350,17 +351,21 @@ export function ResourceAction(action?: ResourceActionBase) {
 export let RESOURCE_PROVIDERS: Provider[] = [];
 
 export function ResourceProvide(): Function {
-	return function(target: { new (http: Http): Resource }) {
-		RESOURCE_PROVIDERS.push(provide(target, {
-			useFactory: (http: Http) => new target(http),
-			deps: [Http]
-		}));
+	return function() {
+		console.warn('ResourceProvide decorator is deprecated.');
 	}
 }
 
 export function ResourceParams(params: ResourceParamsBase) {
 
 	return function(target: Function) {
+
+		if (params.add2Provides !== false) {
+			RESOURCE_PROVIDERS.push(provide(target, {
+				useFactory: (http: Http) => new target(http),
+				deps: [Http]
+			}));
+		}
 
 		if (params.url) {
 			target.prototype.getUrl = function() {
