@@ -358,7 +358,7 @@ export function ResourceProvide(): Function {
 
 export function ResourceParams(params: ResourceParamsBase) {
 
-	return function(target: Function) {
+	return function(target: { new (http: Http): Resource }) {
 
 		if (params.add2Provides !== false) {
 			RESOURCE_PROVIDERS.push(provide(target, {

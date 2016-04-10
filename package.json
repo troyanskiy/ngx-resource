@@ -1,6 +1,6 @@
 {
   "name": "ng2-resource-rest",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Angular2 resource module with simple decorators",
   "keywords": ["ng2-resource", "ng2-resource-rest", "ng2", "ng2-rest", "Angular2", "Resource"],
   "main": "index.js",

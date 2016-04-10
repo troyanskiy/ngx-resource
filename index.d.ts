@@ -47,4 +47,4 @@ export declare class Resource {
 export declare function ResourceAction(action?: ResourceActionBase): (target: Resource, propertyKey: string, descriptor: PropertyDescriptor) => void;
 export declare let RESOURCE_PROVIDERS: Provider[];
 export declare function ResourceProvide(): Function;
-export declare function ResourceParams(params: ResourceParamsBase): (target: Function) => void;
+export declare function ResourceParams(params: ResourceParamsBase): (target: new (http: Http) => Resource) => void;
