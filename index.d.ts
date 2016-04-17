@@ -22,6 +22,7 @@ export interface ResourceActionBase extends ResourceParamsBase {
     method: RequestMethod;
     isArray?: boolean;
     isPending?: boolean;
+    isLazy?: boolean;
 }
 export interface ResourceResult {
     $resolved?: boolean;
@@ -37,12 +38,12 @@ export declare class Resource {
     getHeaders(): any;
     getParams(): any;
     getData(): any;
-    get(data?: any): ResourceResult;
-    query(data?: any): ResourceResult;
-    save(data?: any): ResourceResult;
-    update(data?: any): ResourceResult;
-    remove(data?: any): ResourceResult;
-    delete(data?: any): ResourceResult;
+    get(data?: any, callback?: Function): ResourceResult;
+    query(data?: any, callback?: Function): ResourceResult;
+    save(data?: any, callback?: Function): ResourceResult;
+    update(data?: any, callback?: Function): ResourceResult;
+    remove(data?: any, callback?: Function): ResourceResult;
+    delete(data?: any, callback?: Function): ResourceResult;
 }
 export declare function ResourceAction(action?: ResourceActionBase): (target: Resource, propertyKey: string, descriptor: PropertyDescriptor) => void;
 export declare let RESOURCE_PROVIDERS: Provider[];

@@ -27,7 +27,8 @@ export interface ResourceParamsBase {
 export interface ResourceActionBase extends ResourceParamsBase {
 	method: RequestMethod,
 	isArray?: boolean,
-	isPending?: boolean
+	isPending?: boolean,
+	isLazy?: boolean,
 }
 
 export interface ResourceResult {
@@ -75,7 +76,7 @@ export class Resource {
 	@ResourceAction({
 		method: RequestMethod.Get
 	})
-	get(data?: any): ResourceResult {
+	get(data?: any, callback?: Function): ResourceResult {
 		return null;
 	}
 
@@ -83,7 +84,7 @@ export class Resource {
 		method: RequestMethod.Get,
 		isArray: true
 	})
-	query(data?: any): ResourceResult {
+	query(data?: any, callback?: Function): ResourceResult {
 		return null;
 	}
 
@@ -91,7 +92,7 @@ export class Resource {
 	@ResourceAction({
 		method: RequestMethod.Post
 	})
-	save(data?: any): ResourceResult {
+	save(data?: any, callback?: Function): ResourceResult {
 		return null;
 	}
 
@@ -99,7 +100,7 @@ export class Resource {
 	@ResourceAction({
 		method: RequestMethod.Put
 	})
-	update(data?: any): ResourceResult {
+	update(data?: any, callback?: Function): ResourceResult {
 		return null;
 	}
 
@@ -107,13 +108,13 @@ export class Resource {
 	@ResourceAction({
 		method: RequestMethod.Delete
 	})
-	remove(data?: any): ResourceResult {
+	remove(data?: any, callback?: Function): ResourceResult {
 		return null;
 	}
 
 
-	delete(data?: any): ResourceResult {
-		return this.remove(data);
+	delete(data?: any, callback?: Function): ResourceResult {
+		return this.remove(data, callback);
 	}
 
 }
@@ -165,6 +166,20 @@ export function ResourceAction(action?: ResourceActionBase) {
 
 			// Setting data
 			let data = args.length ? args[0] : null;
+			let callback = args.length > 1 ? args[1] : null;
+			if (typeof data === 'function') {
+				if (!callback) {
+					callback = data;
+					data = null;
+				} else if (typeof callback !== 'function') {
+					let tmpData = callback;
+					callback = data;
+					data = tmpData;
+				} else {
+					data = null;
+				}
+
+			}
 			let params = Object.assign({}, action.params || this.getParams());
 
 			// Setting default data parameters
@@ -312,7 +327,14 @@ export function ResourceAction(action?: ResourceActionBase) {
 			ret.$resolved = false;
 			ret.$observable = observable;
 
-			if (!action.isPending) {
+			if (action.isPending != null) {
+				console.warn('isPending is deprecated. Please use isLazy instead');
+				if (action.isLazy == null) {
+					action.isLazy = action.isPending;
+				}
+			}
+
+			if (!action.isLazy) {
 				observable.subscribe(
 					resp => {
 
@@ -334,6 +356,9 @@ export function ResourceAction(action?: ResourceActionBase) {
 					err => {},
 					() => {
 						ret.$resolved = true;
+						if (callback) {
+							callback(ret);
+						}
 					}
 				);
 			}

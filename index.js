@@ -41,30 +41,30 @@ var Resource = (function () {
     Resource.prototype.getData = function () {
         return null;
     };
-    Resource.prototype.get = function (data) {
+    Resource.prototype.get = function (data, callback) {
         return null;
     };
-    Resource.prototype.query = function (data) {
+    Resource.prototype.query = function (data, callback) {
         return null;
     };
-    Resource.prototype.save = function (data) {
+    Resource.prototype.save = function (data, callback) {
         return null;
     };
-    Resource.prototype.update = function (data) {
+    Resource.prototype.update = function (data, callback) {
         return null;
     };
-    Resource.prototype.remove = function (data) {
+    Resource.prototype.remove = function (data, callback) {
         return null;
     };
-    Resource.prototype.delete = function (data) {
-        return this.remove(data);
+    Resource.prototype.delete = function (data, callback) {
+        return this.remove(data, callback);
     };
     __decorate([
         ResourceAction({
             method: http_1.RequestMethod.Get
         }), 
         __metadata('design:type', Function), 
-        __metadata('design:paramtypes', [Object]), 
+        __metadata('design:paramtypes', [Object, Function]), 
         __metadata('design:returntype', Object)
     ], Resource.prototype, "get", null);
     __decorate([
@@ -73,7 +73,7 @@ var Resource = (function () {
             isArray: true
         }), 
         __metadata('design:type', Function), 
-        __metadata('design:paramtypes', [Object]), 
+        __metadata('design:paramtypes', [Object, Function]), 
         __metadata('design:returntype', Object)
     ], Resource.prototype, "query", null);
     __decorate([
@@ -81,7 +81,7 @@ var Resource = (function () {
             method: http_1.RequestMethod.Post
         }), 
         __metadata('design:type', Function), 
-        __metadata('design:paramtypes', [Object]), 
+        __metadata('design:paramtypes', [Object, Function]), 
         __metadata('design:returntype', Object)
     ], Resource.prototype, "save", null);
     __decorate([
@@ -89,7 +89,7 @@ var Resource = (function () {
             method: http_1.RequestMethod.Put
         }), 
         __metadata('design:type', Function), 
-        __metadata('design:paramtypes', [Object]), 
+        __metadata('design:paramtypes', [Object, Function]), 
         __metadata('design:returntype', Object)
     ], Resource.prototype, "update", null);
     __decorate([
@@ -97,7 +97,7 @@ var Resource = (function () {
             method: http_1.RequestMethod.Delete
         }), 
         __metadata('design:type', Function), 
-        __metadata('design:paramtypes', [Object]), 
+        __metadata('design:paramtypes', [Object, Function]), 
         __metadata('design:returntype', Object)
     ], Resource.prototype, "remove", null);
     Resource = __decorate([
@@ -144,6 +144,21 @@ function ResourceAction(action) {
             var headers = new http_1.Headers(action.headers || this.getHeaders());
             // Setting data
             var data = args.length ? args[0] : null;
+            var callback = args.length > 1 ? args[1] : null;
+            if (typeof data === 'function') {
+                if (!callback) {
+                    callback = data;
+                    data = null;
+                }
+                else if (typeof callback !== 'function') {
+                    var tmpData = callback;
+                    callback = data;
+                    data = tmpData;
+                }
+                else {
+                    data = null;
+                }
+            }
             var params = Object.assign({}, action.params || this.getParams());
             // Setting default data parameters
             var defData = action.data || this.getData();
@@ -267,7 +282,13 @@ function ResourceAction(action) {
             }
             ret.$resolved = false;
             ret.$observable = observable;
-            if (!action.isPending) {
+            if (action.isPending != null) {
+                console.warn('isPending is deprecated. Please use isLazy instead');
+                if (action.isLazy == null) {
+                    action.isLazy = action.isPending;
+                }
+            }
+            if (!action.isLazy) {
                 observable.subscribe(function (resp) {
                     if (action.isArray) {
                         if (!Array.isArray(resp)) {
@@ -285,6 +306,9 @@ function ResourceAction(action) {
                     }
                 }, function (err) { }, function () {
                     ret.$resolved = true;
+                    if (callback) {
+                        callback(ret);
+                    }
                 });
             }
             return ret;
