@@ -64,6 +64,17 @@ export class MyApp {
 				);
 				
 			this.allUsers = this.userRes.query();
+			
+			this.allUsers1 = this.userRes.query(() => {
+				// Called after setting the data
+				console.log(this.allUsers1);
+			});
+			
+			this.allUsers2 = this.userRes.query({name: 'Roman'}, () => {
+				// Called after setting the data
+				console.log(this.allUsers2);
+			});
+			
 				
 		});
 	}
@@ -77,11 +88,11 @@ export class MyApp {
 
 By default implemented 5 main methods:
 
-1. get(data) to execute GET request;
-2. query(data) to execute GET and recieve an array
-3. save(data) to execute POST request;
-4. update(data) to execute PUT request;
-5. remove(data) or delete(data) to execute DELETE request.
+1. get(data, callback) to execute GET request;
+2. query(data, callback) to execute GET and recieve an array
+3. save(data, callback) to execute POST request;
+4. update(data, callback) to execute PUT request;
+5. remove(data, callback) or delete(data, callback) to execute DELETE request.
 
 
 ## @ResourceProvide class decorator
@@ -181,7 +192,7 @@ To create provider the class and it to RESOURCE_PROVIDERS<br>
 export interface ResourceActionBase extends ResourceParamsBase {
 	method:RequestMethod, // from angular `angular2/http`
 	isArray: boolean,
-	isPending: boolean
+	isLazy: boolean
 }
 ```
 
@@ -196,8 +207,8 @@ Http request method of the action.<br>
 Used if received data is an array
 
 
-#### isPending
-Is `isPending` set to true, then the request will not be executed immediately. To execute the request you should subsribe to abservable and hande responces by yourself. 
+#### isLazy
+Is `isLazy` set to true, then the request will not be executed immediately. To execute the request you should subsribe to abservable and hande responces by yourself. 
 
 
 <br>
@@ -334,7 +345,7 @@ export class UserRes extends Resource {
 		method: RequestMethod.Post, // Mandatory field
 		path: '/auth' // Will overwrite default path
 	})
-	login(data:any): ResourceResult { return null; }
+	login(data:any, callback?:Function): ResourceResult { return null; }
 	
 	
 	@ResourceAction({
@@ -342,7 +353,7 @@ export class UserRes extends Resource {
 		path: '/list', // Will overwrite default path
 		isArray: true
 	})
-	list(data:any): ResourceResult { return null; }
+	list(data?:any, callback?:Function): ResourceResult { return null; }
 
 }
 
