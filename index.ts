@@ -335,7 +335,11 @@ export function ResourceAction(action?: ResourceActionBase) {
 			}
 
 			if (!action.isLazy) {
-				observable.subscribe(
+
+				ret.$observable = ret.$observable.publish();
+				ret.$observable.connect();
+
+				ret.$observable.subscribe(
 					resp => {
 
 						if (action.isArray) {

@@ -289,7 +289,9 @@ function ResourceAction(action) {
                 }
             }
             if (!action.isLazy) {
-                observable.subscribe(function (resp) {
+                ret.$observable = ret.$observable.publish();
+                ret.$observable.connect();
+                ret.$observable.subscribe(function (resp) {
                     if (action.isArray) {
                         if (!Array.isArray(resp)) {
                             console.error('Returned data should be an array. Received', resp);
