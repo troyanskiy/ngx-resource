@@ -2,6 +2,8 @@ import "rxjs/Rx";
 import {Inject, provide, Provider} from "angular2/core";
 import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "angular2/http";
 import {Observable} from "rxjs/Observable";
+import {ConnectableObservable} from "rxjs/observable/ConnectableObservable";
+
 
 
 
@@ -337,7 +339,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 			if (!action.isLazy) {
 
 				ret.$observable = ret.$observable.publish();
-				ret.$observable.connect();
+				(<ConnectableObservable<any>>ret.$observable).connect();
 
 				ret.$observable.subscribe(
 					resp => {
