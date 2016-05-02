@@ -47,12 +47,7 @@ export class Resource {
 	protected requestInterceptor(req: Request) { }
 
 	protected responseInterceptor(observable: Observable<any>): Observable<any> {
-		return observable.map(res => {
-			if (!res._body) {
-				return null;
-			}
-			return res.json();
-		});
+		return observable.map(res => res._body ? res.json() : null);
 	}
 
 	getUrl(): string {
