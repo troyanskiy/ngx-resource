@@ -21,7 +21,12 @@ var Resource = (function () {
     }
     Resource.prototype.requestInterceptor = function (req) { };
     Resource.prototype.responseInterceptor = function (observable) {
-        return observable.map(function (res) { return res.json(); });
+        return observable.map(function (res) {
+            if (!res._body) {
+                return null;
+            }
+            return res.json();
+        });
     };
     Resource.prototype.getUrl = function () {
         return '';
@@ -292,6 +297,9 @@ function ResourceAction(action) {
                 ret.$observable = ret.$observable.publish();
                 ret.$observable.connect();
                 ret.$observable.subscribe(function (resp) {
+                    if (resp === null) {
+                        return;
+                    }
                     if (action.isArray) {
                         if (!Array.isArray(resp)) {
                             console.error('Returned data should be an array. Received', resp);

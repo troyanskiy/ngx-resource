@@ -47,7 +47,12 @@ export class Resource {
 	protected requestInterceptor(req: Request) { }
 
 	protected responseInterceptor(observable: Observable<any>): Observable<any> {
-		return observable.map(res => res.json());
+		return observable.map(res => {
+			if (!res._body) {
+				return null;
+			}
+			return res.json();
+		});
 	}
 
 	getUrl(): string {
@@ -343,6 +348,10 @@ export function ResourceAction(action?: ResourceActionBase) {
 
 				ret.$observable.subscribe(
 					resp => {
+
+						if (resp === null) {
+							return;
+						}
 
 						if (action.isArray) {
 							if (!Array.isArray(resp)) {
