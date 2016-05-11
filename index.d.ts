@@ -28,6 +28,8 @@ export interface ResourceResult {
     $resolved?: boolean;
     $observable?: Observable<any>;
 }
+export interface ArrayResourceResult<T> extends ResourceResult, Array<T> {
+}
 export declare class Resource {
     protected http: Http;
     constructor(http: Http);
@@ -39,7 +41,7 @@ export declare class Resource {
     getParams(): any;
     getData(): any;
     get(data?: any, callback?: Function): ResourceResult;
-    query(data?: any, callback?: Function): ResourceResult;
+    query(data?: any, callback?: Function): ArrayResourceResult<any>;
     save(data?: any, callback?: Function): ResourceResult;
     update(data?: any, callback?: Function): ResourceResult;
     remove(data?: any, callback?: Function): ResourceResult;

@@ -3,7 +3,6 @@ import {Inject, provide, Provider} from "angular2/core";
 import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "angular2/http";
 import {Observable} from "rxjs/Observable";
 import {ConnectableObservable} from "rxjs/observable/ConnectableObservable";
-import {Observer} from "rxjs/Observer";
 
 
 
@@ -39,6 +38,7 @@ export interface ResourceResult {
 	$observable?: Observable<any>
 }
 
+export interface ArrayResourceResult<T> extends ResourceResult, Array<T> {}
 
 
 export class Resource {
@@ -92,7 +92,7 @@ export class Resource {
 		method: RequestMethod.Get,
 		isArray: true
 	})
-	query(data?: any, callback?: Function): ResourceResult {
+	query(data?: any, callback?: Function): ArrayResourceResult<any> {
 		return null;
 	}
 
