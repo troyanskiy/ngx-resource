@@ -21,7 +21,12 @@ var Resource = (function () {
     }
     Resource.prototype.requestInterceptor = function (req) { };
     Resource.prototype.responseInterceptor = function (observable) {
-        return observable.map(function (res) { return res._body ? res.json() : null; });
+        return observable.map(function (res) {
+            if (!res._body) {
+                return null;
+            }
+            return res.json();
+        });
     };
     Resource.prototype.getUrl = function () {
         return '';

@@ -3,6 +3,7 @@ import {Inject, provide, Provider} from "angular2/core";
 import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "angular2/http";
 import {Observable} from "rxjs/Observable";
 import {ConnectableObservable} from "rxjs/observable/ConnectableObservable";
+import {Observer} from "rxjs/Observer";
 
 
 
@@ -47,7 +48,12 @@ export class Resource {
 	protected requestInterceptor(req: Request) { }
 
 	protected responseInterceptor(observable: Observable<any>): Observable<any> {
-		return observable.map(res => res._body ? res.json() : null);
+		return observable.map(res => {
+			if (!res._body) {
+				return null;
+			}
+			return res.json();
+		});
 	}
 
 	getUrl(): string {
@@ -132,8 +138,8 @@ export class Resource {
 // }
 
 
-function parseUrl(url): any[] {
-	let params = [];
+function parseUrl(url:string): string[] {
+	let params: string[] = [];
 	let index: number = url.indexOf('{');
 	let lastIndex: number;
 	while (index > -1) {
@@ -154,7 +160,7 @@ function parseUrl(url): any[] {
 export function ResourceAction(action?: ResourceActionBase) {
 	return function(target: Resource, propertyKey: string, descriptor: PropertyDescriptor) {
 
-		descriptor.value = function(...args: any[]) {
+		descriptor.value = function(...args: any[]):ResourceResult {
 
 			let isGetRequest = action.method === RequestMethod.Get;
 
@@ -197,7 +203,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
 
 			// Splitting map params
-			let mapParam = {};
+			let mapParam: { [key: string]: string } = {};
 			for (let key in params) {
 				if (typeof params[key] == 'string' && params[key][0] == '@') {
 					mapParam[key] = params[key];
@@ -205,7 +211,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 				}
 			}
 
-			let usedPathParams = {};
+			let usedPathParams: { [key: string]: string } = {};
 
 			// Parsing url for params
 			var pathParams = parseUrl(url);
@@ -242,7 +248,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 				if (!value) {
 					// Checking if it's mandatory param
 					if (isMandatory) {
-						return Observable.create(observer => {
+						return <Observable<any>> Observable.create((observer:any) => {
 							observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
 						});
 					}
@@ -266,9 +272,9 @@ export function ResourceAction(action?: ResourceActionBase) {
 
 			// Default search params or data
 
-			let body = null;
+			let body: string = null;
 
-			let searchParams;
+			let searchParams: { [key: string]: string };
 			if (isGetRequest) {
 				// GET
 				searchParams = Object.assign({}, params, data);
@@ -284,7 +290,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 			let search: URLSearchParams = new URLSearchParams();
 			for (let key in searchParams) {
 				if (!usedPathParams[key]) {
-					let value = searchParams[key];
+					let value:any = searchParams[key];
 					if (value instanceof Object) {
 						value = JSON.stringify(value);
 					}
