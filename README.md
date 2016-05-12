@@ -1,6 +1,6 @@
 [![npm version](https://badge.fury.io/js/ng2-resource-rest.svg)](http://badge.fury.io/js/ng2-resource-rest)
 # ng2-resource-rest
-Resource (REST) Client for Angular 2
+Resource (REST) Client for Angular 2 RC
 
 To use the module install the module using below command
 
@@ -14,7 +14,7 @@ To use the module install the module using below command
 ```javascript
 // Import necessary staff
 import {Resource, ResourceParams} from "ng2-resource-rest";
-import {Injectable} from "angular2/core";
+import {Injectable} from "@angular/core";
 
 
 // Make it Injectable
@@ -190,7 +190,7 @@ To create provider the class and it to RESOURCE_PROVIDERS<br>
 ### ResourceActionBase
 ```javascript
 export interface ResourceActionBase extends ResourceParamsBase {
-	method:RequestMethod, // from angular `angular2/http`
+	method:RequestMethod, // from angular `@angular/http`
 	isArray: boolean,
 	isLazy: boolean
 }
@@ -325,8 +325,8 @@ export class MyApp {
 ```javascript
 // Import necessary staff
 import {Resource, ResourceParams, ResourceAction, ResourceResult} from "ng2-resouce-rest";
-import {Injectable} from "angular2/core";
-import {RequestMethod} from "angular2/http";
+import {Injectable} from "@angular/core";
+import {RequestMethod} from "@angular/http";
 
 
 // Make it Injectable
