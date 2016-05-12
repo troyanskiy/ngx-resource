@@ -1,6 +1,6 @@
 import "rxjs/Rx";
-import { Provider } from "angular2/core";
-import { Http, Request, RequestMethod } from "angular2/http";
+import { Provider } from "@angular/core";
+import { Http, Request, RequestMethod } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 export interface ResourceRequestInterceptor {
     (req: Request): any;

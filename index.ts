@@ -1,6 +1,6 @@
 import "rxjs/Rx";
-import {Inject, provide, Provider} from "angular2/core";
-import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "angular2/http";
+import {Inject, provide, Provider} from "@angular/core";
+import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {ConnectableObservable} from "rxjs/observable/ConnectableObservable";
 
