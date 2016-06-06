@@ -186,7 +186,7 @@ To create provider the class and it to RESOURCE_PROVIDERS<br>
 **Default**: true
 
 #### removeTrailingSlash
-Remove trailing slashed from url
+Remove trailing slashed from url<br>
 **Default**: true<br>
 
 <br>
