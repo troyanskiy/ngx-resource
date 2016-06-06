@@ -29,6 +29,9 @@ var Resource = (function () {
             return res.json();
         });
     };
+    Resource.prototype.removeTrailingSlash = function () {
+        return true;
+    };
     Resource.prototype.getUrl = function () {
         return '';
     };
@@ -230,11 +233,20 @@ function ResourceAction(action) {
                 if (typeof state_1 === "object") return state_1.value;
                 if (state_1 === "break") break;
             }
-            // Removing doulble slashed from final url
+            // Removing double slashed from final url
             var urlParts = url.split('//').filter(function (val) { return val !== ''; });
             url = urlParts[0];
             if (urlParts.length > 1) {
                 url += '//' + urlParts.slice(1).join('/');
+            }
+            // Remove trailing slash
+            if (typeof action.removeTrailingSlash === "undefined") {
+                action.removeTrailingSlash = this.removeTrailingSlash;
+            }
+            if (action.removeTrailingSlash) {
+                while (url[url.length - 1] == '/') {
+                    url = url.substr(0, url.length - 1);
+                }
             }
             // Default search params or data
             var body = null;
@@ -344,6 +356,11 @@ function ResourceParams(params) {
                 useFactory: function (http) { return new target(http); },
                 deps: [http_1.Http]
             }));
+        }
+        if (typeof params.removeTrailingSlash !== 'undefined') {
+            target.prototype.removeTrailingSlash = function () {
+                return !!params.removeTrailingSlash;
+            };
         }
         if (params.url) {
             target.prototype.getUrl = function () {

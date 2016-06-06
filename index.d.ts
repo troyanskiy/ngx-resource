@@ -18,6 +18,7 @@ export interface ResourceParamsBase {
     requestInterceptor?: ResourceRequestInterceptor;
     responseInterceptor?: ResourceResponseInterceptor;
     add2Provides?: boolean;
+    removeTrailingSlash?: boolean;
 }
 export interface ResourceActionBase extends ResourceParamsBase {
     method: RequestMethod;
@@ -36,6 +37,7 @@ export declare class Resource {
     constructor(http: Http);
     protected requestInterceptor(req: Request): void;
     protected responseInterceptor(observable: Observable<any>): Observable<any>;
+    removeTrailingSlash(): boolean;
     getUrl(): string;
     getPath(): string;
     getHeaders(): any;

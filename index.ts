@@ -26,7 +26,8 @@ export interface ResourceParamsBase {
 	data?: any,
 	requestInterceptor?: ResourceRequestInterceptor,
 	responseInterceptor?: ResourceResponseInterceptor,
-	add2Provides?: boolean
+	add2Provides?: boolean,
+	removeTrailingSlash?: boolean
 }
 
 export interface ResourceActionBase extends ResourceParamsBase {
@@ -57,6 +58,10 @@ export class Resource {
 			}
 			return res.json();
 		});
+	}
+
+	removeTrailingSlash(): boolean {
+		return true;
 	}
 
 	getUrl(): string {
@@ -267,11 +272,21 @@ export function ResourceAction(action?: ResourceActionBase) {
 			}
 
 
-			// Removing doulble slashed from final url
+			// Removing double slashed from final url
 			let urlParts: string[] = url.split('//').filter(val => val !== '');
 			url = urlParts[0];
 			if (urlParts.length > 1) {
 				url += '//' + urlParts.slice(1).join('/');
+			}
+
+			// Remove trailing slash
+			if (typeof action.removeTrailingSlash === "undefined") {
+				action.removeTrailingSlash = this.removeTrailingSlash;
+			}
+			if (action.removeTrailingSlash) {
+				while (url[url.length-1] == '/') {
+					url = url.substr(0, url.length-1);
+				}
 			}
 
 
@@ -412,6 +427,12 @@ export function ResourceParams(params: ResourceParamsBase) {
 				useFactory: (http: Http) => new target(http),
 				deps: [Http]
 			}));
+		}
+
+		if (typeof params.removeTrailingSlash !== 'undefined') {
+			target.prototype.removeTrailingSlash = function() {
+				return !!params.removeTrailingSlash;
+			};
 		}
 
 		if (params.url) {

@@ -183,6 +183,10 @@ function (observable:Observable<any>):Observable<any> {
 
 #### add2Provides
 To create provider the class and it to RESOURCE_PROVIDERS<br>
+**Default**: true
+
+#### removeTrailingSlash
+Remove trailing slashed from url
 **Default**: true<br>
 
 <br>
