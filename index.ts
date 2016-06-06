@@ -1,4 +1,5 @@
 import "rxjs/add/operator/map";
+import "rxjs/add/operator/publish";
 import {Inject, provide, Provider} from "@angular/core";
 import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs/Observable";
@@ -235,13 +236,15 @@ export function ResourceAction(action?: ResourceActionBase) {
 				}
 
 				// Getting value from data body
-				if (data && data[key] && !(data[key] instanceof Object)) {
+				if (data && data[key] && (typeof data[key] != 'object')) {
+				// if (data && data[key] && !(data[key] instanceof Object)) {
 					value = data[key];
 					usedPathParams[key] = value;
 				}
 
 				// Getting default value from params
-				if (!value && params[key] && !(params[key] instanceof Object)) {
+				if (!value && params[key] && (typeof params[key] != 'object')) {
+				// if (!value && params[key] && !(params[key] instanceof Object)) {
 					value = params[key];
 					usedPathParams[key] = value;
 				}
@@ -293,7 +296,8 @@ export function ResourceAction(action?: ResourceActionBase) {
 			for (let key in searchParams) {
 				if (!usedPathParams[key]) {
 					let value:any = searchParams[key];
-					if (value instanceof Object) {
+					if (typeof value == 'object') {
+					// if (value instanceof Object) {
 						value = JSON.stringify(value);
 					}
 					search.append(key, value);

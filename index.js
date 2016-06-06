@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 require("rxjs/add/operator/map");
+require("rxjs/add/operator/publish");
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var Observable_1 = require("rxjs/Observable");
@@ -199,12 +200,14 @@ function ResourceAction(action) {
                     key = mapParam[key].substr(1);
                 }
                 // Getting value from data body
-                if (data && data[key] && !(data[key] instanceof Object)) {
+                if (data && data[key] && (typeof data[key] != 'object')) {
+                    // if (data && data[key] && !(data[key] instanceof Object)) {
                     value = data[key];
                     usedPathParams[key] = value;
                 }
                 // Getting default value from params
-                if (!value && params[key] && !(params[key] instanceof Object)) {
+                if (!value && params[key] && (typeof params[key] != 'object')) {
+                    // if (!value && params[key] && !(params[key] instanceof Object)) {
                     value = params[key];
                     usedPathParams[key] = value;
                 }
@@ -252,7 +255,8 @@ function ResourceAction(action) {
             for (var key in searchParams) {
                 if (!usedPathParams[key]) {
                     var value = searchParams[key];
-                    if (value instanceof Object) {
+                    if (typeof value == 'object') {
+                        // if (value instanceof Object) {
                         value = JSON.stringify(value);
                     }
                     search.append(key, value);

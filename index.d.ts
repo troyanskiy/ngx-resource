@@ -1,4 +1,5 @@
 import "rxjs/add/operator/map";
+import "rxjs/add/operator/publish";
 import { Provider } from "@angular/core";
 import { Http, Request, RequestMethod } from "@angular/http";
 import { Observable } from "rxjs/Observable";
