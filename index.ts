@@ -1,10 +1,12 @@
-import "rxjs/Rx";
+import "rxjs/add/operator/map";
 import {Inject, provide, Provider} from "@angular/core";
 import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {ConnectableObservable} from "rxjs/observable/ConnectableObservable";
 
-
+declare var Object: {
+	assign: any;
+};
 
 
 export interface ResourceRequestInterceptor {

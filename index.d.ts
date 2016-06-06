@@ -1,4 +1,4 @@
-import "rxjs/Rx";
+import "rxjs/add/operator/map";
 import { Provider } from "@angular/core";
 import { Http, Request, RequestMethod } from "@angular/http";
 import { Observable } from "rxjs/Observable";
