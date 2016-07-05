@@ -15,7 +15,7 @@ export interface ResourceRequestInterceptor {
 }
 
 export interface ResourceResponseInterceptor {
-	(observable: Observable<any>, request: Request): Observable<any>;
+	(observable: Observable<any>, request?: Request): Observable<any>;
 }
 
 export interface ResourceParamsBase {
