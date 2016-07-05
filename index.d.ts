@@ -7,7 +7,7 @@ export interface ResourceRequestInterceptor {
     (req: Request): any;
 }
 export interface ResourceResponseInterceptor {
-    (observable: Observable<any>): Observable<any>;
+    (observable: Observable<any>, request: Request): Observable<any>;
 }
 export interface ResourceParamsBase {
     url?: string;

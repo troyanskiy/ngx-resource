@@ -15,7 +15,7 @@ export interface ResourceRequestInterceptor {
 }
 
 export interface ResourceResponseInterceptor {
-	(observable: Observable<any>): Observable<any>;
+	(observable: Observable<any>, request: Request): Observable<any>;
 }
 
 export interface ResourceParamsBase {
@@ -52,12 +52,7 @@ export class Resource {
 	protected requestInterceptor(req: Request) { }
 
 	protected responseInterceptor(observable: Observable<any>): Observable<any> {
-		return observable.map(res => {
-			if (!res._body) {
-				return null;
-			}
-			return res.json();
-		});
+		return observable.map(res => res._body ? res.json() : null);
 	}
 
 	removeTrailingSlash(): boolean {
@@ -343,7 +338,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 			let observable: Observable<Response> = this.http.request(req);
 
 			observable = action.responseInterceptor ?
-				action.responseInterceptor(observable) : this.responseInterceptor(observable);
+				action.responseInterceptor(observable, req) : this.responseInterceptor(observable, req);
 
 			let ret: ResourceResult;
 

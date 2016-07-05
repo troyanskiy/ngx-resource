@@ -171,13 +171,13 @@ Default request interceptor is a function which recieves `Request` object from `
 **Default**: *doing nothing*
 
 #### responseInterceptor
-`(observable:Observable<any>):Observable<any>;`
+`(observable:Observable<any>, request:Request):Observable<any>;`
 
-Default responce interceptor is a function which receives `Observable` object from `rxjs/Observable` and returns also `Observable` object.<br>
+Default response interceptor is a function which receives `Observable` object from `rxjs/Observable` and returns also `Observable` object.<br>
 **Default**: 
 ```javascript
 function (observable:Observable<any>):Observable<any> {
-	return observable.map(res => res.json());
+	return observable.map(res => res._body ? res.json() : null);
 }
 ```
 

@@ -22,12 +22,7 @@ var Resource = (function () {
     }
     Resource.prototype.requestInterceptor = function (req) { };
     Resource.prototype.responseInterceptor = function (observable) {
-        return observable.map(function (res) {
-            if (!res._body) {
-                return null;
-            }
-            return res.json();
-        });
+        return observable.map(function (res) { return res._body ? res.json() : null; });
     };
     Resource.prototype.removeTrailingSlash = function () {
         return true;
@@ -293,7 +288,7 @@ function ResourceAction(action) {
             // Doing the request
             var observable = this.http.request(req);
             observable = action.responseInterceptor ?
-                action.responseInterceptor(observable) : this.responseInterceptor(observable);
+                action.responseInterceptor(observable, req) : this.responseInterceptor(observable, req);
             var ret;
             if (action.isPending) {
                 ret = {};
