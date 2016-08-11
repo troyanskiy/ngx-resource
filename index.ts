@@ -1,5 +1,3 @@
-///<reference path="./node_modules/@types/es6-shim/index.d.ts"/>
-
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/publish";
 import {Inject} from "@angular/core";
