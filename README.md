@@ -193,7 +193,7 @@ Remove trailing slashed from url<br>
 
 #### providersSubSet
 To create provider the class and it to ResourceProviders.subSet(<providersSubSet>)<br>
-**Default**: null<br>
+**Default**: true<br>
 
 <br>
 

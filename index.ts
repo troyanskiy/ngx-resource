@@ -1,9 +1,14 @@
+///<reference path="./node_modules/@types/es6-shim/index.d.ts"/>
+
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/publish";
 import {Inject} from "@angular/core";
-import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "@angular/http";
+import {
+	Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams
+} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {ConnectableObservable} from "rxjs/observable/ConnectableObservable";
+import {Subscriber} from "rxjs";
 
 declare var Object: {
 	assign: any;
@@ -34,7 +39,6 @@ export interface ResourceParamsBase {
 export interface ResourceActionBase extends ResourceParamsBase {
 	method: RequestMethod;
 	isArray?: boolean;
-	isPending?: boolean;
 	isLazy?: boolean;
 }
 
@@ -60,15 +64,15 @@ export class Resource {
 		return true;
 	}
 
-	getUrl(): string {
+	getUrl(): string | Promise<string> {
 		return '';
 	}
 
-	getPath(): string {
+	getPath(): string | Promise<string> {
 		return '';
 	}
 
-	getHeaders(): any {
+	getHeaders(): any | Promise<any> {
 		return {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
@@ -133,15 +137,6 @@ export class Resource {
 
 
 
-// export class ObservableResource<T> extends Observable<T> {
-//
-// 	returnArray: boolean = false;
-//
-// 	$ng1() {}
-//
-// }
-
-
 function parseUrl(url:string): string[] {
 	let params: string[] = [];
 	let index: number = url.indexOf('{');
@@ -168,234 +163,252 @@ export function ResourceAction(action?: ResourceActionBase) {
 
 			let isGetRequest = action.method === RequestMethod.Get;
 
-			// Creating URL
-			let url: string =
-				(action.url ? action.url : this.getUrl()) +
-				(action.path ? action.path : this.getPath());
-
-			// Creating Headers
-			let headers = new Headers(action.headers || this.getHeaders());
-
-			// Setting data
-			let data = args.length ? args[0] : null;
-			let callback = args.length > 1 ? args[1] : null;
-			if (typeof data === 'function') {
-				if (!callback) {
-					callback = data;
-					data = null;
-				} else if (typeof callback !== 'function') {
-					let tmpData = callback;
-					callback = data;
-					data = tmpData;
-				} else {
-					data = null;
-				}
-
-			}
-			let params = Object.assign({}, action.params || this.getParams());
-
-			// Setting default data parameters
-			let defData = action.data || this.getData();
-			if (defData) {
-				if (!data) {
-					data = defData;
-				} else {
-					data = Object.assign(defData, data);
-				}
-			}
-
-
-
-			// Splitting map params
-			let mapParam: { [key: string]: string } = {};
-			for (let key in params) {
-				if (typeof params[key] == 'string' && params[key][0] == '@') {
-					mapParam[key] = params[key];
-					delete params[key];
-				}
-			}
-
-			let usedPathParams: { [key: string]: string } = {};
-
-			// Parsing url for params
-			var pathParams = parseUrl(url);
-
-			for (let i = 0; i < pathParams.length; i++) {
-
-				let param = pathParams[i];
-
-				let key: string = param.substr(1, param.length - 2);
-				let value: string = null;
-				let isMandatory = key[0] == '!';
-				if (isMandatory) {
-					key = key.substr(1);
-				}
-
-				// Do we have mapped path param key
-				if (mapParam[key]) {
-					key = mapParam[key].substr(1);
-				}
-
-				// Getting value from data body
-				if (data && data[key] && (typeof data[key] != 'object')) {
-				// if (data && data[key] && !(data[key] instanceof Object)) {
-					value = data[key];
-					usedPathParams[key] = value;
-				}
-
-				// Getting default value from params
-				if (!value && params[key] && (typeof params[key] != 'object')) {
-				// if (!value && params[key] && !(params[key] instanceof Object)) {
-					value = params[key];
-					usedPathParams[key] = value;
-				}
-
-				// Well, all is bad and setting value to empty string
-				if (!value) {
-					// Checking if it's mandatory param
-					if (isMandatory) {
-						return <Observable<any>> Observable.create((observer:any) => {
-							observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
-						});
-					}
-					url = url.substr(0, url.indexOf(param));
-					break;
-				}
-
-				// Replacing in the url
-				url = url.replace(param, value);
-
-			}
-
-
-			// Removing double slashed from final url
-			let urlParts: string[] = url.split('//').filter(val => val !== '');
-			url = urlParts[0];
-			if (urlParts.length > 1) {
-				url += '//' + urlParts.slice(1).join('/');
-			}
-
-			// Remove trailing slash
-			if (typeof action.removeTrailingSlash === "undefined") {
-				action.removeTrailingSlash = this.removeTrailingSlash;
-			}
-			if (action.removeTrailingSlash) {
-				while (url[url.length-1] == '/') {
-					url = url.substr(0, url.length-1);
-				}
-			}
-
-
-			// Default search params or data
-
-			let body: string = null;
-
-			let searchParams: { [key: string]: string };
-			if (isGetRequest) {
-				// GET
-				searchParams = Object.assign({}, params, data);
-			} else {
-				// NON GET
-				if (data) {
-					body = JSON.stringify(data);
-				}
-				searchParams = params;
-			}
-
-			// Setting search params
-			let search: URLSearchParams = new URLSearchParams();
-			for (let key in searchParams) {
-				if (!usedPathParams[key]) {
-					let value:any = searchParams[key];
-					if (typeof value == 'object') {
-					// if (value instanceof Object) {
-						value = JSON.stringify(value);
-					}
-					search.append(key, value);
-				}
-			}
-
-
-			if (!body) {
-				headers.delete('content-type');
-			}
-
-			// Creating request options
-			let requestOptions = new RequestOptions({
-				method: action.method,
-				headers: headers,
-				body: body,
-				url: url,
-				search: search
-			});
-
-			// Creating request object
-			let req = new Request(requestOptions);
-
-			if (action.requestInterceptor) {
-				action.requestInterceptor(req);
-			} else {
-				this.requestInterceptor(req);
-			}
-
-			// Doing the request
-			let observable: Observable<Response> = this.http.request(req);
-
-			observable = action.responseInterceptor ?
-				action.responseInterceptor(observable, req) : this.responseInterceptor(observable, req);
-
 			let ret: ResourceResult;
 
-			if (action.isPending) {
+			if (action.isLazy) {
 				ret = {};
 			} else {
 				ret = action.isArray ? [] : {};
 			}
 
+			let deferredSubscriber: Subscriber<any> = null;
+			let mainObservable:Observable<Response> = null;
+
 			ret.$resolved = false;
-			ret.$observable = observable;
+			ret.$observable = Observable.create((subscriber:Subscriber<any>) => {
+				deferredSubscriber = subscriber;
+			}).flatMap(() => mainObservable);
 
+			Promise.all([
+				Promise.resolve(action.url || this.getUrl()),
+				Promise.resolve(action.path || this.getPath()),
+				Promise.resolve(action.headers || this.getHeaders())
+			])
+			.then((dataAll:any[]) => {
 
-			if (!action.isLazy) {
+				let url:string = dataAll[0] + dataAll[1];
+				let headers = new Headers(dataAll[2]);
 
-				ret.$observable = ret.$observable.publish();
-				(<ConnectableObservable<any>>ret.$observable).connect();
-
-				ret.$observable.subscribe(
-					resp => {
-
-						if (resp === null) {
-							return;
-						}
-
-						if (action.isArray) {
-							if (!Array.isArray(resp)) {
-								console.error('Returned data should be an array. Received', resp);
-								return;
-							}
-							Array.prototype.push.apply(ret, resp);
-						} else {
-							if (Array.isArray(resp)) {
-								console.error('Returned data should be an object. Received', resp);
-								return;
-							}
-							Object.assign(ret, resp);
-						}
-
-					},
-					err => {},
-					() => {
-						ret.$resolved = true;
-						if (callback) {
-							callback(ret);
-						}
+				let data = args.length ? args[0] : null;
+				let callback = args.length > 1 ? args[1] : null;
+				if (typeof data === 'function') {
+					if (!callback) {
+						callback = data;
+						data = null;
+					} else if (typeof callback !== 'function') {
+						let tmpData = callback;
+						callback = data;
+						data = tmpData;
+					} else {
+						data = null;
 					}
-				);
-			}
 
+				}
+				let params = Object.assign({}, action.params || this.getParams());
+
+				// Setting default data parameters
+				let defData = action.data || this.getData();
+				if (defData) {
+					if (!data) {
+						data = defData;
+					} else {
+						data = Object.assign(defData, data);
+					}
+				}
+
+
+
+				// Splitting map params
+				let mapParam: { [key: string]: string } = {};
+				for (let key in params) {
+					if (typeof params[key] == 'string' && params[key][0] == '@') {
+						mapParam[key] = params[key];
+						delete params[key];
+					}
+				}
+
+				let usedPathParams: { [key: string]: string } = {};
+
+				// Parsing url for params
+				var pathParams = parseUrl(url);
+
+				for (let i = 0; i < pathParams.length; i++) {
+
+					let param = pathParams[i];
+
+					let key: string = param.substr(1, param.length - 2);
+					let value: string = null;
+					let isMandatory = key[0] == '!';
+					if (isMandatory) {
+						key = key.substr(1);
+					}
+
+					// Do we have mapped path param key
+					if (mapParam[key]) {
+						key = mapParam[key].substr(1);
+					}
+
+					// Getting value from data body
+					if (data && data[key] && (typeof data[key] != 'object')) {
+						// if (data && data[key] && !(data[key] instanceof Object)) {
+						value = data[key];
+						usedPathParams[key] = value;
+					}
+
+					// Getting default value from params
+					if (!value && params[key] && (typeof params[key] != 'object')) {
+						// if (!value && params[key] && !(params[key] instanceof Object)) {
+						value = params[key];
+						usedPathParams[key] = value;
+					}
+
+					// Well, all is bad and setting value to empty string
+					if (!value) {
+						// Checking if it's mandatory param
+						if (isMandatory) {
+
+							mainObservable = Observable.create((observer:any) => {
+								observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
+							});
+
+							deferredSubscriber.next();
+							deferredSubscriber.complete();
+							deferredSubscriber = null;
+							return;
+
+							// return <Observable<any>> Observable.create((observer:any) => {
+							// 	observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
+							// });
+						}
+						url = url.substr(0, url.indexOf(param));
+						break;
+					}
+
+					// Replacing in the url
+					url = url.replace(param, value);
+
+				}
+
+
+				// Removing double slashed from final url
+				let urlParts: string[] = url.split('//').filter(val => val !== '');
+				url = urlParts[0];
+				if (urlParts.length > 1) {
+					url += '//' + urlParts.slice(1).join('/');
+				}
+
+				// Remove trailing slash
+				if (typeof action.removeTrailingSlash === "undefined") {
+					action.removeTrailingSlash = this.removeTrailingSlash;
+				}
+				if (action.removeTrailingSlash) {
+					while (url[url.length-1] == '/') {
+						url = url.substr(0, url.length-1);
+					}
+				}
+
+
+				// Default search params or data
+
+				let body: string = null;
+
+				let searchParams: { [key: string]: string };
+				if (isGetRequest) {
+					// GET
+					searchParams = Object.assign({}, params, data);
+				} else {
+					// NON GET
+					if (data) {
+						body = JSON.stringify(data);
+					}
+					searchParams = params;
+				}
+
+				// Setting search params
+				let search: URLSearchParams = new URLSearchParams();
+				for (let key in searchParams) {
+					if (!usedPathParams[key]) {
+						let value:any = searchParams[key];
+						if (typeof value == 'object') {
+							// if (value instanceof Object) {
+							value = JSON.stringify(value);
+						}
+						search.append(key, value);
+					}
+				}
+
+				if (!body) {
+					headers.delete('content-type');
+				}
+
+				// Creating request options
+				let requestOptions = new RequestOptions({
+					method: action.method,
+					headers: headers,
+					body: body,
+					url: url,
+					search: search
+				});
+
+				// Creating request object
+				let req = new Request(requestOptions);
+
+				if (action.requestInterceptor) {
+					action.requestInterceptor(req);
+				} else {
+					this.requestInterceptor(req);
+				}
+
+				// Doing the request
+				mainObservable = this.http.request(req);
+
+				mainObservable = action.responseInterceptor ?
+					action.responseInterceptor(mainObservable, req) : this.responseInterceptor(mainObservable, req);
+
+				if (!action.isLazy) {
+
+          mainObservable = mainObservable.publish();
+					(<ConnectableObservable<any>>mainObservable).connect();
+
+          mainObservable.subscribe(
+						resp => {
+
+							if (resp === null) {
+								return;
+							}
+
+							if (action.isArray) {
+								if (!Array.isArray(resp)) {
+									console.error('Returned data should be an array. Received', resp);
+									return;
+								}
+								Array.prototype.push.apply(ret, resp);
+							} else {
+								if (Array.isArray(resp)) {
+									console.error('Returned data should be an object. Received', resp);
+									return;
+								}
+								Object.assign(ret, resp);
+							}
+
+						},
+						err => {},
+						() => {
+							ret.$resolved = true;
+							if (callback) {
+								callback(ret);
+							}
+						}
+					);
+				}
+
+        deferredSubscriber.next();
+        deferredSubscriber.complete();
+        deferredSubscriber = null;
+
+			});
 
 			return ret;
-
 
 		}
 

@@ -1,3 +1,4 @@
+/// <reference path="node_modules/@types/es6-shim/index.d.ts" />
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/publish";
 import { Http, Request, RequestMethod } from "@angular/http";
@@ -23,7 +24,6 @@ export interface ResourceParamsBase {
 export interface ResourceActionBase extends ResourceParamsBase {
     method: RequestMethod;
     isArray?: boolean;
-    isPending?: boolean;
     isLazy?: boolean;
 }
 export interface ResourceResult {
@@ -38,9 +38,9 @@ export declare class Resource {
     protected requestInterceptor(req: Request): void;
     protected responseInterceptor(observable: Observable<any>): Observable<any>;
     removeTrailingSlash(): boolean;
-    getUrl(): string;
-    getPath(): string;
-    getHeaders(): any;
+    getUrl(): string | Promise<string>;
+    getPath(): string | Promise<string>;
+    getHeaders(): any | Promise<any>;
     getParams(): any;
     getData(): any;
     get(data?: any, callback?: Function): ResourceResult;

@@ -1,3 +1,4 @@
+///<reference path="./node_modules/@types/es6-shim/index.d.ts"/>
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -111,13 +112,6 @@ var Resource = (function () {
     return Resource;
 }());
 exports.Resource = Resource;
-// export class ObservableResource<T> extends Observable<T> {
-//
-// 	returnArray: boolean = false;
-//
-// 	$ng1() {}
-//
-// }
 function parseUrl(url) {
     var params = [];
     var index = url.indexOf('{');
@@ -136,199 +130,214 @@ function parseUrl(url) {
 function ResourceAction(action) {
     return function (target, propertyKey, descriptor) {
         descriptor.value = function () {
+            var _this = this;
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i - 0] = arguments[_i];
             }
             var isGetRequest = action.method === http_1.RequestMethod.Get;
-            // Creating URL
-            var url = (action.url ? action.url : this.getUrl()) +
-                (action.path ? action.path : this.getPath());
-            // Creating Headers
-            var headers = new http_1.Headers(action.headers || this.getHeaders());
-            // Setting data
-            var data = args.length ? args[0] : null;
-            var callback = args.length > 1 ? args[1] : null;
-            if (typeof data === 'function') {
-                if (!callback) {
-                    callback = data;
-                    data = null;
-                }
-                else if (typeof callback !== 'function') {
-                    var tmpData = callback;
-                    callback = data;
-                    data = tmpData;
-                }
-                else {
-                    data = null;
-                }
-            }
-            var params = Object.assign({}, action.params || this.getParams());
-            // Setting default data parameters
-            var defData = action.data || this.getData();
-            if (defData) {
-                if (!data) {
-                    data = defData;
-                }
-                else {
-                    data = Object.assign(defData, data);
-                }
-            }
-            // Splitting map params
-            var mapParam = {};
-            for (var key in params) {
-                if (typeof params[key] == 'string' && params[key][0] == '@') {
-                    mapParam[key] = params[key];
-                    delete params[key];
-                }
-            }
-            var usedPathParams = {};
-            // Parsing url for params
-            var pathParams = parseUrl(url);
-            var _loop_1 = function(i) {
-                var param = pathParams[i];
-                var key = param.substr(1, param.length - 2);
-                var value = null;
-                var isMandatory = key[0] == '!';
-                if (isMandatory) {
-                    key = key.substr(1);
-                }
-                // Do we have mapped path param key
-                if (mapParam[key]) {
-                    key = mapParam[key].substr(1);
-                }
-                // Getting value from data body
-                if (data && data[key] && (typeof data[key] != 'object')) {
-                    // if (data && data[key] && !(data[key] instanceof Object)) {
-                    value = data[key];
-                    usedPathParams[key] = value;
-                }
-                // Getting default value from params
-                if (!value && params[key] && (typeof params[key] != 'object')) {
-                    // if (!value && params[key] && !(params[key] instanceof Object)) {
-                    value = params[key];
-                    usedPathParams[key] = value;
-                }
-                // Well, all is bad and setting value to empty string
-                if (!value) {
-                    // Checking if it's mandatory param
-                    if (isMandatory) {
-                        return { value: Observable_1.Observable.create(function (observer) {
-                            observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
-                        }) };
-                    }
-                    url = url.substr(0, url.indexOf(param));
-                    return "break";
-                }
-                // Replacing in the url
-                url = url.replace(param, value);
-            };
-            for (var i = 0; i < pathParams.length; i++) {
-                var state_1 = _loop_1(i);
-                if (typeof state_1 === "object") return state_1.value;
-                if (state_1 === "break") break;
-            }
-            // Removing double slashed from final url
-            var urlParts = url.split('//').filter(function (val) { return val !== ''; });
-            url = urlParts[0];
-            if (urlParts.length > 1) {
-                url += '//' + urlParts.slice(1).join('/');
-            }
-            // Remove trailing slash
-            if (typeof action.removeTrailingSlash === "undefined") {
-                action.removeTrailingSlash = this.removeTrailingSlash;
-            }
-            if (action.removeTrailingSlash) {
-                while (url[url.length - 1] == '/') {
-                    url = url.substr(0, url.length - 1);
-                }
-            }
-            // Default search params or data
-            var body = null;
-            var searchParams;
-            if (isGetRequest) {
-                // GET
-                searchParams = Object.assign({}, params, data);
-            }
-            else {
-                // NON GET
-                if (data) {
-                    body = JSON.stringify(data);
-                }
-                searchParams = params;
-            }
-            // Setting search params
-            var search = new http_1.URLSearchParams();
-            for (var key in searchParams) {
-                if (!usedPathParams[key]) {
-                    var value = searchParams[key];
-                    if (typeof value == 'object') {
-                        // if (value instanceof Object) {
-                        value = JSON.stringify(value);
-                    }
-                    search.append(key, value);
-                }
-            }
-            if (!body) {
-                headers.delete('content-type');
-            }
-            // Creating request options
-            var requestOptions = new http_1.RequestOptions({
-                method: action.method,
-                headers: headers,
-                body: body,
-                url: url,
-                search: search
-            });
-            // Creating request object
-            var req = new http_1.Request(requestOptions);
-            if (action.requestInterceptor) {
-                action.requestInterceptor(req);
-            }
-            else {
-                this.requestInterceptor(req);
-            }
-            // Doing the request
-            var observable = this.http.request(req);
-            observable = action.responseInterceptor ?
-                action.responseInterceptor(observable, req) : this.responseInterceptor(observable, req);
             var ret;
-            if (action.isPending) {
+            if (action.isLazy) {
                 ret = {};
             }
             else {
                 ret = action.isArray ? [] : {};
             }
+            var deferredSubscriber = null;
+            var mainObservable = null;
             ret.$resolved = false;
-            ret.$observable = observable;
-            if (!action.isLazy) {
-                ret.$observable = ret.$observable.publish();
-                ret.$observable.connect();
-                ret.$observable.subscribe(function (resp) {
-                    if (resp === null) {
-                        return;
+            ret.$observable = Observable_1.Observable.create(function (subscriber) {
+                deferredSubscriber = subscriber;
+            }).flatMap(function () { return mainObservable; });
+            Promise.all([
+                Promise.resolve(action.url || this.getUrl()),
+                Promise.resolve(action.path || this.getPath()),
+                Promise.resolve(action.headers || this.getHeaders())
+            ])
+                .then(function (dataAll) {
+                var url = dataAll[0] + dataAll[1];
+                var headers = new http_1.Headers(dataAll[2]);
+                var data = args.length ? args[0] : null;
+                var callback = args.length > 1 ? args[1] : null;
+                if (typeof data === 'function') {
+                    if (!callback) {
+                        callback = data;
+                        data = null;
                     }
-                    if (action.isArray) {
-                        if (!Array.isArray(resp)) {
-                            console.error('Returned data should be an array. Received', resp);
-                            return;
-                        }
-                        Array.prototype.push.apply(ret, resp);
+                    else if (typeof callback !== 'function') {
+                        var tmpData = callback;
+                        callback = data;
+                        data = tmpData;
                     }
                     else {
-                        if (Array.isArray(resp)) {
-                            console.error('Returned data should be an object. Received', resp);
+                        data = null;
+                    }
+                }
+                var params = Object.assign({}, action.params || _this.getParams());
+                // Setting default data parameters
+                var defData = action.data || _this.getData();
+                if (defData) {
+                    if (!data) {
+                        data = defData;
+                    }
+                    else {
+                        data = Object.assign(defData, data);
+                    }
+                }
+                // Splitting map params
+                var mapParam = {};
+                for (var key in params) {
+                    if (typeof params[key] == 'string' && params[key][0] == '@') {
+                        mapParam[key] = params[key];
+                        delete params[key];
+                    }
+                }
+                var usedPathParams = {};
+                // Parsing url for params
+                var pathParams = parseUrl(url);
+                var _loop_1 = function(i) {
+                    var param = pathParams[i];
+                    var key = param.substr(1, param.length - 2);
+                    var value = null;
+                    var isMandatory = key[0] == '!';
+                    if (isMandatory) {
+                        key = key.substr(1);
+                    }
+                    // Do we have mapped path param key
+                    if (mapParam[key]) {
+                        key = mapParam[key].substr(1);
+                    }
+                    // Getting value from data body
+                    if (data && data[key] && (typeof data[key] != 'object')) {
+                        // if (data && data[key] && !(data[key] instanceof Object)) {
+                        value = data[key];
+                        usedPathParams[key] = value;
+                    }
+                    // Getting default value from params
+                    if (!value && params[key] && (typeof params[key] != 'object')) {
+                        // if (!value && params[key] && !(params[key] instanceof Object)) {
+                        value = params[key];
+                        usedPathParams[key] = value;
+                    }
+                    // Well, all is bad and setting value to empty string
+                    if (!value) {
+                        // Checking if it's mandatory param
+                        if (isMandatory) {
+                            mainObservable = Observable_1.Observable.create(function (observer) {
+                                observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
+                            });
+                            deferredSubscriber.next();
+                            deferredSubscriber.complete();
+                            deferredSubscriber = null;
+                            return { value: void 0 };
+                        }
+                        url = url.substr(0, url.indexOf(param));
+                        return "break";
+                    }
+                    // Replacing in the url
+                    url = url.replace(param, value);
+                };
+                for (var i = 0; i < pathParams.length; i++) {
+                    var state_1 = _loop_1(i);
+                    if (typeof state_1 === "object") return state_1.value;
+                    if (state_1 === "break") break;
+                }
+                // Removing double slashed from final url
+                var urlParts = url.split('//').filter(function (val) { return val !== ''; });
+                url = urlParts[0];
+                if (urlParts.length > 1) {
+                    url += '//' + urlParts.slice(1).join('/');
+                }
+                // Remove trailing slash
+                if (typeof action.removeTrailingSlash === "undefined") {
+                    action.removeTrailingSlash = _this.removeTrailingSlash;
+                }
+                if (action.removeTrailingSlash) {
+                    while (url[url.length - 1] == '/') {
+                        url = url.substr(0, url.length - 1);
+                    }
+                }
+                // Default search params or data
+                var body = null;
+                var searchParams;
+                if (isGetRequest) {
+                    // GET
+                    searchParams = Object.assign({}, params, data);
+                }
+                else {
+                    // NON GET
+                    if (data) {
+                        body = JSON.stringify(data);
+                    }
+                    searchParams = params;
+                }
+                // Setting search params
+                var search = new http_1.URLSearchParams();
+                for (var key in searchParams) {
+                    if (!usedPathParams[key]) {
+                        var value = searchParams[key];
+                        if (typeof value == 'object') {
+                            // if (value instanceof Object) {
+                            value = JSON.stringify(value);
+                        }
+                        search.append(key, value);
+                    }
+                }
+                if (!body) {
+                    headers.delete('content-type');
+                }
+                // Creating request options
+                var requestOptions = new http_1.RequestOptions({
+                    method: action.method,
+                    headers: headers,
+                    body: body,
+                    url: url,
+                    search: search
+                });
+                // Creating request object
+                var req = new http_1.Request(requestOptions);
+                if (action.requestInterceptor) {
+                    action.requestInterceptor(req);
+                }
+                else {
+                    _this.requestInterceptor(req);
+                }
+                // Doing the request
+                mainObservable = _this.http.request(req);
+                mainObservable = action.responseInterceptor ?
+                    action.responseInterceptor(mainObservable, req) : _this.responseInterceptor(mainObservable, req);
+                if (!action.isLazy) {
+                    mainObservable = mainObservable.publish();
+                    mainObservable.connect();
+                    mainObservable.subscribe(function (resp) {
+                        if (resp === null) {
                             return;
                         }
-                        Object.assign(ret, resp);
-                    }
-                }, function (err) { }, function () {
-                    ret.$resolved = true;
-                    if (callback) {
-                        callback(ret);
-                    }
-                });
-            }
+                        if (action.isArray) {
+                            if (!Array.isArray(resp)) {
+                                console.error('Returned data should be an array. Received', resp);
+                                return;
+                            }
+                            Array.prototype.push.apply(ret, resp);
+                        }
+                        else {
+                            if (Array.isArray(resp)) {
+                                console.error('Returned data should be an object. Received', resp);
+                                return;
+                            }
+                            Object.assign(ret, resp);
+                        }
+                    }, function (err) { }, function () {
+                        ret.$resolved = true;
+                        if (callback) {
+                            callback(ret);
+                        }
+                    });
+                }
+                deferredSubscriber.next();
+                deferredSubscriber.complete();
+                deferredSubscriber = null;
+            });
             return ret;
         };
     };
