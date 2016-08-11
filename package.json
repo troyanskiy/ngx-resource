@@ -1,6 +1,6 @@
 {
   "name": "ng2-resource-rest",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Angular2 resource module with simple decorators",
   "keywords": [
     "ng2-resource",
@@ -25,8 +25,8 @@
   },
   "homepage": "https://github.com/troyanskiy/ng2-resource-rest#readme",
   "devDependencies": {
-    "@angular/core": "2.0.0-rc.4",
-    "@angular/http": "2.0.0-rc.4",
+    "@angular/core": "2.0.0-rc.5",
+    "@angular/http": "2.0.0-rc.5",
     "rxjs": "^5.0.0-beta.6",
     "zone.js": "^0.6.12"
   }

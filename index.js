@@ -269,6 +269,9 @@ function ResourceAction(action) {
                     search.append(key, value);
                 }
             }
+            if (!body) {
+                headers.delete('content-type');
+            }
             // Creating request options
             var requestOptions = new http_1.RequestOptions({
                 method: action.method,

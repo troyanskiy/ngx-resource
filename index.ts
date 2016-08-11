@@ -315,6 +315,9 @@ export function ResourceAction(action?: ResourceActionBase) {
 			}
 
 
+			if (!body) {
+				headers.delete('content-type');
+			}
 
 			// Creating request options
 			let requestOptions = new RequestOptions({
