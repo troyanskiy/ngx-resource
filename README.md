@@ -35,13 +35,13 @@ export class UserRes extends Resource {}
 import {App, Platform} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {UserRes} from "./resources/UserRes";
-import {RESOURCE_PROVIDERS} from "ng2-resource-rest";
+import {ResourceProviders} from "ng2-resource-rest";
 
 @App({
 	templateUrl: 'build/app.html',
 	config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
 	providers: [
-		RESOURCE_PROVIDERS
+		ResourceProviders.main()
 	]
 })
 export class MyApp {
@@ -118,14 +118,16 @@ Decorates methods. @ResourceAction accepts object `ResourceActionBase` type (des
 ### ResourceParamsBase
 ```javascript
 export interface ResourceParamsBase {
-	url?:string,
-	path?:string,
-	headers?:any,
-	params?:any,
-	data?:any,
-	requestInterceptor?:ResourceRequestInterceptor,
-	responseInterceptor?:ResourceResponseInterceptor,
-	add2Provides?: boolean
+	url?:string;
+	path?:string;
+	headers?:any;
+	params?:any;
+	data?:any;
+	requestInterceptor?:ResourceRequestInterceptor;
+	responseInterceptor?:ResourceResponseInterceptor;
+	add2Provides?: boolean;
+	removeTrailingSlash?: boolean;
+	providersSubSet?: string;
 }
 ```
 
@@ -182,12 +184,16 @@ function (observable:Observable<any>):Observable<any> {
 ```
 
 #### add2Provides
-To create provider the class and it to RESOURCE_PROVIDERS<br>
+To create provider the class and it to ResourceProviders.main()<br>
 **Default**: true
 
 #### removeTrailingSlash
 Remove trailing slashed from url<br>
 **Default**: true<br>
+
+#### providersSubSet
+To create provider the class and it to ResourceProviders.subSet(<providersSubSet>)<br>
+**Default**: null<br>
 
 <br>
 

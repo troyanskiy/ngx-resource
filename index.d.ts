@@ -1,6 +1,5 @@
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/publish";
-import { Provider } from "@angular/core";
 import { Http, Request, RequestMethod } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 export interface ResourceRequestInterceptor {
@@ -18,6 +17,7 @@ export interface ResourceParamsBase {
     requestInterceptor?: ResourceRequestInterceptor;
     responseInterceptor?: ResourceResponseInterceptor;
     add2Provides?: boolean;
+    providersSubSet?: string;
     removeTrailingSlash?: boolean;
 }
 export interface ResourceActionBase extends ResourceParamsBase {
@@ -51,6 +51,12 @@ export declare class Resource {
     delete(data?: any, callback?: Function): ResourceResult;
 }
 export declare function ResourceAction(action?: ResourceActionBase): (target: Resource, propertyKey: string, descriptor: PropertyDescriptor) => void;
-export declare let RESOURCE_PROVIDERS: Provider[];
-export declare function ResourceProvide(): Function;
+export declare let RESOURCE_PROVIDERS: any[];
+export declare let RESOURCE_PROVIDERS_SUBSET: {
+    [id: string]: any[];
+};
+export declare class ResourceProviders {
+    static main(): any[];
+    static subSet(name: string): any[];
+}
 export declare function ResourceParams(params: ResourceParamsBase): (target: new (http: Http) => Resource) => void;

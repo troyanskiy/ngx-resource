@@ -1,6 +1,6 @@
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/publish";
-import {Inject, provide, Provider} from "@angular/core";
+import {Inject} from "@angular/core";
 import {Http, Request, RequestMethod, Headers, RequestOptions, Response, URLSearchParams} from "@angular/http";
 import {Observable} from "rxjs/Observable";
 import {ConnectableObservable} from "rxjs/observable/ConnectableObservable";
@@ -19,27 +19,28 @@ export interface ResourceResponseInterceptor {
 }
 
 export interface ResourceParamsBase {
-	url?: string,
-	path?: string,
-	headers?: any,
-	params?: any,
-	data?: any,
-	requestInterceptor?: ResourceRequestInterceptor,
-	responseInterceptor?: ResourceResponseInterceptor,
-	add2Provides?: boolean,
-	removeTrailingSlash?: boolean
+	url?: string;
+	path?: string;
+	headers?: any;
+	params?: any;
+	data?: any;
+	requestInterceptor?: ResourceRequestInterceptor;
+	responseInterceptor?: ResourceResponseInterceptor;
+	add2Provides?: boolean;
+	providersSubSet?: string;
+	removeTrailingSlash?: boolean;
 }
 
 export interface ResourceActionBase extends ResourceParamsBase {
-	method: RequestMethod,
-	isArray?: boolean,
-	isPending?: boolean,
-	isLazy?: boolean,
+	method: RequestMethod;
+	isArray?: boolean;
+	isPending?: boolean;
+	isLazy?: boolean;
 }
 
 export interface ResourceResult {
-	$resolved?: boolean,
-	$observable?: Observable<any>
+	$resolved?: boolean;
+	$observable?: Observable<any>;
 }
 
 export interface ArrayResourceResult<T> extends ResourceResult, Array<T> {}
@@ -354,12 +355,6 @@ export function ResourceAction(action?: ResourceActionBase) {
 			ret.$resolved = false;
 			ret.$observable = observable;
 
-			if (action.isPending != null) {
-				console.warn('isPending is deprecated. Please use isLazy instead');
-				if (action.isLazy == null) {
-					action.isLazy = action.isPending;
-				}
-			}
 
 			if (!action.isLazy) {
 
@@ -408,23 +403,41 @@ export function ResourceAction(action?: ResourceActionBase) {
 }
 
 
-export let RESOURCE_PROVIDERS: Provider[] = [];
+export let RESOURCE_PROVIDERS: any[] = [];
+export let RESOURCE_PROVIDERS_SUBSET: {[id:string] :any[]} = {};
 
-export function ResourceProvide(): Function {
-	return function() {
-		console.warn('ResourceProvide decorator is deprecated.');
+export class ResourceProviders {
+	static main(): any[] {
+		return RESOURCE_PROVIDERS;
+	}
+	static subSet(name:string):any[] {
+		return RESOURCE_PROVIDERS_SUBSET[name] || [];
 	}
 }
+
 
 export function ResourceParams(params: ResourceParamsBase) {
 
 	return function(target: { new (http: Http): Resource }) {
 
+		let providersList:any[] = null;
+
 		if (params.add2Provides !== false) {
-			RESOURCE_PROVIDERS.push(provide(target, {
+			if (params.providersSubSet) {
+				if (!RESOURCE_PROVIDERS_SUBSET[params.providersSubSet]) {
+					RESOURCE_PROVIDERS_SUBSET[params.providersSubSet] = [];
+				}
+				providersList = RESOURCE_PROVIDERS_SUBSET[params.providersSubSet];
+			} else {
+				providersList = RESOURCE_PROVIDERS;
+			}
+
+			providersList.push({
+				provide: target,
 				useFactory: (http: Http) => new target(http),
 				deps: [Http]
-			}));
+			});
+
 		}
 
 		if (typeof params.removeTrailingSlash !== 'undefined') {

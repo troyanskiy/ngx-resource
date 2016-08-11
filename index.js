@@ -301,12 +301,6 @@ function ResourceAction(action) {
             }
             ret.$resolved = false;
             ret.$observable = observable;
-            if (action.isPending != null) {
-                console.warn('isPending is deprecated. Please use isLazy instead');
-                if (action.isLazy == null) {
-                    action.isLazy = action.isPending;
-                }
-            }
             if (!action.isLazy) {
                 ret.$observable = ret.$observable.publish();
                 ret.$observable.connect();
@@ -341,19 +335,37 @@ function ResourceAction(action) {
 }
 exports.ResourceAction = ResourceAction;
 exports.RESOURCE_PROVIDERS = [];
-function ResourceProvide() {
-    return function () {
-        console.warn('ResourceProvide decorator is deprecated.');
+exports.RESOURCE_PROVIDERS_SUBSET = {};
+var ResourceProviders = (function () {
+    function ResourceProviders() {
+    }
+    ResourceProviders.main = function () {
+        return exports.RESOURCE_PROVIDERS;
     };
-}
-exports.ResourceProvide = ResourceProvide;
+    ResourceProviders.subSet = function (name) {
+        return exports.RESOURCE_PROVIDERS_SUBSET[name] || [];
+    };
+    return ResourceProviders;
+}());
+exports.ResourceProviders = ResourceProviders;
 function ResourceParams(params) {
     return function (target) {
+        var providersList = null;
         if (params.add2Provides !== false) {
-            exports.RESOURCE_PROVIDERS.push(core_1.provide(target, {
+            if (params.providersSubSet) {
+                if (!exports.RESOURCE_PROVIDERS_SUBSET[params.providersSubSet]) {
+                    exports.RESOURCE_PROVIDERS_SUBSET[params.providersSubSet] = [];
+                }
+                providersList = exports.RESOURCE_PROVIDERS_SUBSET[params.providersSubSet];
+            }
+            else {
+                providersList = exports.RESOURCE_PROVIDERS;
+            }
+            providersList.push({
+                provide: target,
                 useFactory: function (http) { return new target(http); },
                 deps: [http_1.Http]
-            }));
+            });
         }
         if (typeof params.removeTrailingSlash !== 'undefined') {
             target.prototype.removeTrailingSlash = function () {
