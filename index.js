@@ -142,12 +142,16 @@ function ResourceAction(action) {
             else {
                 ret = action.isArray ? [] : {};
             }
-            var deferredSubscriber = null;
+            var mainDeferredSubscriber = null;
             var mainObservable = null;
             ret.$resolved = false;
             ret.$observable = Observable_1.Observable.create(function (subscriber) {
-                deferredSubscriber = subscriber;
+                mainDeferredSubscriber = subscriber;
             }).flatMap(function () { return mainObservable; });
+            if (!action.isLazy) {
+                ret.$observable = ret.$observable.publish();
+                ret.$observable.connect();
+            }
             Promise.all([
                 Promise.resolve(action.url || this.getUrl()),
                 Promise.resolve(action.path || this.getPath()),
@@ -225,9 +229,9 @@ function ResourceAction(action) {
                             mainObservable = Observable_1.Observable.create(function (observer) {
                                 observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
                             });
-                            deferredSubscriber.next();
-                            deferredSubscriber.complete();
-                            deferredSubscriber = null;
+                            mainDeferredSubscriber.next();
+                            mainDeferredSubscriber.complete();
+                            mainDeferredSubscriber = null;
                             return { value: void 0 };
                         }
                         url = url.substr(0, url.indexOf(param));
@@ -302,40 +306,46 @@ function ResourceAction(action) {
                     _this.requestInterceptor(req);
                 }
                 // Doing the request
-                mainObservable = _this.http.request(req);
-                mainObservable = action.responseInterceptor ?
-                    action.responseInterceptor(mainObservable, req) : _this.responseInterceptor(mainObservable, req);
-                if (!action.isLazy) {
-                    mainObservable = mainObservable.publish();
-                    mainObservable.connect();
-                    mainObservable.subscribe(function (resp) {
-                        if (resp === null) {
-                            return;
-                        }
-                        if (action.isArray) {
-                            if (!Array.isArray(resp)) {
-                                console.error('Returned data should be an array. Received', resp);
-                                return;
+                var requestObservable = _this.http.request(req);
+                requestObservable = action.responseInterceptor ?
+                    action.responseInterceptor(requestObservable, req) : _this.responseInterceptor(requestObservable, req);
+                if (action.isLazy) {
+                    mainObservable = requestObservable;
+                }
+                else {
+                    mainObservable = Observable_1.Observable.create(function (subscriber) {
+                        requestObservable.subscribe(function (resp) {
+                            if (resp !== null) {
+                                if (action.isArray) {
+                                    if (!Array.isArray(resp)) {
+                                        console.error('Returned data should be an array. Received', resp);
+                                    }
+                                    else {
+                                        Array.prototype.push.apply(ret, resp);
+                                    }
+                                }
+                                else {
+                                    if (Array.isArray(resp)) {
+                                        console.error('Returned data should be an object. Received', resp);
+                                    }
+                                    else {
+                                        Object.assign(ret, resp);
+                                    }
+                                }
                             }
-                            Array.prototype.push.apply(ret, resp);
-                        }
-                        else {
-                            if (Array.isArray(resp)) {
-                                console.error('Returned data should be an object. Received', resp);
-                                return;
+                            subscriber.next(resp);
+                        }, function (err) { return subscriber.error(err); }, function () {
+                            ret.$resolved = true;
+                            subscriber.complete();
+                            if (callback) {
+                                callback(ret);
                             }
-                            Object.assign(ret, resp);
-                        }
-                    }, function (err) { }, function () {
-                        ret.$resolved = true;
-                        if (callback) {
-                            callback(ret);
-                        }
+                        });
                     });
                 }
-                deferredSubscriber.next();
-                deferredSubscriber.complete();
-                deferredSubscriber = null;
+                mainDeferredSubscriber.next();
+                mainDeferredSubscriber.complete();
+                mainDeferredSubscriber = null;
             });
             return ret;
         };

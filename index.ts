@@ -169,13 +169,19 @@ export function ResourceAction(action?: ResourceActionBase) {
 				ret = action.isArray ? [] : {};
 			}
 
-			let deferredSubscriber: Subscriber<any> = null;
+			let mainDeferredSubscriber: Subscriber<any> = null;
 			let mainObservable:Observable<Response> = null;
 
 			ret.$resolved = false;
 			ret.$observable = Observable.create((subscriber:Subscriber<any>) => {
-				deferredSubscriber = subscriber;
+				mainDeferredSubscriber = subscriber;
 			}).flatMap(() => mainObservable);
+
+
+			if (!action.isLazy) {
+				ret.$observable = ret.$observable.publish();
+				(<ConnectableObservable<any>>ret.$observable).connect();
+			}
 
 			Promise.all([
 				Promise.resolve(action.url || this.getUrl()),
@@ -269,14 +275,11 @@ export function ResourceAction(action?: ResourceActionBase) {
 								observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
 							});
 
-							deferredSubscriber.next();
-							deferredSubscriber.complete();
-							deferredSubscriber = null;
+							mainDeferredSubscriber.next();
+							mainDeferredSubscriber.complete();
+							mainDeferredSubscriber = null;
 							return;
 
-							// return <Observable<any>> Observable.create((observer:any) => {
-							// 	observer.onError(new Error('Mandatory ' + param + ' path parameter is missing'));
-							// });
 						}
 						url = url.substr(0, url.indexOf(param));
 						break;
@@ -358,53 +361,60 @@ export function ResourceAction(action?: ResourceActionBase) {
 				}
 
 				// Doing the request
-				mainObservable = this.http.request(req);
+				let requestObservable = this.http.request(req);
 
-				mainObservable = action.responseInterceptor ?
-					action.responseInterceptor(mainObservable, req) : this.responseInterceptor(mainObservable, req);
+				requestObservable = action.responseInterceptor ?
+					action.responseInterceptor(requestObservable, req) : this.responseInterceptor(requestObservable, req);
 
-				if (!action.isLazy) {
+				if (action.isLazy) {
+					mainObservable = requestObservable;
+				} else {
 
-          mainObservable = mainObservable.publish();
-					(<ConnectableObservable<any>>mainObservable).connect();
+					mainObservable = Observable.create((subscriber:Subscriber<any>) => {
 
-          mainObservable.subscribe(
-						resp => {
+						requestObservable.subscribe(
+							(resp:any) => {
 
-							if (resp === null) {
-								return;
-							}
-
-							if (action.isArray) {
-								if (!Array.isArray(resp)) {
-									console.error('Returned data should be an array. Received', resp);
-									return;
+								if (resp !== null) {
+									if (action.isArray) {
+										if (!Array.isArray(resp)) {
+											console.error('Returned data should be an array. Received', resp);
+										} else {
+											Array.prototype.push.apply(ret, resp);
+										}
+									} else {
+										if (Array.isArray(resp)) {
+											console.error('Returned data should be an object. Received', resp);
+										} else {
+											Object.assign(ret, resp);
+										}
+									}
 								}
-								Array.prototype.push.apply(ret, resp);
-							} else {
-								if (Array.isArray(resp)) {
-									console.error('Returned data should be an object. Received', resp);
-									return;
-								}
-								Object.assign(ret, resp);
-							}
 
-						},
-						err => {},
-						() => {
-							ret.$resolved = true;
-							if (callback) {
-								callback(ret);
+								subscriber.next(resp);
+
+							},
+							(err:any) => subscriber.error(err),
+							() => {
+								ret.$resolved = true;
+								subscriber.complete();
+								if (callback) {
+									callback(ret);
+								}
 							}
-						}
-					);
+						);
+
+					});
+
 				}
 
-        deferredSubscriber.next();
-        deferredSubscriber.complete();
-        deferredSubscriber = null;
+				mainDeferredSubscriber.next();
+				mainDeferredSubscriber.complete();
+				mainDeferredSubscriber = null;
+
 
 			});
+
 
 			return ret;
 
