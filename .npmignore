@@ -1,0 +1,3 @@
+#typescript sources
+*.ts
+!*.d.ts
