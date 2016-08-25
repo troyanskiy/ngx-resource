@@ -31,6 +31,10 @@ export interface ResourceResult {
 }
 export interface ArrayResourceResult<T> extends ResourceResult, Array<T> {
 }
+type TypedResourceResult<R extends {}> = R & {
+  $resolved?: boolean;
+  $observable?: Observable<R>;
+}
 export declare class Resource {
     protected http: Http;
     constructor(http: Http);
@@ -49,7 +53,10 @@ export declare class Resource {
     remove(data?: any, callback?: Function): ResourceResult;
     delete(data?: any, callback?: Function): ResourceResult;
 }
-export declare function ResourceAction(action?: ResourceActionBase): (target: Resource, propertyKey: string, descriptor: PropertyDescriptor) => void;
+export declare function ResourceAction(action?: ResourceActionBase): (target: Resource, propertyKey: string, descriptor?: PropertyDescriptor) => void;
+export declare interface ResourceProcessor<I, O> {
+  (data: I): TypedResourceResult<O>;
+}
 export declare let RESOURCE_PROVIDERS: any[];
 export declare let RESOURCE_PROVIDERS_SUBSET: {
     [id: string]: any[];
