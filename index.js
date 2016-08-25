@@ -128,7 +128,7 @@ function parseUrl(url) {
 }
 function ResourceAction(action) {
     return function (target, propertyKey, descriptor) {
-        descriptor.value = function () {
+        var actionImplementation = function () {
             var _this = this;
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -349,6 +349,14 @@ function ResourceAction(action) {
             });
             return ret;
         };
+        if (descriptor) {
+            // attached to member function, go with descriptor
+            descriptor.value = actionImplementation;
+        }
+        else {
+            // attached to member property, go with propertyKey
+            target[propertyKey] = actionImplementation;
+        }
     };
 }
 exports.ResourceAction = ResourceAction;

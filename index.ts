@@ -155,9 +155,9 @@ function parseUrl(url:string): string[] {
 
 
 export function ResourceAction(action?: ResourceActionBase) {
-	return function(target: Resource, propertyKey: string, descriptor: PropertyDescriptor) {
+	return function(target: Resource, propertyKey: string, descriptor?: PropertyDescriptor) {
 
-		descriptor.value = function(...args: any[]):ResourceResult {
+		let actionImplementation = function(...args: any[]):ResourceResult {
 
 			let isGetRequest = action.method === RequestMethod.Get;
 
@@ -418,8 +418,15 @@ export function ResourceAction(action?: ResourceActionBase) {
 
 			return ret;
 
-		}
+		};
 
+		if (descriptor) {
+			// attached to member function, go with descriptor
+			descriptor.value = actionImplementation;
+		} else {
+			// attached to member property, go with propertyKey
+			target[propertyKey] = actionImplementation;
+		}
 	};
 }
 
