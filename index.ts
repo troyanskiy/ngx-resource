@@ -300,7 +300,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
 				// Remove trailing slash
 				if (typeof action.removeTrailingSlash === "undefined") {
-					action.removeTrailingSlash = this.removeTrailingSlash;
+					action.removeTrailingSlash = this.removeTrailingSlash();
 				}
 				if (action.removeTrailingSlash) {
 					while (url[url.length-1] == '/') {
