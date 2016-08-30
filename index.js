@@ -253,7 +253,7 @@ function ResourceAction(action) {
                 }
                 // Remove trailing slash
                 if (typeof action.removeTrailingSlash === "undefined") {
-                    action.removeTrailingSlash = _this.removeTrailingSlash;
+                    action.removeTrailingSlash = _this.removeTrailingSlash();
                 }
                 if (action.removeTrailingSlash) {
                     while (url[url.length - 1] == '/') {
