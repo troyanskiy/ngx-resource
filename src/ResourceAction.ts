@@ -1,7 +1,7 @@
 import {ResourceActionBase, ResourceResult} from './Interfaces';
 import {Resource} from './Resource';
 import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
-import {Subscriber, Observable, ConnectableObservable} from 'rxjs';
+import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
 
 export function ResourceAction(action?: ResourceActionBase) {
 
@@ -33,6 +33,15 @@ export function ResourceAction(action?: ResourceActionBase) {
       ret.$observable = Observable.create((subscriber:Subscriber<any>) => {
         mainDeferredSubscriber = subscriber;
       }).flatMap(() => mainObservable);
+      ret.$abortRequest = () => {
+        ret.$resolved = true;
+      };
+
+      function releaseMainDeferredSubscriber() {
+        mainDeferredSubscriber.next();
+        mainDeferredSubscriber.complete();
+        mainDeferredSubscriber = null;
+      }
 
 
       if (!action.isLazy) {
@@ -48,6 +57,14 @@ export function ResourceAction(action?: ResourceActionBase) {
         Promise.resolve(action.data || this.getData())
       ])
         .then((dataAll:any[]) => {
+
+          if (ret.$resolved) {
+            mainObservable = Observable.create((observer:any) => {
+              observer.next(null);
+            });
+
+            releaseMainDeferredSubscriber();
+          }
 
           let url:string = dataAll[0] + dataAll[1];
           let headers = new Headers(dataAll[2]);
@@ -96,9 +113,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
                 console.warn('Mandatory ' + pathParam + ' path parameter is missing');
 
-                mainDeferredSubscriber.next();
-                mainDeferredSubscriber.complete();
-                mainDeferredSubscriber = null;
+                releaseMainDeferredSubscriber();
                 return;
 
               }
@@ -189,9 +204,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
             console.warn('Request is null');
 
-            mainDeferredSubscriber.next();
-            mainDeferredSubscriber.complete();
-            mainDeferredSubscriber = null;
+            releaseMainDeferredSubscriber();
             return;
           }
 
@@ -211,7 +224,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
             mainObservable = Observable.create((subscriber:Subscriber<any>) => {
 
-              requestObservable.subscribe(
+              let reqSubscr:Subscription = requestObservable.subscribe(
                 (resp:any) => {
 
                   if (resp !== null) {
@@ -243,15 +256,19 @@ export function ResourceAction(action?: ResourceActionBase) {
                 }
               );
 
+              ret.$abortRequest = () => {
+                if (ret.$resolved) {
+                  return;
+                }
+                reqSubscr.unsubscribe();
+                ret.$resolved = true;
+              }
+
             });
 
           }
 
-          mainDeferredSubscriber.next();
-          mainDeferredSubscriber.complete();
-          mainDeferredSubscriber = null;
-
-
+          releaseMainDeferredSubscriber();
 
         });
 
