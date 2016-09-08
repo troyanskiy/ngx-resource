@@ -1,3 +1,5 @@
 #typescript sources
 *.ts
+.idea/
+typings/
 !*.d.ts
