@@ -87,7 +87,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
           }
 
-          data = Object.assign(dataAll[4], data);
+          data = Object.assign({}, dataAll[4], data);
 
           let pathParams = url.match(/{([^}]*)}/g) || [];
           let usedPathParams:any = {};
