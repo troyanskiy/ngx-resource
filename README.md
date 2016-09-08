@@ -199,13 +199,13 @@ All default decorated options will be overwritten for the method.
 
 ## Types
 
-### `ResourceResult<T>`
-Every request method is returning give data type this is extended by `ResourceResult`
+### `ResourceResult<R>`
+Every request method is returning given data type which is extended by `ResourceResult`
 ```ts
 export type ResourceResult<R extends {}> = R & {
-  $resolved?: boolean; // true is request has been executed
+  $resolved?: boolean; // true if request has been executed
   $observable?: Observable<R>; // Observable for the request
-  $abortRequest?: () => void; // method to cances pending request
+  $abortRequest?: () => void; // method to abort pending request
 }
 ```
 
@@ -278,7 +278,7 @@ export interface ResourceActionBase extends ResourceParamsBase {
 	method?:RequestMethod; // from angular `@angular/http`
 	isArray?: boolean;
 	isLazy?: boolean;
-	requestInterceptor?: ResourceRequestInterceptor;
+  requestInterceptor?: ResourceRequestInterceptor;
   responseInterceptor?: ResourceResponseInterceptor;
 }
 ```
@@ -301,12 +301,14 @@ Is `isLazy` set to true, then the request will not be executed immediately. To e
 #### `requestInterceptor`
 `(req: Request): Request;`
 
+Custom request modifier for the method<br>
 Default request interceptor is a function which recieves `Request` object from `anglar2/http`<br>
 **Default**: *doing nothing*
 
 #### `responseInterceptor`
 `(observable:Observable<any>, request?:Request):Observable<any>;`
 
+Custom response interceptor for the method<br>
 Default response interceptor is a function which receives `Observable` object from `rxjs/Observable` and returns also `Observable` object.<br>
 **Default**: 
 ```javascript
@@ -413,8 +415,7 @@ Lower number - higher priority
 ```ts
 import {Request, Response} from '@angular/http';
 import {Observable, Subscriber} from 'rxjs';
-import {AuthServiceHelper, ConfigServiceHelper} from '../helpers/index';
-import {AppConfigResource} from './appConfig.resource';
+import {AuthServiceHelper} from '../helpers/index';
 import {Resource} from 'ng2-resource-rest';
 
 export class AuthGuardResource extends Resource {
@@ -481,7 +482,7 @@ export class AuthResource extends AuthGuardResource {
     method: RequestMethod.Post,
     path: '/login'
   })
-  login: ResourceMethod<any, any>;
+  login: ResourceMethod<{login: string, password: string}, any>;
 
   @ResourceAction({
     method: RequestMethod.Get,
