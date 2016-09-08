@@ -117,7 +117,7 @@ import {NewsRes} from '../../resources/index';
   templateUrl: 'news.page.component.html',
   styleUrls: ['news.page.component.css'],
 })
-export class EnrichDashboardPageComponent implements OnInit {
+export class PageComponent implements OnInit {
 
   newList: INewsShort[] = [];
 
