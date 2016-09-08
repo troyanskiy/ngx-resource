@@ -1,6 +1,6 @@
 [![npm version](https://badge.fury.io/js/ng2-resource-rest.svg)](http://badge.fury.io/js/ng2-resource-rest)
 # ng2-resource-rest
-Resource (REST) Client for Angular 2 RC
+Resource (REST) Client for Angular 2 RC6
 
 To use the module install the module using below command
 
@@ -10,24 +10,78 @@ To use the module install the module using below command
 
 ### How to use
 
-***Creating simple resource (./resources/UserRes.ts)***
-```javascript
-// Import necessary staff
-import {Resource, ResourceParams} from "ng2-resource-rest";
-import {Injectable} from "@angular/core";
+***Creating simple resource CRUD (./resources/NewsRes.ts)***
+```ts
+import {Injectable} from '@angular/core';
+import {Resource, ResourceParams, ResourceAction, ResourceMethod} from 'ng2-resource-rest';
+import {RequestMethod} from '@angular/http';
 
+interface IQueryInput {
+  dateFrom?: string;
+  dateTo?: string;
+  isRead?: string;
+}
 
-// Make it Injectable
+interface INewsShort {
+  id: number;
+  date: string;
+  title: string;
+  text: string;
+}
+
+interface INews extends INewsShort {
+  image: string;
+  fullText: string;
+}
+
 @Injectable()
-
-// Decorate the your resource class
 @ResourceParams({
-	// Url to api
-	url: 'https://domain.net/api',
-	// Api path
-	path: '/users/{id}'
+  url: 'https://domain.net/api/users'
 })
-export class UserRes extends Resource {}
+export class NewsRes extends Resource {
+
+  @ResourceAction({
+    isArray: true
+  })
+  query: ResourceMethod<IQueryInput, INewsShort[]>;
+
+  @ResourceAction({
+    path: '/{!id}'
+  })
+  get: ResourceMethod<{id: any}, INews>;
+
+  @ResourceAction({
+    method: RequestMethod.Post
+  })
+  save: ResourceMethod<INews, INews>;
+
+  @ResourceAction({
+    method: RequestMethod.Put,
+    path: '/{!id}'
+  })
+  update: ResourceMethod<INews, INews>;
+
+  @ResourceAction({
+    method: RequestMethod.Delete,
+    path: '/{!id}'
+  })
+  remove: ResourceMethod<{id: any}, any>;
+
+  // Alias to save
+  create(data: INews, callback?: (res: INews) => any): INews {
+    return this.save(data, callback);
+  }
+  
+}
+```
+
+Or it is possible to use predefined CRUD resource which will to exactly the same as resource above
+``` ts
+@Injectable()
+@ResourceParams({
+  url: 'https://domain.net/api/users'
+})
+export class NewRes extends ResourceCRUD<IQueryInput, INewsShort, INews> {}
 ```
 
 ***Using in your app. (In the case is Ionic)***

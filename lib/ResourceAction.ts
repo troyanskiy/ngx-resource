@@ -1,7 +1,7 @@
-import {ResourceActionBase, ResourceResult} from './Interfaces';
-import {Resource} from './Resource';
 import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
 import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
+import {ResourceActionBase, ResourceResult} from './Interfaces';
+import {Resource} from './Resource';
 
 export function ResourceAction(action?: ResourceActionBase) {
 
@@ -14,7 +14,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
   return function(target: Resource, propertyKey: string) {
 
-    target[propertyKey] = function(...args: any[]): ResourceResult<any> {
+    (<any>target)[propertyKey] = function(...args: any[]): ResourceResult<any> {
 
       let isGetRequest = action.method === RequestMethod.Get;
 
@@ -127,6 +127,9 @@ export function ResourceAction(action?: ResourceActionBase) {
 
           // Removing double slashed from final url
           url = url.replace(/\/\/+/g, '/');
+          if (url.startsWith('http')) {
+            url = url.replace(':/', '://');
+          }
 
           // Remove trailing slash
           if (typeof action.removeTrailingSlash === "undefined") {
@@ -280,7 +283,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 }
 
 
-function getValueForPath(key: string, params: any, data: any, usedPathParams: any) {
+function getValueForPath(key: string, params: any, data: any, usedPathParams: any): string {
 
   if (typeof data[key] !== 'object') {
     usedPathParams[key] = true;

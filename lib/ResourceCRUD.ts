@@ -1,30 +1,30 @@
 import {RequestMethod} from '@angular/http';
-import {ResourceBase} from './ResourceBase';
+import {Resource} from './Resource';
 import {ResourceMethod} from './Interfaces';
 import {ResourceAction} from './ResourceAction';
 
-export class Resource<T> extends ResourceBase {
+export class ResourceCRUD<TQuery, TShort, TFull> extends Resource {
 
   @ResourceAction({
     isArray: true
   })
-  query: ResourceMethod<T, T>;
+  query: ResourceMethod<TQuery, TShort>;
 
   @ResourceAction({
     path: '/{!id}'
   })
-  get: ResourceMethod<{id: any}, T>;
+  get: ResourceMethod<{id: any}, TFull>;
 
   @ResourceAction({
     method: RequestMethod.Post
   })
-  save: ResourceMethod<T, T>;
+  save: ResourceMethod<TFull, TFull>;
 
   @ResourceAction({
     method: RequestMethod.Put,
     path: '/{!id}'
   })
-  update: ResourceMethod<T, T>;
+  update: ResourceMethod<TFull, TFull>;
 
   @ResourceAction({
     method: RequestMethod.Delete,
@@ -33,13 +33,8 @@ export class Resource<T> extends ResourceBase {
   remove: ResourceMethod<{id: any}, any>;
 
   // Alias to save
-  create(data: T, callback?: (res: T) => any): T {
+  create(data: TFull, callback?: (res: TFull) => any): TFull {
     return this.save(data, callback);
-  }
-
-  // Alias to remove
-  delete(data: {id: any}, callback?: (res: any) => any): any {
-    return this.remove(data, callback);
   }
 
 }

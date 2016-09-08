@@ -2,7 +2,7 @@ import {Http, Request} from '@angular/http';
 import {Observable} from 'rxjs';
 import {ResourceGlobalConfig} from './ResourceGlobalConfig';
 
-export class ResourceBase {
+export class Resource {
 
   private _url: string = null;
   private _path: string = null;
@@ -109,7 +109,6 @@ export class ResourceBase {
   responseInterceptor(observable: Observable<any>, req: Request): Observable<any> {
     return observable.map(res => res._body ? res.json() : null);
   }
-
 
   removeTrailingSlash(): boolean {
     return true;

@@ -9,7 +9,7 @@ export interface ResourceResponseInterceptor {
   (observable: Observable<any>, request?: Request): Observable<any>;
 }
 
-interface ResourceParamsCommon {
+export interface ResourceParamsCommon {
   url?: string;
   path?: string;
   headers?: any;
@@ -18,7 +18,7 @@ interface ResourceParamsCommon {
   removeTrailingSlash?: boolean;
 }
 
-export interface ResourceParamsBase extends ResourceParamsCommon{
+export interface ResourceParamsBase extends ResourceParamsCommon {
   add2Provides?: boolean;
   providersSubSet?: string;
 }

@@ -1,7 +1,7 @@
-import {ResourceParamsBase} from './Interfaces';
-import {Resource} from './Resource';
 import {Http} from '@angular/http';
+import {ResourceParamsBase} from './Interfaces';
 import {ResourceProviders} from './ResourceProviders';
+import {Resource} from './Resource';
 
 
 export function ResourceParams(params: ResourceParamsBase) {
