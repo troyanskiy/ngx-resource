@@ -4,7 +4,7 @@ import {ResourceProviders} from './ResourceProviders';
 import {Resource} from './Resource';
 
 
-export function ResourceParams(params: ResourceParamsBase) {
+export function ResourceParams(params: ResourceParamsBase = {}) {
 
   return function(target: { new (http: Http): Resource }) {
 
