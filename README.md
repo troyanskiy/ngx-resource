@@ -280,6 +280,8 @@ export interface ResourceActionBase extends ResourceParamsBase {
 	isLazy?: boolean;
   requestInterceptor?: ResourceRequestInterceptor;
   responseInterceptor?: ResourceResponseInterceptor;
+  map?: ResourceResponseMap;
+  filter?: ResourceResponseFilter;
 }
 ```
 
@@ -316,6 +318,23 @@ function (observable:Observable<any>):Observable<any> {
 	return observable.map(res => res._body ? res.json() : null);
 }
 ```
+
+#### `map`
+`(item: any):any;`
+
+Custom response data mapper.<br>
+Will be called for each array element if response is an array.<br>
+Will called for the object if response is an object<br>
+Called before mapping data
+
+#### `filter`
+`(item: any):boolean;`
+
+Custom response filter.<br>
+Will be called for each array element if response is an array.<br>
+Will called for the object if response is an object<br>
+Called before map method
+
 
 <br>
 
@@ -365,6 +384,12 @@ Default response interceptor
 
 #### `removeTrailingSlash(): boolean`
 Called by method if needs to trim trailing slashes from final url
+
+#### `map(item: any): any<any>`
+Default response mapper
+
+#### `filter(item: any): boolean`
+Default filter method. By default always `true`
 
 
 ## `ResourceCRUD` class

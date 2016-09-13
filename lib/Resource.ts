@@ -114,6 +114,14 @@ export class Resource {
     return true;
   }
 
+  map(item: any): any {
+    return item;
+  }
+
+  filter(item: any): boolean {
+    return true;
+  }
+
 
   private _getUrl(): string|Promise<string> {
     return null;

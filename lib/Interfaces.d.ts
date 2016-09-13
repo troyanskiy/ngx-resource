@@ -6,6 +6,12 @@ export interface ResourceRequestInterceptor {
 export interface ResourceResponseInterceptor {
     (observable: Observable<any>, request?: Request): Observable<any>;
 }
+export interface ResourceResponseMap {
+    (item: any): any;
+}
+export interface ResourceResponseFilter {
+    (item: any): boolean;
+}
 export interface ResourceParamsCommon {
     url?: string;
     path?: string;
@@ -24,6 +30,8 @@ export interface ResourceActionBase extends ResourceParamsCommon {
     isLazy?: boolean;
     requestInterceptor?: ResourceRequestInterceptor;
     responseInterceptor?: ResourceResponseInterceptor;
+    map?: ResourceResponseMap;
+    filter?: ResourceResponseFilter;
 }
 export interface ResourceMethod<I, O> {
     (data?: I, callback?: (res: O) => any): ResourceResult<O>;

@@ -70,6 +70,8 @@ export declare class Resource {
      */
     responseInterceptor(observable: Observable<any>, req: Request): Observable<any>;
     removeTrailingSlash(): boolean;
+    map(item: any): any;
+    filter(item: any): boolean;
     private _getUrl();
     private _getPath();
     private _getHeaders();

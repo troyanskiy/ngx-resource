@@ -1,6 +1,6 @@
 import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
 import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
-import {ResourceActionBase, ResourceResult} from './Interfaces';
+import {ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter} from './Interfaces';
 import {Resource} from './Resource';
 
 export function ResourceAction(action?: ResourceActionBase) {
@@ -231,17 +231,23 @@ export function ResourceAction(action?: ResourceActionBase) {
                 (resp:any) => {
 
                   if (resp !== null) {
+
+                    let map:ResourceResponseMap = action.map ? action.map : this.map;
+                    let filter:ResourceResponseFilter = action.filter ? action.filter : this.filter;
+
                     if (action.isArray) {
                       if (!Array.isArray(resp)) {
                         console.error('Returned data should be an array. Received', resp);
                       } else {
-                        Array.prototype.push.apply(ret, resp);
+                        Array.prototype.push.apply(ret, resp.filter(filter).map(map));
                       }
                     } else {
                       if (Array.isArray(resp)) {
                         console.error('Returned data should be an object. Received', resp);
                       } else {
-                        Object.assign(ret, resp);
+                        if (filter(resp)) {
+                          Object.assign(ret, map(resp));
+                        }
                       }
                     }
                   }
