@@ -33,7 +33,7 @@ export class ResourceProviders {
       subSet = this.mainProvidersName;
     }
 
-    return this.providers[subSet];
+    return this.providers[subSet] || [];
 
   }
 
