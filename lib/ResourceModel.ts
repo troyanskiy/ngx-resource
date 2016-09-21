@@ -39,35 +39,14 @@ export class ResourceModel {
     	return result;
     }
 
-    private _resource_method(method_name: string) {
-    	let _method = this.$resource[method_name]
-    	if (!_method) {
-    		console.error(`Your Resource has no implemented ${method_name} method.`);
-    		return;
-    	}
-    	let data = (method_name=="remove") ? {id: this[this.$primaryKey]} :this.getData();
-
-    	let result = _method(data)
-    	this.$resolved = result.$resolved;
-    	this.$observable = result.$observable;
-    	this.$abortRequest = result.$abortRequest;
-    	this.$observable.subscribe(resp => {
-    		this.fillFromObject(resp.getData())
-    	})
-    }
-
-    private _create() {
-    	this._resource_method('create');
-    }
-
-    fillFromObject(_object: any) {
+    public $fillFromObject(_object: any) {
         for (var propName in _object) {
             this[propName] = _object[propName]
         }
         return this
     }
 
-    getData() {
+    public $getData() {
     	let _object = {};
     	for (var propName in this) {
     		if (!(this[propName] instanceof Function)&&!(propName.charAt(0)=='$')) {
@@ -78,21 +57,42 @@ export class ResourceModel {
         return _object;
     }
 
-    save() {
+    public $save() {
     	if (this[this.$primaryKey]) {
-    		this.update();
+    		this.$update();
     	}
     	else {
-    		this._create();
+    		this.$create();
     	}
     }
 
-    update() {
-    	this._resource_method('update');
+    public $update() {
+    	this.$resource_method('update');
     }
 
-    remove() {
-    	this._resource_method('remove');
+    public $remove() {
+    	this.$resource_method('remove');
+    }
+
+    private $resource_method(method_name: string) {
+        let _method = this.$resource[method_name]
+        if (!_method) {
+            console.error(`Your Resource has no implemented ${method_name} method.`);
+            return;
+        }
+        let data = (method_name=="remove") ? {id: this[this.$primaryKey]} :this.$getData();
+
+        let result = _method(data)
+        this.$resolved = result.$resolved;
+        this.$observable = result.$observable;
+        this.$abortRequest = result.$abortRequest;
+        this.$observable.subscribe(resp => {
+            this.$fillFromObject(resp.$getData())
+        })
+    }
+
+    private $create() {
+        this.$resource_method('create');
     }
 
 }

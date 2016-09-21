@@ -13,11 +13,11 @@ export class Resource {
   private _params: any = null;
   private _data: any = null;
 
-  static resourceModel: Type<ResourceModel>;
+  static model: Type<ResourceModel>;
 
   constructor(protected http: Http, protected injector: Injector) {
-     if (this.constructor['resourceModel']) {
-         this.constructor['resourceModel']['resourceInstance'] = this;
+     if (this.constructor['model']) {
+         this.constructor['model']['resourceInstance'] = this;
      }
   }
 

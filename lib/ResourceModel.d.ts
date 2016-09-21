@@ -11,11 +11,11 @@ export declare class ResourceModel {
     $resource: Resource;
     static resourceClass: Type<Resource>;
     static create(data?: any, commit?: boolean): any;
-    private _resource_method(method_name);
-    private _create();
-    fillFromObject(_object: any): this;
-    getData(): {};
-    save(): void;
-    update(): void;
-    remove(): void;
+    $fillFromObject(_object: any): this;
+    $getData(): {};
+    $save(): void;
+    $update(): void;
+    $remove(): void;
+    private $resource_method(method_name);
+    private $create();
 }

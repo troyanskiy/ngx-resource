@@ -26,7 +26,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
       let ret: ResourceResult<any> | ResourceModel;
 
-      let resourceModel = action.modelClass || target.constructor['resourceModel'];
+      let resourceModel = action.model || target.constructor['model'];
 
       if (resourceModel&&!action.isArray) {
         ret = resourceModel.create({}, false)
@@ -260,7 +260,7 @@ export function ResourceAction(action?: ResourceActionBase) {
                       } else {
                         if (filter(resp)) {
                           if (!!resourceModel) {
-                            ret.fillFromObject(map(resp))
+                            ret.$fillFromObject(map(resp))
                           }
                           else {
                             Object.assign(ret, map(resp));
@@ -325,13 +325,13 @@ export function mapToModel(resp, model) {
   if (Array.isArray(resp)) {
     result = [];
     for (let item of resp) {
-      let model_instance = new model(...injection).fillFromObject(item);
+      let model_instance = new model(...injection).$fillFromObject(item);
       model_instance.$resource = this;
       result.push(model_instance);
     }
   }
   else {
-    result = new model(...injection).fillFromObject(resp);
+    result = new model(...injection).$fillFromObject(resp);
     result.$resource = this;
   }
 

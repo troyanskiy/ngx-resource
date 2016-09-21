@@ -582,7 +582,7 @@ export class User extends ResourceModel {
 })
 export class UserResource extends ResourceCRUD<IUserQueryInput, IUserShort, User> {
 
-  static resourceModel = User;
+  static model = User;
 
   @ResourceAction({
     method: RequestMethod.Get,
@@ -595,7 +595,7 @@ export class UserResource extends ResourceCRUD<IUserQueryInput, IUserShort, User
     method: RequestMethod.Get,
     isArray: true,
     path: '/followers',
-    modelClass: Group
+    model: Group
   })
   groups: ResourceMethod<{id: any}, Group[]>;
 
@@ -635,13 +635,13 @@ export class PageComponent implements OnInit {
 
     //change and save user
     this.user.first_name = 'Bob'
-    this.user.save()
+    this.user.$save()
 
     //get followers, get first follower, change and save
     let followers: User[] = this.user.followers()
     let follower: User = followers[0]
     follower.first_name = 'Mary'
-    follower.save()
+    follower.$save()
 
     //get user groups
     let groups: Group[] = this.user.groups()
