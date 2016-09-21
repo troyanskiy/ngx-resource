@@ -1,6 +1,9 @@
 import {Http, Request} from '@angular/http';
+import {Injector} from '@angular/core';
+import { Type } from "@angular/core/src/type"
 import {Observable} from 'rxjs';
 import {ResourceGlobalConfig} from './ResourceGlobalConfig';
+import {ResourceModel} from './ResourceModel';
 
 export class Resource {
 
@@ -10,7 +13,13 @@ export class Resource {
   private _params: any = null;
   private _data: any = null;
 
-  constructor(protected http: Http) {}
+  static model: Type<ResourceModel>;
+
+  constructor(protected http: Http, protected injector: Injector) {
+     if (this.constructor['model']) {
+         this.constructor['model']['resourceInstance'] = this;
+     }
+  }
 
   /**
    * Get main url of the resource

@@ -1,7 +1,13 @@
 import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
 import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
+import {ReflectiveInjector} from "@angular/core";
+import {global} from "@angular/common/src/facade/lang";
+import { Type } from "@angular/core/src/type"
 import {ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter} from './Interfaces';
 import {Resource} from './Resource';
+import {ResourceModel} from './ResourceModel';
+
+var Reflect = global.Reflect;
 
 export function ResourceAction(action?: ResourceActionBase) {
 
@@ -14,13 +20,18 @@ export function ResourceAction(action?: ResourceActionBase) {
 
   return function(target: Resource, propertyKey: string) {
 
-    (<any>target)[propertyKey] = function(...args: any[]): ResourceResult<any> {
+    (<any>target)[propertyKey] = function(...args: any[]): ResourceResult<any> | ResourceModel {
 
       let isGetRequest = action.method === RequestMethod.Get;
 
-      let ret: ResourceResult<any>;
+      let ret: ResourceResult<any> | ResourceModel;
 
-      if (action.isLazy) {
+      let resourceModel = action.model || target.constructor['model'];
+
+      if (resourceModel&&!action.isArray) {
+        ret = resourceModel.create({}, false)
+      }
+      else if (action.isLazy) {
         ret = {};
       } else {
         ret = action.isArray ? [] : {};
@@ -239,14 +250,21 @@ export function ResourceAction(action?: ResourceActionBase) {
                       if (!Array.isArray(resp)) {
                         console.error('Returned data should be an array. Received', resp);
                       } else {
-                        Array.prototype.push.apply(ret, resp.filter(filter).map(map));
+                        let result = resp.filter(filter).map(map);
+                        result = !!resourceModel ? mapToModel.bind(this)(result, resourceModel): result;
+                        Array.prototype.push.apply(ret, result);
                       }
                     } else {
                       if (Array.isArray(resp)) {
                         console.error('Returned data should be an object. Received', resp);
                       } else {
                         if (filter(resp)) {
-                          Object.assign(ret, map(resp));
+                          if (!!resourceModel) {
+                            ret.$fillFromObject(map(resp))
+                          }
+                          else {
+                            Object.assign(ret, map(resp));
+                          }
                         }
                       }
                     }
@@ -281,6 +299,10 @@ export function ResourceAction(action?: ResourceActionBase) {
 
         });
 
+      if (resourceModel) {
+          ret.$observable = ret.$observable.map(resp => { return mapToModel.bind(this)(resp, resourceModel) })
+      }
+
       return ret;
 
     }
@@ -288,6 +310,33 @@ export function ResourceAction(action?: ResourceActionBase) {
   }
 }
 
+export function mapToModel(resp, model) {
+  let model_providers = Reflect.getMetadata("providers", model) || []
+  let providers = ReflectiveInjector.resolve(model_providers);
+  let injector = ReflectiveInjector.fromResolvedProviders(providers, this.injector)
+  let properties = Reflect.getMetadata("design:paramtypes", model) || []
+  let injection = []
+  for (let property of properties) {
+    injection.push(injector.get(property));
+  }
+
+  let result: any;
+
+  if (Array.isArray(resp)) {
+    result = [];
+    for (let item of resp) {
+      let model_instance = new model(...injection).$fillFromObject(item);
+      model_instance.$resource = this;
+      result.push(model_instance);
+    }
+  }
+  else {
+    result = new model(...injection).$fillFromObject(resp);
+    result.$resource = this;
+  }
+
+  return result;
+}
 
 function getValueForPath(key: string, params: any, data: any, usedPathParams: any): string {
 

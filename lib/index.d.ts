@@ -7,3 +7,4 @@ export * from './ResourceGlobalConfig';
 export * from './ResourceModule';
 export * from './ResourceParams';
 export * from './ResourceProviders';
+export * from './ResourceModel';
