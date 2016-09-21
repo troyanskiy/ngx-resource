@@ -1,5 +1,4 @@
 import {Http} from '@angular/http';
-import {Injector} from '@angular/core';
 import {ResourceParamsBase} from './Interfaces';
 import {ResourceProviders} from './ResourceProviders';
 import {Resource} from './Resource';
@@ -7,7 +6,7 @@ import {Resource} from './Resource';
 
 export function ResourceParams(params: ResourceParamsBase = {}) {
 
-  return function(target: { new (http: Http, injector: Injector): Resource }) {
+  return function(target: { new (http: Http): Resource }) {
 
     if (params.add2Provides !== false) {
       ResourceProviders.add(target, params.providersSubSet);

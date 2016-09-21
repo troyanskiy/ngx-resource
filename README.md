@@ -73,7 +73,7 @@ export class NewsRes extends Resource {
   create(data: INews, callback?: (res: INews) => any): INews {
     return this.save(data, callback);
   }
-
+  
 }
 ```
 
@@ -88,7 +88,7 @@ export class NewRes extends ResourceCRUD<IQueryInput, INewsShort, INews> {}
 
 ***Using in your app.***
 
-First of all need to add Resource Module to your app Module. Simply
+First of all need to add Resource Module to your app Module. Simply 
 import ResourceModule.forRoot() to your all root module
 
 ```ts
@@ -125,24 +125,24 @@ export class PageComponent implements OnInit {
 
   ngOnInit():any {
 
-    // That will execute GET request https://domain.net/api/users
+    // That will execute GET request https://domain.net/api/users 
     // and after will assign the data to this.newsList
     this.newList = this.newsRes.query();
-
+    
     // Execute GET request https://domain.net/api/users?page=1&perPage=20
     this.newList = this.newsRes.query({page: 1, perPage: 20});
-
+    
     // Execute GET request https://domain.net/api/users/12
     // and assing the data to oneNews variable
     let oneNews = this.newsRes.get({id: 12});
-
+    
     // or
     let otherOneNews: INews = null;
     this.newsRes.get({id: 12}, (receivedNews: INews) => {
       otherOneNews = receivedNews;
       // do some magic after receiving news
     });
-
+    
     // or :)
     let otherSomeNews = this.newsRes.get({id: 12});
     otherSomeNews
@@ -153,15 +153,15 @@ export class PageComponent implements OnInit {
           // do some magic after receiving news
         }
       );
-
+      
     // Also you can cancel the requests
     let news = this.newsRes.get({id: 12});
     news.$abortRequest();
-
-    // That kind of ways with callback, $observable and $abortRequest
+    
+    // That kind of ways with callback, $observable and $abortRequest 
     // can be used on all methods
-
-
+   
+    
     // Creating the news
     let newNews:INews = {
       date: '17.06.2016,
@@ -172,7 +172,7 @@ export class PageComponent implements OnInit {
     // That will execute the POST request to https://domain.net/api/users
     // Expected to receive created news object which will be assigned to newNews
     let newNews = this.newsRes.save(newNews);
-
+    
     // and so on
 
   }
@@ -186,14 +186,14 @@ export class PageComponent implements OnInit {
 ## @ResourceParams class decorator
 ```@ResourceParams(options: ResourceParamsBase)```
 
-The decorator is used to define default resource parameters (can be overwritten with method parameters).
+The decorator is used to define default resource parameters (can be overwritten with method parameters). 
 @ResourceParams accepts object `ResourceParamsBase` type (description below).
 
 
 ## @ResourceAction method decorator
 ```@ResourceAction(options: ResourceActionBase)```
 
-Decorates methods. @ResourceAction accepts object `ResourceActionBase` type (description below).
+Decorates methods. @ResourceAction accepts object `ResourceActionBase` type (description below). 
 All default decorated options will be overwritten for the method.
 
 
@@ -239,7 +239,7 @@ If path param is with `!` prefix, then the param is mandatory<br>
 #### `headers`
 Default resource HTTP headers.<br>
 It should be object where key is header name and value is header value<br>
-**Default**:
+**Default**: 
 ```javascript
 {
 	'Accept': 'application/json',
@@ -298,7 +298,7 @@ Used if received data is an array
 
 
 #### `isLazy`
-Is `isLazy` set to true, then the request will not be executed immediately. To execute the request you should subsribe to abservable and hande responces by yourself.
+Is `isLazy` set to true, then the request will not be executed immediately. To execute the request you should subsribe to abservable and hande responces by yourself. 
 
 #### `requestInterceptor`
 `(req: Request): Request;`
@@ -312,7 +312,7 @@ Default request interceptor is a function which recieves `Request` object from `
 
 Custom response interceptor for the method<br>
 Default response interceptor is a function which receives `Observable` object from `rxjs/Observable` and returns also `Observable` object.<br>
-**Default**:
+**Default**: 
 ```javascript
 function (observable:Observable<any>):Observable<any> {
 	return observable.map(res => res._body ? res.json() : null);
@@ -517,137 +517,4 @@ export class AuthResource extends AuthGuardResource {
 
 }
 
-```
-
-
-## Example of resource model usage
-
-
-### `UserResource with model`
-
-
-```ts
-import { Injectable } from '@angular/core';
-import { RequestMethod } from '@angular/http';
-import { AppProject } from '../../project/app.project';
-import { Resource, ResourceAction, ResourceMethod, ResourceParams, ResourceModelParams, ResourceModel } from 'ng2-resource-rest';
-import { SomeService } from './some.service'
-import { GroupResource, Group } from './group.resource'
-
-export interface IUserQueryInput {
-  is_active?: boolean;
-}
-
-export interface IUserShort {
-  id: number;
-  email: string;
-}
-
-export interface IUser extends IUserShort {
-  avatar: string;
-  first_name: string;
-  last_name: string;
-}
-
-export interface User extends IUser {}
-
-@ResourceModelParams({
-  providers: [SomeService]
-})
-export class User extends ResourceModel {
-
-  static resourceClass = UserResource;
-
-  constructor(private someService: SomeService, private groupResource: GroupResource) {
-    super();
-  }
-
-  someAction() {
-      return this.someService.someAction(this.id);
-  }
-
-  followers(): User[] {
-      return this.$resource.followers({id: this.id})
-  }
-
-  groups(): Group[] {
-      return this.groupResource.query({user: this.id})
-  }
-}
-
-
-@Injectable()
-@ResourceParams({
-  url: 'https://domain.net/api/users'
-})
-export class UserResource extends ResourceCRUD<IUserQueryInput, IUserShort, User> {
-
-  static model = User;
-
-  @ResourceAction({
-    method: RequestMethod.Get,
-    isArray: true,
-    path: '/followers'
-  })
-  followers: ResourceMethod<{id: any}, User[]>;
-
-  @ResourceAction({
-    method: RequestMethod.Get,
-    isArray: true,
-    path: '/followers',
-    model: Group
-  })
-  groups: ResourceMethod<{id: any}, Group[]>;
-
-}
-
-```
-
-###Using resource with model in your app
-
-```ts
-import {Component, OnInit} from '@angular/core';
-import {UserResource, GroupResource, User, Group} from '../../resources/index';
-
-@Component({
-  moduleId: module.id,
-  selector: 'user-component',
-  templateUrl: 'users.page.component.html',
-  styleUrls: ['users.page.component.css'],
-})
-export class PageComponent implements OnInit {
-
-  usersList: User[] = [];
-  groupsList: Group[] = []
-  group: Group;
-  user: User;
-
-  constructor(private userResource: UserResource, private groupResource: GroupResource) {}
-
-  ngOnInit():any {
-
-    // That will execute GET request https://domain.net/api/users
-    // and after will assign the data to this.usersList
-    this.usersList = this.userResource.query();
-
-    //Get user
-    this.user = this.userResource.get({id: 1});
-
-    //change and save user
-    this.user.first_name = 'Bob'
-    this.user.$save()
-
-    //get followers, get first follower, change and save
-    let followers: User[] = this.user.followers()
-    let follower: User = followers[0]
-    follower.first_name = 'Mary'
-    follower.$save()
-
-    //get user groups
-    let groups: Group[] = this.user.groups()
-
-    //call some action from SomeService for user
-    this.user.someAction()
-
-);
 ```
