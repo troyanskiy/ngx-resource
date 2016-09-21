@@ -1,7 +1,7 @@
-import { Type } from "@angular/core/src/type";
+import { Type } from '@angular/core/src/type';
 import { Observable } from 'rxjs';
-import { ResourceModelParamsBase } from "./Interfaces";
-import { Resource } from "./Resource";
+import { ResourceModelParamsBase } from './Interfaces';
+import { Resource } from './Resource';
 export declare function ResourceModelParams(params?: ResourceModelParamsBase): (target: Type<ResourceModel>) => void;
 export declare class ResourceModel {
     $resolved: boolean;
@@ -16,6 +16,6 @@ export declare class ResourceModel {
     $save(): void;
     $update(): void;
     $remove(): void;
-    private $resource_method(method_name);
-    private $create();
+    private _resourceMethod(method_name);
+    private _create();
 }

@@ -2,7 +2,7 @@ import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Reque
 import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
 import {ReflectiveInjector} from "@angular/core";
 import {global} from "@angular/common/src/facade/lang";
-import { Type } from "@angular/core/src/type"
+import {Type} from "@angular/core/src/type"
 import {ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter} from './Interfaces';
 import {Resource} from './Resource';
 import {ResourceModel} from './ResourceModel';
@@ -18,9 +18,9 @@ export function ResourceAction(action?: ResourceActionBase) {
   }
 
 
-  return function(target: Resource, propertyKey: string) {
+  return function (target: Resource, propertyKey: string) {
 
-    (<any>target)[propertyKey] = function(...args: any[]): ResourceResult<any> | ResourceModel {
+    (<any>target)[propertyKey] = function (...args: any[]): ResourceResult<any> | ResourceModel {
 
       let isGetRequest = action.method === RequestMethod.Get;
 
@@ -28,8 +28,8 @@ export function ResourceAction(action?: ResourceActionBase) {
 
       let resourceModel = action.model || target.constructor['model'];
 
-      if (resourceModel&&!action.isArray) {
-        ret = resourceModel.create({}, false)
+      if (resourceModel && !action.isArray) {
+        ret = resourceModel.create({}, false);
       }
       else if (action.isLazy) {
         ret = {};
@@ -38,10 +38,10 @@ export function ResourceAction(action?: ResourceActionBase) {
       }
 
       let mainDeferredSubscriber: Subscriber<any> = null;
-      let mainObservable:Observable<Response> = null;
+      let mainObservable: Observable<Response> = null;
 
       ret.$resolved = false;
-      ret.$observable = Observable.create((subscriber:Subscriber<any>) => {
+      ret.$observable = Observable.create((subscriber: Subscriber<any>) => {
         mainDeferredSubscriber = subscriber;
       }).flatMap(() => mainObservable);
       ret.$abortRequest = () => {
@@ -67,17 +67,17 @@ export function ResourceAction(action?: ResourceActionBase) {
         Promise.resolve(action.params || this.getParams()),
         Promise.resolve(action.data || this.getData())
       ])
-        .then((dataAll:any[]) => {
+        .then((dataAll: any[]) => {
 
           if (ret.$resolved) {
-            mainObservable = Observable.create((observer:any) => {
+            mainObservable = Observable.create((observer: any) => {
               observer.next(null);
             });
 
             releaseMainDeferredSubscriber();
           }
 
-          let url:string = dataAll[0] + dataAll[1];
+          let url: string = dataAll[0] + dataAll[1];
           let headers = new Headers(dataAll[2]);
           let defPathParams = dataAll[3];
 
@@ -101,13 +101,13 @@ export function ResourceAction(action?: ResourceActionBase) {
           data = Object.assign({}, dataAll[4], data);
 
           let pathParams = url.match(/{([^}]*)}/g) || [];
-          let usedPathParams:any = {};
+          let usedPathParams: any = {};
 
-          for (let i=0; i < pathParams.length; i++) {
+          for (let i = 0; i < pathParams.length; i++) {
 
             let pathParam = pathParams[i];
 
-            let pathKey = pathParam.substr(1, pathParam.length-2);
+            let pathKey = pathParam.substr(1, pathParam.length - 2);
             let isMandatory = pathKey[0] === '!';
             if (isMandatory) {
               pathKey = pathKey.substr(1);
@@ -118,7 +118,7 @@ export function ResourceAction(action?: ResourceActionBase) {
             if (!value) {
               if (isMandatory) {
 
-                mainObservable = Observable.create((observer:any) => {
+                mainObservable = Observable.create((observer: any) => {
                   observer.error(new Error('Mandatory ' + pathParam + ' path parameter is missing'));
                 });
 
@@ -147,8 +147,8 @@ export function ResourceAction(action?: ResourceActionBase) {
             action.removeTrailingSlash = this.removeTrailingSlash();
           }
           if (action.removeTrailingSlash) {
-            while (url[url.length-1] == '/') {
-              url = url.substr(0, url.length-1);
+            while (url[url.length - 1] == '/') {
+              url = url.substr(0, url.length - 1);
             }
           }
 
@@ -181,7 +181,7 @@ export function ResourceAction(action?: ResourceActionBase) {
           let search: URLSearchParams = new URLSearchParams();
           for (let key in searchParams) {
             if (!usedPathParams[key]) {
-              let value:any = searchParams[key];
+              let value: any = searchParams[key];
               if (typeof value == 'object') {
                 // if (value instanceof Object) {
                 value = JSON.stringify(value);
@@ -212,7 +212,7 @@ export function ResourceAction(action?: ResourceActionBase) {
             this.requestInterceptor(req);
 
           if (!req) {
-            mainObservable = Observable.create((observer:any) => {
+            mainObservable = Observable.create((observer: any) => {
               observer.error(new Error('Request is null'));
             });
 
@@ -231,27 +231,28 @@ export function ResourceAction(action?: ResourceActionBase) {
             this.responseInterceptor(requestObservable, req);
 
 
-
           if (action.isLazy) {
             mainObservable = requestObservable;
           } else {
 
-            mainObservable = Observable.create((subscriber:Subscriber<any>) => {
+            mainObservable = Observable.create((subscriber: Subscriber<any>) => {
 
-              let reqSubscr:Subscription = requestObservable.subscribe(
-                (resp:any) => {
+              let reqSubscr: Subscription = requestObservable.subscribe(
+                (resp: any) => {
 
                   if (resp !== null) {
 
-                    let map:ResourceResponseMap = action.map ? action.map : this.map;
-                    let filter:ResourceResponseFilter = action.filter ? action.filter : this.filter;
+                    let map: ResourceResponseMap = action.map ? action.map : this.map;
+                    let filter: ResourceResponseFilter = action.filter ? action.filter : this.filter;
 
                     if (action.isArray) {
                       if (!Array.isArray(resp)) {
                         console.error('Returned data should be an array. Received', resp);
                       } else {
                         let result = resp.filter(filter).map(map);
-                        result = !!resourceModel ? mapToModel.bind(this)(result, resourceModel): result;
+                        if (!!resourceModel) {
+                          result = mapToModel.bind(this)(result, resourceModel);
+                        }
                         Array.prototype.push.apply(ret, result);
                       }
                     } else {
@@ -260,7 +261,7 @@ export function ResourceAction(action?: ResourceActionBase) {
                       } else {
                         if (filter(resp)) {
                           if (!!resourceModel) {
-                            ret.$fillFromObject(map(resp))
+                            (<ResourceModel>ret).$fillFromObject(map(resp))
                           }
                           else {
                             Object.assign(ret, map(resp));
@@ -273,7 +274,7 @@ export function ResourceAction(action?: ResourceActionBase) {
                   subscriber.next(resp);
 
                 },
-                (err:any) => subscriber.error(err),
+                (err: any) => subscriber.error(err),
                 () => {
                   ret.$resolved = true;
                   subscriber.complete();
@@ -300,7 +301,9 @@ export function ResourceAction(action?: ResourceActionBase) {
         });
 
       if (resourceModel) {
-          ret.$observable = ret.$observable.map(resp => { return mapToModel.bind(this)(resp, resourceModel) })
+        ret.$observable = ret.$observable.map(resp => {
+          return mapToModel.bind(this)(resp, resourceModel)
+        })
       }
 
       return ret;
@@ -311,11 +314,11 @@ export function ResourceAction(action?: ResourceActionBase) {
 }
 
 export function mapToModel(resp, model) {
-  let model_providers = Reflect.getMetadata("providers", model) || []
+  let model_providers = Reflect.getMetadata("providers", model) || [];
   let providers = ReflectiveInjector.resolve(model_providers);
-  let injector = ReflectiveInjector.fromResolvedProviders(providers, this.injector)
-  let properties = Reflect.getMetadata("design:paramtypes", model) || []
-  let injection = []
+  let injector = ReflectiveInjector.fromResolvedProviders(providers, this.injector);
+  let properties = Reflect.getMetadata("design:paramtypes", model) || [];
+  let injection = [];
   for (let property of properties) {
     injection.push(injector.get(property));
   }
