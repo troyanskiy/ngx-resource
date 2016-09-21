@@ -1,4 +1,4 @@
-import {Provider} from '@angular/core';
+import {Provider, Injector} from '@angular/core';
 import {Http} from '@angular/http';
 import {Resource} from './Resource';
 
@@ -7,7 +7,7 @@ export class ResourceProviders {
   private static mainProvidersName: string = '__mainProviders';
   private static providers: {[id: string]: Provider[]} = {};
 
-  static add(resource: { new (http: Http): Resource }, subSet:string = null) {
+  static add(resource: { new (http: Http, injector: Injector): Resource }, subSet:string = null) {
 
     if (!subSet) {
       subSet = this.mainProvidersName;
@@ -20,8 +20,8 @@ export class ResourceProviders {
     this.providers[subSet].push(
       {
         provide: resource,
-        useFactory: (http: Http) => new resource(http),
-        deps: [Http]
+        useFactory: (http: Http, injector: Injector) => new resource(http, injector),
+        deps: [Http, Injector]
       }
     )
 

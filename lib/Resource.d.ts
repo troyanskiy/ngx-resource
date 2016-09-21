@@ -1,5 +1,9 @@
 import { Http, Request } from '@angular/http';
+import { Injector } from '@angular/core';
+import { Type } from "@angular/core/src/type"
 import { Observable } from 'rxjs';
+import { ResourceModel } from './ResourceModel';
+
 export declare class Resource {
     protected http: Http;
     private _url;
@@ -7,7 +11,10 @@ export declare class Resource {
     private _headers;
     private _params;
     private _data;
-    constructor(http: Http);
+
+    static resourceModel: Type<ResourceModel>;
+
+    constructor(http: Http, injector: Injector);
     /**
      * Get main url of the resource
      * @returns {string|Promise<string>}

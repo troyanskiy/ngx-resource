@@ -1,5 +1,7 @@
 import { Observable } from 'rxjs';
 import { Request, RequestMethod } from '@angular/http';
+import { Type } from "@angular/core/src/type";
+import { ResourceModel } from "./ResourceModel";
 export interface ResourceRequestInterceptor {
     (req: Request): Request;
 }
@@ -32,9 +34,13 @@ export interface ResourceActionBase extends ResourceParamsCommon {
     responseInterceptor?: ResourceResponseInterceptor;
     map?: ResourceResponseMap;
     filter?: ResourceResponseFilter;
+    modelClass?: Type<ResourceModel>;
 }
 export interface ResourceMethod<I, O> {
     (data?: I, callback?: (res: O) => any): ResourceResult<O>;
+}
+export interface ResourceModelParamsBase {
+    providers?: any[];
 }
 export declare type ResourceResult<R extends {}> = R & {
     $resolved?: boolean;
