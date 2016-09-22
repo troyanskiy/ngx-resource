@@ -1,4 +1,5 @@
 import {Provider, Injector} from '@angular/core';
+import {Type} from '@angular/core/src/type';
 import {Http} from '@angular/http';
 import {Resource} from './Resource';
 
@@ -7,7 +8,7 @@ export class ResourceProviders {
   private static mainProvidersName: string = '__mainProviders';
   private static providers: {[id: string]: Provider[]} = {};
 
-  static add(resource: { new (http: Http, injector: Injector): Resource }, subSet: string = null) {
+  static add(resource: Type<Resource>, subSet: string = null) {
 
     if (!subSet) {
       subSet = this.mainProvidersName;
@@ -17,11 +18,17 @@ export class ResourceProviders {
       this.providers[subSet] = [];
     }
 
+    let deps: any[] = Reflect.getMetadata("design:paramtypes", resource)
+
+    if (deps.length==0) {
+      deps = [Http, Injector]
+    }
+
     this.providers[subSet].push(
       {
         provide: resource,
-        useFactory: (http: Http, injector: Injector) => new resource(http, injector),
-        deps: [Http, Injector]
+        useFactory: (...args: any[]) => new resource(...args),
+        deps: deps
       }
     );
 

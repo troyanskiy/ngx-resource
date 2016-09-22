@@ -1,5 +1,4 @@
-import { Http } from '@angular/http';
-import { Injector } from '@angular/core';
+import { Type } from '@angular/core/src/type';
 import { ResourceParamsBase } from './Interfaces';
 import { Resource } from './Resource';
-export declare function ResourceParams(params?: ResourceParamsBase): (target: new (http: Http, injector: Injector) => Resource) => void;
+export declare function ResourceParams(params?: ResourceParamsBase): (target: Type<Resource>) => void;

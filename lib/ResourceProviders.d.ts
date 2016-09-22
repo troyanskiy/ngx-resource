@@ -1,11 +1,9 @@
-import { Provider, Injector } from '@angular/core';
-import { Http } from '@angular/http';
+import { Provider } from '@angular/core';
+import { Type } from '@angular/core/src/type';
 import { Resource } from './Resource';
 export declare class ResourceProviders {
     private static mainProvidersName;
     private static providers;
-    static add(resource: {
-        new (http: Http, injector: Injector): Resource;
-    }, subSet?: string): void;
+    static add(resource: Type<Resource>, subSet?: string): void;
     static get(subSet?: string): Provider[];
 }
