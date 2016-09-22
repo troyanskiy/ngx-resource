@@ -1,13 +1,11 @@
 import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
 import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
 import {ReflectiveInjector} from "@angular/core";
-import {global} from "@angular/common/src/facade/lang";
 import { Type } from "@angular/core/src/type"
 import {ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter} from './Interfaces';
 import {Resource} from './Resource';
 import {ResourceModel} from './ResourceModel';
 
-var Reflect = global.Reflect;
 
 export function ResourceAction(action?: ResourceActionBase) {
 
@@ -26,7 +24,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
       let ret: ResourceResult<any> | ResourceModel;
 
-      let resourceModel = action.model || target.constructor['model'];
+      let resourceModel = action.model || this.constructor['model'];
 
       if (resourceModel&&!action.isArray) {
         ret = resourceModel.create({}, false)

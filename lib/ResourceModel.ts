@@ -1,11 +1,8 @@
-import {global} from "@angular/common/src/facade/lang";
 import { Type } from "@angular/core/src/type";
 import {Observable} from 'rxjs';
 import {ResourceModelParamsBase} from "./Interfaces";
 import {Resource} from "./Resource";
 import {mapToModel} from "./ResourceAction";
-
-var Reflect = global.Reflect;
 
 
 export function ResourceModelParams(params?: ResourceModelParamsBase) {
@@ -50,9 +47,8 @@ export class ResourceModel {
     	let _object = {};
     	for (var propName in this) {
     		if (!(this[propName] instanceof Function)&&!(propName.charAt(0)=='$')) {
-
+               _object[propName] = this[propName]
     		}
-            _object[propName] = this[propName]
         }
         return _object;
     }
@@ -82,7 +78,7 @@ export class ResourceModel {
         }
         let data = (method_name=="remove") ? {id: this[this.$primaryKey]} :this.$getData();
 
-        let result = _method(data)
+        let result = _method.bind(this.$resource)(data)
         this.$resolved = result.$resolved;
         this.$observable = result.$observable;
         this.$abortRequest = result.$abortRequest;
