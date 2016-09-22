@@ -1,13 +1,19 @@
+import 'reflect-metadata';
 import { Http, Request } from '@angular/http';
+import { Injector } from '@angular/core';
+import { Type } from '@angular/core/src/type';
 import { Observable } from 'rxjs';
+import { ResourceModel } from './ResourceModel';
 export declare class Resource {
     protected http: Http;
+    protected injector: Injector;
+    static model: Type<ResourceModel>;
     private _url;
     private _path;
     private _headers;
     private _params;
     private _data;
-    constructor(http: Http);
+    constructor(http: Http, injector: Injector);
     /**
      * Get main url of the resource
      * @returns {string|Promise<string>}
