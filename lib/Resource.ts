@@ -1,11 +1,14 @@
+import 'reflect-metadata';
 import {Http, Request} from '@angular/http';
 import {Injector} from '@angular/core';
-import { Type } from "@angular/core/src/type"
+import {Type} from '@angular/core/src/type';
 import {Observable} from 'rxjs';
 import {ResourceGlobalConfig} from './ResourceGlobalConfig';
 import {ResourceModel} from './ResourceModel';
 
 export class Resource {
+
+  static model: Type<ResourceModel>;
 
   private _url: string = null;
   private _path: string = null;
@@ -13,12 +16,10 @@ export class Resource {
   private _params: any = null;
   private _data: any = null;
 
-  static model: Type<ResourceModel>;
-
   constructor(protected http: Http, protected injector: Injector) {
-     if (this.constructor['model']) {
-         this.constructor['model']['resourceInstance'] = this;
-     }
+    if ((<any>this.constructor).model) {
+      (<any>this.constructor).model.resourceInstance = this;
+    }
   }
 
   /**
@@ -106,7 +107,7 @@ export class Resource {
    * That is called before executing request
    * @param req
    */
-  requestInterceptor(req: Request): Request{
+  requestInterceptor(req: Request): Request {
     return req;
   }
 

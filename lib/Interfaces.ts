@@ -1,8 +1,7 @@
 import {Observable} from 'rxjs';
 import {Request, RequestMethod} from '@angular/http';
-import { Type } from "@angular/core/src/type";
-import { Resource } from "./Resource"
-import { ResourceModel } from "./ResourceModel"
+import {Type} from '@angular/core/src/type';
+import {ResourceModel} from './ResourceModel';
 
 
 export interface ResourceRequestInterceptor {

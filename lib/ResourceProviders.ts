@@ -7,7 +7,7 @@ export class ResourceProviders {
   private static mainProvidersName: string = '__mainProviders';
   private static providers: {[id: string]: Provider[]} = {};
 
-  static add(resource: { new (http: Http, injector: Injector): Resource }, subSet:string = null) {
+  static add(resource: { new (http: Http, injector: Injector): Resource }, subSet: string = null) {
 
     if (!subSet) {
       subSet = this.mainProvidersName;
@@ -23,11 +23,11 @@ export class ResourceProviders {
         useFactory: (http: Http, injector: Injector) => new resource(http, injector),
         deps: [Http, Injector]
       }
-    )
+    );
 
   }
 
-  static get(subSet:string = null): Provider[] {
+  static get(subSet: string = null): Provider[] {
 
     if (!subSet) {
       subSet = this.mainProvidersName;
