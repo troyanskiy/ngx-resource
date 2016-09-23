@@ -1,9 +1,10 @@
-import 'reflect-metadata';
-import { Http, Request } from '@angular/http';
-import { Injector } from '@angular/core';
-import { Type } from '@angular/core/src/type';
-import { Observable } from 'rxjs';
-import { ResourceModel } from './ResourceModel';
+/// <reference types="es6-shim" />
+import "reflect-metadata";
+import { Http, Request } from "@angular/http";
+import { Injector } from "@angular/core";
+import { Type } from "@angular/core/src/type";
+import { Observable } from "rxjs";
+import { ResourceModel } from "./ResourceModel";
 export declare class Resource {
     protected http: Http;
     protected injector: Injector;

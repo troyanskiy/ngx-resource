@@ -1,11 +1,11 @@
-import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
-import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
-import {ReflectiveInjector} from '@angular/core';
-import {Type} from '@angular/core/src/type';
+import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from "@angular/http";
+import {Subscriber, Observable, ConnectableObservable, Subscription} from "rxjs";
+import {ReflectiveInjector} from "@angular/core";
+import {Type} from "@angular/core/src/type";
 
-import {ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter} from './Interfaces';
-import {Resource} from './Resource';
-import {ResourceModel} from './ResourceModel';
+import {ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter} from "./Interfaces";
+import {Resource} from "./Resource";
+import {ResourceModel} from "./ResourceModel";
 
 
 export function ResourceAction(action?: ResourceActionBase) {
@@ -25,7 +25,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
       let ret: ResourceResult<any> | ResourceModel;
 
-      let resourceModel = action.model || this.constructor['model'];
+      let resourceModel = action.model || this.constructor["model"];
 
       if (resourceModel && !action.isArray) {
         ret = resourceModel.create({}, false);
@@ -82,11 +82,11 @@ export function ResourceAction(action?: ResourceActionBase) {
           let data = args.length ? args[0] : null;
           let callback = args.length > 1 ? args[1] : null;
 
-          if (typeof data === 'function') {
+          if (typeof data === "function") {
             if (!callback) {
               callback = data;
               data = null;
-            } else if (typeof callback !== 'function') {
+            } else if (typeof callback !== "function") {
               let tmpData = callback;
               callback = data;
               data = tmpData;
@@ -106,7 +106,7 @@ export function ResourceAction(action?: ResourceActionBase) {
             let pathParam = pathParams[i];
 
             let pathKey = pathParam.substr(1, pathParam.length - 2);
-            let isMandatory = pathKey[0] === '!';
+            let isMandatory = pathKey[0] === "!";
             if (isMandatory) {
               pathKey = pathKey.substr(1);
             }
@@ -116,11 +116,13 @@ export function ResourceAction(action?: ResourceActionBase) {
             if (!value) {
               if (isMandatory) {
 
+                let consoleMsg = `Mandatory ${pathParam} path parameter is missing`;
+
                 mainObservable = Observable.create((observer: any) => {
-                  observer.error(new Error('Mandatory ' + pathParam + ' path parameter is missing'));
+                  observer.error(new Error(consoleMsg));
                 });
 
-                console.warn('Mandatory ' + pathParam + ' path parameter is missing');
+                console.warn(consoleMsg);
 
                 releaseMainDeferredSubscriber();
                 return;
@@ -135,17 +137,17 @@ export function ResourceAction(action?: ResourceActionBase) {
           }
 
           // Removing double slashed from final url
-          url = url.replace(/\/\/+/g, '/');
-          if (url.startsWith('http')) {
-            url = url.replace(':/', '://');
+          url = url.replace(/\/\/+/g, "/");
+          if (url.startsWith("http")) {
+            url = url.replace(":/", "://");
           }
 
           // Remove trailing slash
-          if (typeof action.removeTrailingSlash === 'undefined') {
+          if (typeof action.removeTrailingSlash === "undefined") {
             action.removeTrailingSlash = this.removeTrailingSlash();
           }
           if (action.removeTrailingSlash) {
-            while (url[url.length - 1] === '/') {
+            while (url[url.length - 1] === "/") {
               url = url.substr(0, url.length - 1);
             }
           }
@@ -153,7 +155,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
           // Remove mapped params
           for (let key in defPathParams) {
-            if (defPathParams[key][0] === '@') {
+            if (defPathParams[key][0] === "@") {
               delete defPathParams[key];
             }
           }
@@ -180,7 +182,7 @@ export function ResourceAction(action?: ResourceActionBase) {
           for (let key in searchParams) {
             if (!usedPathParams[key]) {
               let value: any = searchParams[key];
-              if (typeof value === 'object') {
+              if (typeof value === "object") {
                 // if (value instanceof Object) {
                 value = JSON.stringify(value);
               }
@@ -190,7 +192,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
           // Removing Content-Type header if no body
           if (!body) {
-            headers.delete('content-type');
+            headers.delete("content-type");
           }
 
           // Creating request options
@@ -211,10 +213,10 @@ export function ResourceAction(action?: ResourceActionBase) {
 
           if (!req) {
             mainObservable = Observable.create((observer: any) => {
-              observer.error(new Error('Request is null'));
+              observer.error(new Error("Request is null"));
             });
 
-            console.warn('Request is null');
+            console.warn("Request is null");
 
             releaseMainDeferredSubscriber();
             return;
@@ -223,7 +225,7 @@ export function ResourceAction(action?: ResourceActionBase) {
           // Doing the request
           let requestObservable = this.http.request(req);
 
-          //noinspection TypeScriptValidateTypes
+          // noinspection TypeScriptValidateTypes
           requestObservable = action.responseInterceptor ?
             action.responseInterceptor(requestObservable, req) :
             this.responseInterceptor(requestObservable, req);
@@ -245,7 +247,7 @@ export function ResourceAction(action?: ResourceActionBase) {
 
                     if (action.isArray) {
                       if (!Array.isArray(resp)) {
-                        console.error('Returned data should be an array. Received', resp);
+                        console.error("Returned data should be an array. Received", resp);
                       } else {
                         let result = resp.filter(filter).map(map);
                         result = !!resourceModel ? mapToModel.bind(this)(result, resourceModel) : result;
@@ -253,7 +255,7 @@ export function ResourceAction(action?: ResourceActionBase) {
                       }
                     } else {
                       if (Array.isArray(resp)) {
-                        console.error('Returned data should be an object. Received', resp);
+                        console.error("Returned data should be an object. Received", resp);
                       } else {
                         if (filter(resp)) {
                           if (!!resourceModel) {
@@ -309,11 +311,11 @@ export function ResourceAction(action?: ResourceActionBase) {
 }
 
 export function mapToModel(resp: any, model: Type<ResourceModel>) {
-  let modelProviders = (<any>Reflect).getMetadata('providers', model) || [];
+  let modelProviders = (<any>Reflect).getMetadata("providers", model) || [];
   let providers = ReflectiveInjector.resolve(modelProviders);
   let injector = ReflectiveInjector.fromResolvedProviders(providers, this.injector);
-  let properties = (<any>Reflect).getMetadata('design:paramtypes', model) || [];
-  let injection:any[] = [];
+  let properties = (<any>Reflect).getMetadata("design:paramtypes", model) || [];
+  let injection: any[] = [];
   for (let property of properties) {
     injection.push(injector.get(property));
   }
@@ -337,7 +339,7 @@ export function mapToModel(resp: any, model: Type<ResourceModel>) {
 
 function getValueForPath(key: string, params: any, data: any, usedPathParams: any): string {
 
-  if (typeof data[key] !== 'object') {
+  if (typeof data[key] !== "object") {
     usedPathParams[key] = true;
     return data[key];
   }
@@ -346,7 +348,7 @@ function getValueForPath(key: string, params: any, data: any, usedPathParams: an
     return null;
   }
 
-  if (params[key][0] === '@') {
+  if (params[key][0] === "@") {
     return getValueForPath(params[key].substr(1), params, data, usedPathParams);
   }
 

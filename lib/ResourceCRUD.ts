@@ -1,7 +1,7 @@
-import {RequestMethod} from '@angular/http';
-import {Resource} from './Resource';
-import {ResourceMethod} from './Interfaces';
-import {ResourceAction} from './ResourceAction';
+import {RequestMethod} from "@angular/http";
+import {Resource} from "./Resource";
+import {ResourceMethod} from "./Interfaces";
+import {ResourceAction} from "./ResourceAction";
 
 export class ResourceCRUD<TQuery, TShort, TFull> extends Resource {
 
@@ -11,7 +11,7 @@ export class ResourceCRUD<TQuery, TShort, TFull> extends Resource {
   query: ResourceMethod<TQuery, TShort>;
 
   @ResourceAction({
-    path: '/{!id}'
+    path: "/{!id}"
   })
   get: ResourceMethod<{id: any}, TFull>;
 
@@ -22,13 +22,13 @@ export class ResourceCRUD<TQuery, TShort, TFull> extends Resource {
 
   @ResourceAction({
     method: RequestMethod.Put,
-    path: '/{!id}'
+    path: "/{!id}"
   })
   update: ResourceMethod<TFull, TFull>;
 
   @ResourceAction({
     method: RequestMethod.Delete,
-    path: '/{!id}'
+    path: "/{!id}"
   })
   remove: ResourceMethod<{id: any}, any>;
 

@@ -1,7 +1,7 @@
-import { Type } from '@angular/core/src/type';
-import { Observable } from 'rxjs';
-import { ResourceModelParamsBase } from './Interfaces';
-import { Resource } from './Resource';
+import { Type } from "@angular/core/src/type";
+import { Observable } from "rxjs";
+import { ResourceModelParamsBase } from "./Interfaces";
+import { Resource } from "./Resource";
 export declare function ResourceModelParams(params?: ResourceModelParamsBase): (target: Type<ResourceModel>) => void;
 export declare class ResourceModel {
     static resourceClass: Type<Resource>;

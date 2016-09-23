@@ -1,6 +1,6 @@
-import { Provider } from '@angular/core';
-import { Type } from '@angular/core/src/type';
-import { Resource } from './Resource';
+import { Provider } from "@angular/core";
+import { Type } from "@angular/core/src/type";
+import { Resource } from "./Resource";
 export declare class ResourceProviders {
     private static mainProvidersName;
     private static providers;
