@@ -1,3 +1,4 @@
+/// <reference types="es6-shim" />
 import 'reflect-metadata';
 import { Http, Request } from '@angular/http';
 import { Injector } from '@angular/core';

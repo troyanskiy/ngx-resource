@@ -5,17 +5,17 @@ import {Resource} from './Resource';
 import {mapToModel} from './ResourceAction';
 
 
+
 export function ResourceModelParams(params?: ResourceModelParamsBase) {
 
   return function (target: Type<ResourceModel>) {
-    let providers:any[] = [];
+    let providers: any[] = [];
     if (params) {
       providers = params.providers || [];
     }
 
     (<any>Reflect).defineMetadata('providers', providers, target);
   };
-
 }
 
 
@@ -49,7 +49,7 @@ export class ResourceModel {
   }
 
   public $getData() {
-    let _object:any = {};
+    let _object: any = {};
     for (let propName in this) {
       if (!((<any>this)[propName] instanceof Function) && !(propName.charAt(0) === '$')) {
         _object[propName] = (<any>this)[propName];

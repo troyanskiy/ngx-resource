@@ -1,11 +1,11 @@
 import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
 import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
 import {ReflectiveInjector} from '@angular/core';
+import {Type} from '@angular/core/src/type';
+
 import {ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter} from './Interfaces';
 import {Resource} from './Resource';
 import {ResourceModel} from './ResourceModel';
-import {Type} from '@angular/core/src/type';
-
 
 
 export function ResourceAction(action?: ResourceActionBase) {
@@ -116,11 +116,13 @@ export function ResourceAction(action?: ResourceActionBase) {
             if (!value) {
               if (isMandatory) {
 
+                let consoleMsg = `Mandatory ${pathParam} path parameter is missing`;
+
                 mainObservable = Observable.create((observer: any) => {
-                  observer.error(new Error('Mandatory ' + pathParam + ' path parameter is missing'));
+                  observer.error(new Error(consoleMsg));
                 });
 
-                console.warn('Mandatory ' + pathParam + ' path parameter is missing');
+                console.warn(consoleMsg);
 
                 releaseMainDeferredSubscriber();
                 return;
@@ -223,7 +225,7 @@ export function ResourceAction(action?: ResourceActionBase) {
           // Doing the request
           let requestObservable = this.http.request(req);
 
-          //noinspection TypeScriptValidateTypes
+          // noinspection TypeScriptValidateTypes
           requestObservable = action.responseInterceptor ?
             action.responseInterceptor(requestObservable, req) :
             this.responseInterceptor(requestObservable, req);
@@ -313,7 +315,7 @@ export function mapToModel(resp: any, model: Type<ResourceModel>) {
   let providers = ReflectiveInjector.resolve(modelProviders);
   let injector = ReflectiveInjector.fromResolvedProviders(providers, this.injector);
   let properties = (<any>Reflect).getMetadata('design:paramtypes', model) || [];
-  let injection:any[] = [];
+  let injection: any[] = [];
   for (let property of properties) {
     injection.push(injector.get(property));
   }
