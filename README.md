@@ -432,6 +432,18 @@ Lower number - higher priority
 4. Defined in ResourceGlobalConfig
 5. Default value
 
+## Example of service injection
+```ts
+export class UnitRes extends Resource {
+    constructor(
+            http: Http,
+            injector: Injector,
+            private _myService: MyService
+        ) {
+            super(http, injector);
+        }
+ }
+```
 
 ## Example of auth resource service with custom headers
 
