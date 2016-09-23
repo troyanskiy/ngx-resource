@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import {Provider, Injector} from '@angular/core';
 import {Type} from '@angular/core/src/type';
 import {Http} from '@angular/http';
@@ -19,7 +18,7 @@ export class ResourceProviders {
       this.providers[subSet] = [];
     }
 
-    let deps: any[] = Reflect.getMetadata('design:paramtypes', resource);
+    let deps: any[] = (<any>Reflect).getMetadata('design:paramtypes', resource);
 
     if (deps.length === 0) {
       deps = [Http, Injector];

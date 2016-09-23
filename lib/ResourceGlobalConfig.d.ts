@@ -1,4 +1,3 @@
-/// <reference types="es6-shim" />
 export declare class ResourceGlobalConfig {
     static url: string | Promise<string>;
     static path: string | Promise<string>;

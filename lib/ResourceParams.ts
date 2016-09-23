@@ -1,5 +1,3 @@
-import {Http} from '@angular/http';
-import {Injector} from '@angular/core';
 import {Type} from '@angular/core/src/type';
 import {ResourceParamsBase} from './Interfaces';
 import {ResourceProviders} from './ResourceProviders';
