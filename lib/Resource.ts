@@ -1,10 +1,10 @@
-import "reflect-metadata";
-import {Http, Request} from "@angular/http";
-import {Injector} from "@angular/core";
-import {Type} from "@angular/core/src/type";
-import {Observable} from "rxjs";
-import {ResourceGlobalConfig} from "./ResourceGlobalConfig";
-import {ResourceModel} from "./ResourceModel";
+import 'reflect-metadata';
+import {Http, Request} from '@angular/http';
+import {Injector} from '@angular/core';
+import {Type} from '@angular/core/src/type';
+import {Observable} from 'rxjs';
+import {ResourceGlobalConfig} from './ResourceGlobalConfig';
+import {ResourceModel} from './ResourceModel';
 
 export class Resource {
 
@@ -27,7 +27,7 @@ export class Resource {
    * @returns {string|Promise<string>}
    */
   getUrl(): string | Promise<string> {
-    return this._url || this._getUrl() || ResourceGlobalConfig.url || "";
+    return this._url || this._getUrl() || ResourceGlobalConfig.url || '';
   }
 
   /**
@@ -43,7 +43,7 @@ export class Resource {
    * @returns {string|Promise<string>}
    */
   getPath(): string | Promise<string> {
-    return this._path || this._getPath() || ResourceGlobalConfig.path || "";
+    return this._path || this._getPath() || ResourceGlobalConfig.path || '';
   }
 
   /**

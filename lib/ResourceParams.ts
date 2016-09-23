@@ -1,9 +1,9 @@
-import {Http} from "@angular/http";
-import {Injector} from "@angular/core";
-import {Type} from "@angular/core/src/type";
-import {ResourceParamsBase} from "./Interfaces";
-import {ResourceProviders} from "./ResourceProviders";
-import {Resource} from "./Resource";
+import {Http} from '@angular/http';
+import {Injector} from '@angular/core';
+import {Type} from '@angular/core/src/type';
+import {ResourceParamsBase} from './Interfaces';
+import {ResourceProviders} from './ResourceProviders';
+import {Resource} from './Resource';
 
 
 export function ResourceParams(params: ResourceParamsBase = {}) {
@@ -14,7 +14,7 @@ export function ResourceParams(params: ResourceParamsBase = {}) {
       ResourceProviders.add(target, params.providersSubSet);
     }
 
-    if (typeof params.removeTrailingSlash !== "undefined") {
+    if (typeof params.removeTrailingSlash !== 'undefined') {
       target.prototype.removeTrailingSlash = function () {
         return !!params.removeTrailingSlash;
       };

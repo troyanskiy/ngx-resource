@@ -1,8 +1,8 @@
-import {Type} from "@angular/core/src/type";
-import {Observable} from "rxjs";
-import {ResourceModelParamsBase} from "./Interfaces";
-import {Resource} from "./Resource";
-import {mapToModel} from "./ResourceAction";
+import {Type} from '@angular/core/src/type';
+import {Observable} from 'rxjs';
+import {ResourceModelParamsBase} from './Interfaces';
+import {Resource} from './Resource';
+import {mapToModel} from './ResourceAction';
 
 
 
@@ -14,7 +14,7 @@ export function ResourceModelParams(params?: ResourceModelParamsBase) {
       providers = params.providers || [];
     }
 
-    (<any>Reflect).defineMetadata("providers", providers, target);
+    (<any>Reflect).defineMetadata('providers', providers, target);
   };
 }
 
@@ -27,12 +27,12 @@ export class ResourceModel {
   $resolved: boolean;
   $observable: Observable<any>;
   $abortRequest: () => void;
-  $primaryKey: string = "id";
+  $primaryKey: string = 'id';
   $resource: Resource;
 
   static create(data: any = {}, commit: boolean = true) {
     if (!this.resourceInstance) {
-      console.error("You should first instantiate Resource by injecting.");
+      console.error('You should first instantiate Resource by injecting.');
     }
     let result = mapToModel.bind(this.resourceInstance)(data, this);
     if (commit) {
@@ -51,7 +51,7 @@ export class ResourceModel {
   public $getData() {
     let _object: any = {};
     for (let propName in this) {
-      if (!((<any>this)[propName] instanceof Function) && !(propName.charAt(0) === "$")) {
+      if (!((<any>this)[propName] instanceof Function) && !(propName.charAt(0) === '$')) {
         _object[propName] = (<any>this)[propName];
       }
     }
@@ -67,11 +67,11 @@ export class ResourceModel {
   }
 
   public $update() {
-    this.$resource_method("update");
+    this.$resource_method('update');
   }
 
   public $remove() {
-    this.$resource_method("remove");
+    this.$resource_method('remove');
   }
 
   private $resource_method(method_name: string) {
@@ -80,7 +80,7 @@ export class ResourceModel {
       console.error(`Your Resource has no implemented ${method_name} method.`);
       return;
     }
-    let data = (method_name === "remove") ? {id: (<any>this)[this.$primaryKey]} : this.$getData();
+    let data = (method_name === 'remove') ? {id: (<any>this)[this.$primaryKey]} : this.$getData();
 
     let result = _method.bind(this.$resource)(data);
     this.$resolved = result.$resolved;
@@ -92,7 +92,7 @@ export class ResourceModel {
   }
 
   private $create() {
-    this.$resource_method("create");
+    this.$resource_method('create');
   }
 
 }

@@ -1,11 +1,12 @@
-import {Provider, Injector} from "@angular/core";
-import {Type} from "@angular/core/src/type";
-import {Http} from "@angular/http";
-import {Resource} from "./Resource";
+import 'reflect-metadata';
+import {Provider, Injector} from '@angular/core';
+import {Type} from '@angular/core/src/type';
+import {Http} from '@angular/http';
+import {Resource} from './Resource';
 
 export class ResourceProviders {
 
-  private static mainProvidersName: string = "__mainProviders";
+  private static mainProvidersName: string = '__mainProviders';
   private static providers: {[id: string]: Provider[]} = {};
 
   static add(resource: Type<Resource>, subSet: string = null) {
@@ -18,7 +19,7 @@ export class ResourceProviders {
       this.providers[subSet] = [];
     }
 
-    let deps: any[] = Reflect.getMetadata("design:paramtypes", resource);
+    let deps: any[] = Reflect.getMetadata('design:paramtypes', resource);
 
     if (deps.length === 0) {
       deps = [Http, Injector];

@@ -1,5 +1,5 @@
-import { Resource } from "./Resource";
-import { ResourceMethod } from "./Interfaces";
+import { Resource } from './Resource';
+import { ResourceMethod } from './Interfaces';
 export declare class ResourceCRUDBase<TQuery, TKeys, TShort, TFull> extends Resource {
     query: ResourceMethod<TQuery, TShort>;
     get: ResourceMethod<TKeys, TFull>;

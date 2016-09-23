@@ -1,7 +1,7 @@
-import { Observable } from "rxjs";
-import { Request, RequestMethod } from "@angular/http";
-import { Type } from "@angular/core/src/type";
-import { ResourceModel } from "./ResourceModel";
+import { Observable } from 'rxjs';
+import { Request, RequestMethod } from '@angular/http';
+import { Type } from '@angular/core/src/type';
+import { ResourceModel } from './ResourceModel';
 export interface ResourceRequestInterceptor {
     (req: Request): Request;
 }
