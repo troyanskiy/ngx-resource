@@ -1,5 +1,5 @@
 import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
-import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs';
+import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs/Rx';
 import {ReflectiveInjector} from '@angular/core';
 import {Type} from '@angular/core/src/type';
 

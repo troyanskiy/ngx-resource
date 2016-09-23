@@ -1,8 +1,7 @@
-import 'reflect-metadata';
 import {Http, Request} from '@angular/http';
 import {Injector} from '@angular/core';
 import {Type} from '@angular/core/src/type';
-import {Observable} from 'rxjs';
+import {Observable} from 'rxjs/Rx';
 import {ResourceGlobalConfig} from './ResourceGlobalConfig';
 import {ResourceModel} from './ResourceModel';
 
