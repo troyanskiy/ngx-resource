@@ -1,4 +1,6 @@
 [![npm version](https://badge.fury.io/js/ng2-resource-rest.svg)](http://badge.fury.io/js/ng2-resource-rest)
+
+[![NPM](https://nodei.co/npm/ng2-resource-rest.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ng2-resource-rest/)
 # ng2-resource-rest
 Resource (REST) Client for Angular 2 RC6
 
