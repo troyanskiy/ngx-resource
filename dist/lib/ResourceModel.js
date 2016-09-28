@@ -1,73 +1,80 @@
-import { mapToModel } from './ResourceAction';
-export function ResourceModelParams(params) {
+"use strict";
+var ResourceAction_1 = require('./ResourceAction');
+function ResourceModelParams(params) {
     return function (target) {
-        let providers = [];
+        var providers = [];
         if (params) {
             providers = params.providers || [];
         }
         Reflect.defineMetadata('providers', providers, target);
     };
 }
-export class ResourceModel {
-    constructor() {
+exports.ResourceModelParams = ResourceModelParams;
+var ResourceModel = (function () {
+    function ResourceModel() {
         this.$primaryKey = 'id';
     }
-    static create(data = {}, commit = true) {
+    ResourceModel.create = function (data, commit) {
+        if (data === void 0) { data = {}; }
+        if (commit === void 0) { commit = true; }
         if (!this.resourceInstance) {
             console.error('You should first instantiate Resource by injecting.');
         }
-        let result = mapToModel.bind(this.resourceInstance)(data, this);
+        var result = ResourceAction_1.mapToModel.bind(this.resourceInstance)(data, this);
         if (commit) {
             result = result.save();
         }
         return result;
-    }
-    $fillFromObject(_object) {
-        for (let propName in _object) {
+    };
+    ResourceModel.prototype.$fillFromObject = function (_object) {
+        for (var propName in _object) {
             this[propName] = _object[propName];
         }
         return this;
-    }
-    $getData() {
-        let _object = {};
-        for (let propName in this) {
+    };
+    ResourceModel.prototype.$getData = function () {
+        var _object = {};
+        for (var propName in this) {
             if (!(this[propName] instanceof Function) && !(propName.charAt(0) === '$')) {
                 _object[propName] = this[propName];
             }
         }
         return _object;
-    }
-    $save() {
+    };
+    ResourceModel.prototype.$save = function () {
         if (this[this.$primaryKey]) {
             this.$update();
         }
         else {
             this.$create();
         }
-    }
-    $update() {
+    };
+    ResourceModel.prototype.$update = function () {
         this.$resource_method('update');
-    }
-    $remove() {
+    };
+    ResourceModel.prototype.$remove = function () {
         this.$resource_method('remove');
-    }
-    $resource_method(method_name) {
-        let _method = this.$resource[method_name];
+    };
+    ResourceModel.prototype.$resource_method = function (method_name) {
+        var _this = this;
+        var _method = this.$resource[method_name];
         if (!_method) {
-            console.error(`Your Resource has no implemented ${method_name} method.`);
+            console.error("Your Resource has no implemented " + method_name + " method.");
             return;
         }
-        let data = (method_name === 'remove') ? { id: this[this.$primaryKey] } : this.$getData();
-        let result = _method.bind(this.$resource)(data);
+        var data = (method_name === 'remove') ? { id: this[this.$primaryKey] } : this.$getData();
+        var result = _method.bind(this.$resource)(data);
         this.$resolved = result.$resolved;
         this.$observable = result.$observable;
         this.$abortRequest = result.$abortRequest;
-        this.$observable.subscribe(resp => {
-            this.$fillFromObject(resp.$getData());
+        this.$observable.subscribe(function (resp) {
+            _this.$fillFromObject(resp.$getData());
         });
-    }
-    $create() {
+    };
+    ResourceModel.prototype.$create = function () {
         this.$resource_method('create');
-    }
-}
+    };
+    return ResourceModel;
+}());
+exports.ResourceModel = ResourceModel;
 //# sourceMappingURL=ResourceModel.js.map

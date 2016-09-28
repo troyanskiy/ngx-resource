@@ -1,25 +1,30 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpModule } from '@angular/http';
-import { ResourceProviders } from './ResourceProviders';
-export class ResourceModule {
-    static forRoot() {
+"use strict";
+var core_1 = require('@angular/core');
+var common_1 = require('@angular/common');
+var http_1 = require('@angular/http');
+var ResourceProviders_1 = require('./ResourceProviders');
+var ResourceModule = (function () {
+    function ResourceModule() {
+    }
+    ResourceModule.forRoot = function () {
         return {
             ngModule: ResourceModule,
-            providers: [ResourceProviders.get()]
+            providers: [ResourceProviders_1.ResourceProviders.get()]
         };
-    }
-    static forChild(subSet) {
+    };
+    ResourceModule.forChild = function (subSet) {
         return {
             ngModule: ResourceModule,
-            providers: [ResourceProviders.get(subSet)]
+            providers: [ResourceProviders_1.ResourceProviders.get(subSet)]
         };
-    }
-}
-ResourceModule.decorators = [
-    { type: NgModule, args: [{
-                imports: [CommonModule, HttpModule]
-            },] },
-];
-ResourceModule.ctorParameters = [];
+    };
+    ResourceModule.decorators = [
+        { type: core_1.NgModule, args: [{
+                    imports: [common_1.CommonModule, http_1.HttpModule]
+                },] },
+    ];
+    ResourceModule.ctorParameters = [];
+    return ResourceModule;
+}());
+exports.ResourceModule = ResourceModule;
 //# sourceMappingURL=ResourceModule.js.map

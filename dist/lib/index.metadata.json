@@ -1,0 +1,1 @@
+{"__symbolic":"module","version":1,"metadata":{},"exports":[{"from":"./Interfaces"},{"from":"./Resource"},{"from":"./ResourceAction"},{"from":"./ResourceCRUD"},{"from":"./ResourceCRUDBase"},{"from":"./ResourceGlobalConfig"},{"from":"./ResourceModule"},{"from":"./ResourceParams"},{"from":"./ResourceProviders"},{"from":"./ResourceModel"}]}

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "es2015",
+    "target": "es5",
+    "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
     "removeComments": true,
@@ -16,10 +16,7 @@
     "noImplicitUseStrict": false,
     "noFallthroughCasesInSwitch": true,
     "outDir": "./dist",
-    "rootDir": ".",
-    "types": [
-      "node"
-    ]
+    "rootDir": "."
   },
   "angularCompilerOptions": {
     "debug": true

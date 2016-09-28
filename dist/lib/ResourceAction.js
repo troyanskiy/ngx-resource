@@ -1,16 +1,22 @@
-import { RequestMethod, Headers, URLSearchParams, RequestOptions, Request } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
-import { ReflectiveInjector } from '@angular/core';
-export function ResourceAction(action) {
+"use strict";
+var http_1 = require('@angular/http');
+var Rx_1 = require('rxjs/Rx');
+var core_1 = require('@angular/core');
+function ResourceAction(action) {
     action = action || {};
     if (action.method === undefined) {
-        action.method = RequestMethod.Get;
+        action.method = http_1.RequestMethod.Get;
     }
     return function (target, propertyKey) {
-        target[propertyKey] = function (...args) {
-            let isGetRequest = action.method === RequestMethod.Get;
-            let ret;
-            let resourceModel = action.model || this.constructor['model'];
+        target[propertyKey] = function () {
+            var _this = this;
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            var isGetRequest = action.method === http_1.RequestMethod.Get;
+            var ret;
+            var resourceModel = action.model || this.constructor['model'];
             if (resourceModel && !action.isArray) {
                 ret = resourceModel.create({}, false);
             }
@@ -20,13 +26,13 @@ export function ResourceAction(action) {
             else {
                 ret = action.isArray ? [] : {};
             }
-            let mainDeferredSubscriber = null;
-            let mainObservable = null;
+            var mainDeferredSubscriber = null;
+            var mainObservable = null;
             ret.$resolved = false;
-            ret.$observable = Observable.create((subscriber) => {
+            ret.$observable = Rx_1.Observable.create(function (subscriber) {
                 mainDeferredSubscriber = subscriber;
-            }).flatMap(() => mainObservable);
-            ret.$abortRequest = () => {
+            }).flatMap(function () { return mainObservable; });
+            ret.$abortRequest = function () {
                 ret.$resolved = true;
             };
             function releaseMainDeferredSubscriber() {
@@ -45,25 +51,25 @@ export function ResourceAction(action) {
                 Promise.resolve(action.params || this.getParams()),
                 Promise.resolve(action.data || this.getData())
             ])
-                .then((dataAll) => {
+                .then(function (dataAll) {
                 if (ret.$resolved) {
-                    mainObservable = Observable.create((observer) => {
+                    mainObservable = Rx_1.Observable.create(function (observer) {
                         observer.next(null);
                     });
                     releaseMainDeferredSubscriber();
                 }
-                let url = dataAll[0] + dataAll[1];
-                let headers = new Headers(dataAll[2]);
-                let defPathParams = dataAll[3];
-                let data = args.length ? args[0] : null;
-                let callback = args.length > 1 ? args[1] : null;
+                var url = dataAll[0] + dataAll[1];
+                var headers = new http_1.Headers(dataAll[2]);
+                var defPathParams = dataAll[3];
+                var data = args.length ? args[0] : null;
+                var callback = args.length > 1 ? args[1] : null;
                 if (typeof data === 'function') {
                     if (!callback) {
                         callback = data;
                         data = null;
                     }
                     else if (typeof callback !== 'function') {
-                        let tmpData = callback;
+                        var tmpData = callback;
                         callback = data;
                         data = tmpData;
                     }
@@ -72,50 +78,55 @@ export function ResourceAction(action) {
                     }
                 }
                 data = Object.assign({}, dataAll[4], data);
-                let pathParams = url.match(/{([^}]*)}/g) || [];
-                let usedPathParams = {};
-                for (let i = 0; i < pathParams.length; i++) {
-                    let pathParam = pathParams[i];
-                    let pathKey = pathParam.substr(1, pathParam.length - 2);
-                    let isMandatory = pathKey[0] === '!';
+                var pathParams = url.match(/{([^}]*)}/g) || [];
+                var usedPathParams = {};
+                var _loop_1 = function(i) {
+                    var pathParam = pathParams[i];
+                    var pathKey = pathParam.substr(1, pathParam.length - 2);
+                    var isMandatory = pathKey[0] === '!';
                     if (isMandatory) {
                         pathKey = pathKey.substr(1);
                     }
-                    let value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
+                    var value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
                     if (!value) {
                         if (isMandatory) {
-                            let consoleMsg = `Mandatory ${pathParam} path parameter is missing`;
-                            mainObservable = Observable.create((observer) => {
-                                observer.error(new Error(consoleMsg));
+                            var consoleMsg_1 = "Mandatory " + pathParam + " path parameter is missing";
+                            mainObservable = Rx_1.Observable.create(function (observer) {
+                                observer.error(new Error(consoleMsg_1));
                             });
-                            console.warn(consoleMsg);
+                            console.warn(consoleMsg_1);
                             releaseMainDeferredSubscriber();
-                            return;
+                            return { value: void 0 };
                         }
                         url = url.substr(0, url.indexOf(pathParam));
-                        break;
+                        return "break";
                     }
                     url = url.replace(pathParam, value);
+                };
+                for (var i = 0; i < pathParams.length; i++) {
+                    var state_1 = _loop_1(i);
+                    if (typeof state_1 === "object") return state_1.value;
+                    if (state_1 === "break") break;
                 }
                 url = url.replace(/\/\/+/g, '/');
                 if (url.startsWith('http')) {
                     url = url.replace(':/', '://');
                 }
                 if (typeof action.removeTrailingSlash === 'undefined') {
-                    action.removeTrailingSlash = this.removeTrailingSlash();
+                    action.removeTrailingSlash = _this.removeTrailingSlash();
                 }
                 if (action.removeTrailingSlash) {
                     while (url[url.length - 1] === '/') {
                         url = url.substr(0, url.length - 1);
                     }
                 }
-                for (let key in defPathParams) {
+                for (var key in defPathParams) {
                     if (defPathParams[key][0] === '@') {
                         delete defPathParams[key];
                     }
                 }
-                let body = null;
-                let searchParams;
+                var body = null;
+                var searchParams;
                 if (isGetRequest) {
                     searchParams = Object.assign({}, defPathParams, data);
                 }
@@ -125,10 +136,10 @@ export function ResourceAction(action) {
                     }
                     searchParams = defPathParams;
                 }
-                let search = new URLSearchParams();
-                for (let key in searchParams) {
+                var search = new http_1.URLSearchParams();
+                for (var key in searchParams) {
                     if (!usedPathParams[key]) {
-                        let value = searchParams[key];
+                        var value = searchParams[key];
                         if (typeof value === 'object') {
                             value = JSON.stringify(value);
                         }
@@ -138,45 +149,45 @@ export function ResourceAction(action) {
                 if (!body) {
                     headers.delete('content-type');
                 }
-                let requestOptions = new RequestOptions({
+                var requestOptions = new http_1.RequestOptions({
                     method: action.method,
                     headers: headers,
                     body: body,
                     url: url,
                     search: search
                 });
-                let req = new Request(requestOptions);
+                var req = new http_1.Request(requestOptions);
                 req = action.requestInterceptor ?
                     action.requestInterceptor(req) :
-                    this.requestInterceptor(req);
+                    _this.requestInterceptor(req);
                 if (!req) {
-                    mainObservable = Observable.create((observer) => {
+                    mainObservable = Rx_1.Observable.create(function (observer) {
                         observer.error(new Error('Request is null'));
                     });
                     console.warn('Request is null');
                     releaseMainDeferredSubscriber();
                     return;
                 }
-                let requestObservable = this.http.request(req);
+                var requestObservable = _this.http.request(req);
                 requestObservable = action.responseInterceptor ?
                     action.responseInterceptor(requestObservable, req) :
-                    this.responseInterceptor(requestObservable, req);
+                    _this.responseInterceptor(requestObservable, req);
                 if (action.isLazy) {
                     mainObservable = requestObservable;
                 }
                 else {
-                    mainObservable = Observable.create((subscriber) => {
-                        let reqSubscr = requestObservable.subscribe((resp) => {
+                    mainObservable = Rx_1.Observable.create(function (subscriber) {
+                        var reqSubscr = requestObservable.subscribe(function (resp) {
                             if (resp !== null) {
-                                let map = action.map ? action.map : this.map;
-                                let filter = action.filter ? action.filter : this.filter;
+                                var map = action.map ? action.map : _this.map;
+                                var filter = action.filter ? action.filter : _this.filter;
                                 if (action.isArray) {
                                     if (!Array.isArray(resp)) {
                                         console.error('Returned data should be an array. Received', resp);
                                     }
                                     else {
-                                        let result = resp.filter(filter).map(map);
-                                        result = !!resourceModel ? mapToModel.bind(this)(result, resourceModel) : result;
+                                        var result = resp.filter(filter).map(map);
+                                        result = !!resourceModel ? mapToModel.bind(_this)(result, resourceModel) : result;
                                         Array.prototype.push.apply(ret, result);
                                     }
                                 }
@@ -197,14 +208,14 @@ export function ResourceAction(action) {
                                 }
                             }
                             subscriber.next(resp);
-                        }, (err) => subscriber.error(err), () => {
+                        }, function (err) { return subscriber.error(err); }, function () {
                             ret.$resolved = true;
                             subscriber.complete();
                             if (callback) {
                                 callback(ret);
                             }
                         });
-                        ret.$abortRequest = () => {
+                        ret.$abortRequest = function () {
                             if (ret.$resolved) {
                                 return;
                             }
@@ -216,38 +227,42 @@ export function ResourceAction(action) {
                 releaseMainDeferredSubscriber();
             });
             if (resourceModel) {
-                ret.$observable = ret.$observable.map((resp) => {
-                    return mapToModel.bind(this)(resp, resourceModel);
+                ret.$observable = ret.$observable.map(function (resp) {
+                    return mapToModel.bind(_this)(resp, resourceModel);
                 });
             }
             return ret;
         };
     };
 }
-export function mapToModel(resp, model) {
-    let modelProviders = Reflect.getMetadata('providers', model) || [];
-    let providers = ReflectiveInjector.resolve(modelProviders);
-    let injector = ReflectiveInjector.fromResolvedProviders(providers, this.injector);
-    let properties = Reflect.getMetadata('design:paramtypes', model) || [];
-    let injection = [];
-    for (let property of properties) {
+exports.ResourceAction = ResourceAction;
+function mapToModel(resp, model) {
+    var modelProviders = Reflect.getMetadata('providers', model) || [];
+    var providers = core_1.ReflectiveInjector.resolve(modelProviders);
+    var injector = core_1.ReflectiveInjector.fromResolvedProviders(providers, this.injector);
+    var properties = Reflect.getMetadata('design:paramtypes', model) || [];
+    var injection = [];
+    for (var _i = 0, properties_1 = properties; _i < properties_1.length; _i++) {
+        var property = properties_1[_i];
         injection.push(injector.get(property));
     }
-    let result;
+    var result;
     if (Array.isArray(resp)) {
         result = [];
-        for (let item of resp) {
-            let modelInstance = new model(...injection).$fillFromObject(item);
+        for (var _a = 0, resp_1 = resp; _a < resp_1.length; _a++) {
+            var item = resp_1[_a];
+            var modelInstance = new (model.bind.apply(model, [void 0].concat(injection)))().$fillFromObject(item);
             modelInstance.$resource = this;
             result.push(modelInstance);
         }
     }
     else {
-        result = new model(...injection).$fillFromObject(resp);
+        result = new (model.bind.apply(model, [void 0].concat(injection)))().$fillFromObject(resp);
         result.$resource = this;
     }
     return result;
 }
+exports.mapToModel = mapToModel;
 function getValueForPath(key, params, data, usedPathParams) {
     if (typeof data[key] !== 'object') {
         usedPathParams[key] = true;

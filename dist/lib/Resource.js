@@ -1,6 +1,7 @@
-import { ResourceGlobalConfig } from './ResourceGlobalConfig';
-export class Resource {
-    constructor(http, injector) {
+"use strict";
+var ResourceGlobalConfig_1 = require('./ResourceGlobalConfig');
+var Resource = (function () {
+    function Resource(http, injector) {
         this.http = http;
         this.injector = injector;
         this._url = null;
@@ -12,65 +13,67 @@ export class Resource {
             this.constructor.model.resourceInstance = this;
         }
     }
-    getUrl() {
-        return this._url || this._getUrl() || ResourceGlobalConfig.url || '';
-    }
-    setUrl(url) {
+    Resource.prototype.getUrl = function () {
+        return this._url || this._getUrl() || ResourceGlobalConfig_1.ResourceGlobalConfig.url || '';
+    };
+    Resource.prototype.setUrl = function (url) {
         this._url = url;
-    }
-    getPath() {
-        return this._path || this._getPath() || ResourceGlobalConfig.path || '';
-    }
-    setPath(path) {
+    };
+    Resource.prototype.getPath = function () {
+        return this._path || this._getPath() || ResourceGlobalConfig_1.ResourceGlobalConfig.path || '';
+    };
+    Resource.prototype.setPath = function (path) {
         this._path = path;
-    }
-    getHeaders() {
-        return this._headers || this._getHeaders() || ResourceGlobalConfig.headers || {};
-    }
-    setHeaders(headers) {
+    };
+    Resource.prototype.getHeaders = function () {
+        return this._headers || this._getHeaders() || ResourceGlobalConfig_1.ResourceGlobalConfig.headers || {};
+    };
+    Resource.prototype.setHeaders = function (headers) {
         this._headers = headers;
-    }
-    getParams() {
-        return this._params || this._getParams() || ResourceGlobalConfig.params || {};
-    }
-    setParams(params) {
+    };
+    Resource.prototype.getParams = function () {
+        return this._params || this._getParams() || ResourceGlobalConfig_1.ResourceGlobalConfig.params || {};
+    };
+    Resource.prototype.setParams = function (params) {
         this._params = params;
-    }
-    getData() {
-        return this._data || this._getData() || ResourceGlobalConfig.data || {};
-    }
-    setData(data) {
+    };
+    Resource.prototype.getData = function () {
+        return this._data || this._getData() || ResourceGlobalConfig_1.ResourceGlobalConfig.data || {};
+    };
+    Resource.prototype.setData = function (data) {
         this._data = data;
-    }
-    requestInterceptor(req) {
+    };
+    Resource.prototype.requestInterceptor = function (req) {
         return req;
-    }
-    responseInterceptor(observable, req) {
-        return observable.map(res => res._body ? res.json() : null);
-    }
-    removeTrailingSlash() {
+    };
+    Resource.prototype.responseInterceptor = function (observable, req) {
+        return observable.map(function (res) { return res._body ? res.json() : null; });
+    };
+    Resource.prototype.removeTrailingSlash = function () {
         return true;
-    }
-    map(item) {
+    };
+    Resource.prototype.map = function (item) {
         return item;
-    }
-    filter(item) {
+    };
+    Resource.prototype.filter = function (item) {
         return true;
-    }
-    _getUrl() {
+    };
+    Resource.prototype._getUrl = function () {
         return null;
-    }
-    _getPath() {
+    };
+    Resource.prototype._getPath = function () {
         return null;
-    }
-    _getHeaders() {
+    };
+    Resource.prototype._getHeaders = function () {
         return null;
-    }
-    _getParams() {
+    };
+    Resource.prototype._getParams = function () {
         return null;
-    }
-    _getData() {
+    };
+    Resource.prototype._getData = function () {
         return null;
-    }
-}
+    };
+    return Resource;
+}());
+exports.Resource = Resource;
 //# sourceMappingURL=Resource.js.map

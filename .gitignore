@@ -9,4 +9,4 @@ crashlytics.properties
 crashlytics-build.properties
 typings
 /compiled
-*.metadata.json
+#*.metadata.json
