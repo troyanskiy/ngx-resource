@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "moduleResolution": "node",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -11,7 +10,7 @@
     "pretty": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noImplicitReturns": true,
     "noImplicitUseStrict": false,
     "noFallthroughCasesInSwitch": true,
@@ -19,7 +18,7 @@
     "rootDir": "."
   },
   "angularCompilerOptions": {
-    "debug": true
+    "genDir": "compiled"
   },
   "compileOnSave": false,
   "files": [

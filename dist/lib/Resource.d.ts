@@ -1,4 +1,3 @@
-/// <reference types="es6-shim" />
 import { Http, Request } from '@angular/http';
 import { Injector } from '@angular/core';
 import { Type } from '@angular/core/src/type';
