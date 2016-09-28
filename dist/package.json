@@ -1,6 +1,6 @@
 {
   "name": "ng2-resource-rest",
-  "version": "1.4.2",
+  "version": "1.4.4",
   "description": "Angular2 resource module with simple decorators",
   "keywords": [
     "ng2-resource",
@@ -10,13 +10,7 @@
     "Angular2",
     "Resource"
   ],
-  "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "ngc": "ngc -p ./tsconfig.aot.json"
-  },
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/troyanskiy/ng2-resource-rest.git"

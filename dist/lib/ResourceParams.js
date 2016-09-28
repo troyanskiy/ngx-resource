@@ -1,10 +1,8 @@
-"use strict";
-var ResourceProviders_1 = require('./ResourceProviders');
-function ResourceParams(params) {
-    if (params === void 0) { params = {}; }
+import { ResourceProviders } from './ResourceProviders';
+export function ResourceParams(params = {}) {
     return function (target) {
         if (params.add2Provides !== false) {
-            ResourceProviders_1.ResourceProviders.add(target, params.providersSubSet);
+            ResourceProviders.add(target, params.providersSubSet);
         }
         if (typeof params.removeTrailingSlash !== 'undefined') {
             target.prototype.removeTrailingSlash = function () {
@@ -38,5 +36,4 @@ function ResourceParams(params) {
         }
     };
 }
-exports.ResourceParams = ResourceParams;
 //# sourceMappingURL=ResourceParams.js.map

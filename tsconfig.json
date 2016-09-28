@@ -1,4 +1,7 @@
 {
+  "angularCompilerOptions": {
+    "genDir": "compiled"
+  },
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
