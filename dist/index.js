@@ -1,6 +1,21 @@
 "use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-__export(require('./lib/index'));
+var Resource_1 = require('./lib/Resource');
+exports.Resource = Resource_1.Resource;
+var ResourceAction_1 = require('./lib/ResourceAction');
+exports.ResourceAction = ResourceAction_1.ResourceAction;
+var ResourceCRUD_1 = require('./lib/ResourceCRUD');
+exports.ResourceCRUD = ResourceCRUD_1.ResourceCRUD;
+var ResourceCRUDBase_1 = require('./lib/ResourceCRUDBase');
+exports.ResourceCRUDBase = ResourceCRUDBase_1.ResourceCRUDBase;
+var ResourceGlobalConfig_1 = require('./lib/ResourceGlobalConfig');
+exports.ResourceGlobalConfig = ResourceGlobalConfig_1.ResourceGlobalConfig;
+var ResourceModel_1 = require('./lib/ResourceModel');
+exports.ResourceModel = ResourceModel_1.ResourceModel;
+exports.ResourceModelParams = ResourceModel_1.ResourceModelParams;
+var ResourceModule_1 = require('./lib/ResourceModule');
+exports.ResourceModule = ResourceModule_1.ResourceModule;
+var ResourceParams_1 = require('./lib/ResourceParams');
+exports.ResourceParams = ResourceParams_1.ResourceParams;
+var ResourceProviders_1 = require('./lib/ResourceProviders');
+exports.ResourceProviders = ResourceProviders_1.ResourceProviders;
 //# sourceMappingURL=index.js.map
