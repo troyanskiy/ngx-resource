@@ -234,9 +234,12 @@ Default resource common address<br>
 Default resource path to api.<br>
 Can contain path params, which are between `{ }`.<br>
 If path param is with `!` prefix, then the param is mandatory<br>
+If path param is with `:` prefix, then the param will be removed from post data<br>
 **Default**: *empty*<br>
 **Ex**: /users/{id}<br>
 **Ex2**: /users/{!id}<br>
+**Ex3**: /users/{:id}<br>
+**Ex4**: /users/{!:id}<br>
 
 #### `headers`
 Default resource HTTP headers.<br>

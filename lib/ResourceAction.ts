@@ -111,7 +111,15 @@ export function ResourceAction(action?: ResourceActionBase) {
               pathKey = pathKey.substr(1);
             }
 
+            let isGetOnly = pathKey[0] === ':';
+            if (isGetOnly) {
+              pathKey = pathKey.substr(1);
+            }
+
             let value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
+            if (isGetOnly) {
+              delete [data[pathKey]];
+            }
 
             if (!value) {
               if (isMandatory) {

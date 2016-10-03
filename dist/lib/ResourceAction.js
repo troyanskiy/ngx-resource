@@ -87,7 +87,14 @@ function ResourceAction(action) {
                     if (isMandatory) {
                         pathKey = pathKey.substr(1);
                     }
+                    var isGetOnly = pathKey[0] === ':';
+                    if (isGetOnly) {
+                        pathKey = pathKey.substr(1);
+                    }
                     var value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
+                    if (isGetOnly) {
+                        delete [data[pathKey]];
+                    }
                     if (!value) {
                         if (isMandatory) {
                             var consoleMsg_1 = "Mandatory " + pathParam + " path parameter is missing";
