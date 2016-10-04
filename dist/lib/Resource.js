@@ -79,4 +79,3 @@ var Resource = (function () {
     return Resource;
 }());
 exports.Resource = Resource;
-//# sourceMappingURL=Resource.js.map

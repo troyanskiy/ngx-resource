@@ -119,7 +119,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
             let value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
             if (isGetOnly) {
-              delete [data[pathKey]];
+              delete data[pathKey];
             }
 
             if (!value) {

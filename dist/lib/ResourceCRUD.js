@@ -59,4 +59,3 @@ var ResourceCRUD = (function (_super) {
     return ResourceCRUD;
 }(Resource_1.Resource));
 exports.ResourceCRUD = ResourceCRUD;
-//# sourceMappingURL=ResourceCRUD.js.map

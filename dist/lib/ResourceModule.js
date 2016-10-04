@@ -27,4 +27,3 @@ var ResourceModule = (function () {
     return ResourceModule;
 }());
 exports.ResourceModule = ResourceModule;
-//# sourceMappingURL=ResourceModule.js.map

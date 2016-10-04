@@ -94,7 +94,7 @@ function ResourceAction(methodOptions) {
                     }
                     var value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
                     if (isGetOnly) {
-                        delete [data[pathKey]];
+                        delete data[pathKey];
                     }
                     if (!value) {
                         if (isMandatory) {
@@ -292,4 +292,3 @@ function getValueForPath(key, params, data, usedPathParams) {
     usedPathParams[key] = true;
     return params[key];
 }
-//# sourceMappingURL=ResourceAction.js.map

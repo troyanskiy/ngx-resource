@@ -40,4 +40,3 @@ var ResourceProviders = (function () {
     return ResourceProviders;
 }());
 exports.ResourceProviders = ResourceProviders;
-//# sourceMappingURL=ResourceProviders.js.map

@@ -55,4 +55,3 @@ var ResourceCRUDBase = (function (_super) {
     return ResourceCRUDBase;
 }(Resource_1.Resource));
 exports.ResourceCRUDBase = ResourceCRUDBase;
-//# sourceMappingURL=ResourceCRUDBase.js.map

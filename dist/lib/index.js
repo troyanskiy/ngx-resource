@@ -11,4 +11,3 @@ __export(require('./ResourceModel'));
 __export(require('./ResourceModule'));
 __export(require('./ResourceParams'));
 __export(require('./ResourceProviders'));
-//# sourceMappingURL=index.js.map

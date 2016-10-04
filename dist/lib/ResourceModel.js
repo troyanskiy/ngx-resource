@@ -77,4 +77,3 @@ var ResourceModel = (function () {
     return ResourceModel;
 }());
 exports.ResourceModel = ResourceModel;
-//# sourceMappingURL=ResourceModel.js.map

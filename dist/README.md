@@ -2,7 +2,7 @@
 
 [![NPM](https://nodei.co/npm/ng2-resource-rest.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ng2-resource-rest/)
 # ng2-resource-rest
-Resource (REST) Client for Angular 2 RC6
+Resource (REST) Client for Angular 2
 
 To use the module install the module using below command
 

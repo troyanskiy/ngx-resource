@@ -42,4 +42,3 @@ function ResourceParams(params) {
     };
 }
 exports.ResourceParams = ResourceParams;
-//# sourceMappingURL=ResourceParams.js.map

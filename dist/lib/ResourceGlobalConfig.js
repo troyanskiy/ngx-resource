@@ -13,4 +13,3 @@ var ResourceGlobalConfig = (function () {
     return ResourceGlobalConfig;
 }());
 exports.ResourceGlobalConfig = ResourceGlobalConfig;
-//# sourceMappingURL=ResourceGlobalConfig.js.map
