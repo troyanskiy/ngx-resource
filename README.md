@@ -211,17 +211,16 @@ export type ResourceResult<R extends {}> = R & {
 }
 ```
 
-### `ResourceParamsBase`
+### `ResourceParamsCommon`
 ```javascript
-export interface ResourceParamsBase {
+export interface ResourceParamsCommon {
 	url?:string;
 	path?:string;
 	headers?:any;
 	params?:any;
 	data?:any;
 	removeTrailingSlash?: boolean;
-	add2Provides?: boolean;
-	providersSubSet?: string;
+	addTimestamp?: boolean | string;
 }
 ```
 
@@ -234,9 +233,12 @@ Default resource common address<br>
 Default resource path to api.<br>
 Can contain path params, which are between `{ }`.<br>
 If path param is with `!` prefix, then the param is mandatory<br>
+If path param is with `:` prefix, then the param will be removed from post data<br>
 **Default**: *empty*<br>
 **Ex**: /users/{id}<br>
 **Ex2**: /users/{!id}<br>
+**Ex3**: /users/{:id}<br>
+**Ex4**: /users/{!:id}<br>
 
 #### `headers`
 Default resource HTTP headers.<br>
@@ -264,6 +266,20 @@ The params will be added to data object if they does not exists<br>
 Remove trailing slashed from url<br>
 **Default**: true<br>
 
+#### `addTimestamp`
+Will add timestamp to the url<br>
+Can be boolean or string representation of parameter name<br>
+**Default**: false<br>
+
+
+### `ResourceParamsBase`
+```javascript
+export interface ResourceParamsBase extends ResourceParamsCommon {
+	add2Provides?: boolean;
+	providersSubSet?: string;
+}
+```
+
 #### `add2Provides`
 To create service provider and it to ResourceModule.forRoot()<br>
 **Default**: true<br>
@@ -272,11 +288,11 @@ To create service provider and it to ResourceModule.forRoot()<br>
 To create service provider and it to ResourceModule.forChild(<providersSubSet>)<br>
 **Default**: null (so it goes to forRoot())<br>
 
-<br>
+
 
 ### `ResourceActionBase`
 ```javascript
-export interface ResourceActionBase extends ResourceParamsBase {
+export interface ResourceActionBase extends ResourceParamsCommon {
 	method?:RequestMethod; // from angular `@angular/http`
 	isArray?: boolean;
 	isLazy?: boolean;

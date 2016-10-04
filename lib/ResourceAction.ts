@@ -1,19 +1,18 @@
-import {RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request} from '@angular/http';
-import {Subscriber, Observable, ConnectableObservable, Subscription} from 'rxjs/Rx';
-import {ReflectiveInjector} from '@angular/core';
-import {Type} from '@angular/core/src/type';
+import { RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request } from '@angular/http';
+import { Subscriber, Observable, ConnectableObservable, Subscription } from 'rxjs/Rx';
+import { ReflectiveInjector } from '@angular/core';
+import { Type } from '@angular/core/src/type';
+import { ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter } from './Interfaces';
+import { Resource } from './Resource';
+import { ResourceModel } from './ResourceModel';
 
-import {ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter} from './Interfaces';
-import {Resource} from './Resource';
-import {ResourceModel} from './ResourceModel';
 
+export function ResourceAction(methodOptions?: ResourceActionBase) {
 
-export function ResourceAction(action?: ResourceActionBase) {
+  methodOptions = methodOptions || {};
 
-  action = action || {};
-
-  if (action.method === undefined) {
-    action.method = RequestMethod.Get;
+  if (methodOptions.method === undefined) {
+    methodOptions.method = RequestMethod.Get;
   }
 
 
@@ -21,18 +20,20 @@ export function ResourceAction(action?: ResourceActionBase) {
 
     (<any>target)[propertyKey] = function (...args: any[]): ResourceResult<any> | ResourceModel {
 
-      let isGetRequest = action.method === RequestMethod.Get;
+      let resourceOptions = this._getResourceOptions();
+
+      let isGetRequest = methodOptions.method === RequestMethod.Get;
 
       let ret: ResourceResult<any> | ResourceModel;
 
-      let resourceModel = action.model || this.constructor['model'];
+      let resourceModel = methodOptions.model || this.constructor['model'];
 
-      if (resourceModel && !action.isArray) {
+      if (resourceModel && !methodOptions.isArray) {
         ret = resourceModel.create({}, false);
-      } else if (action.isLazy) {
+      } else if (methodOptions.isLazy) {
         ret = {};
       } else {
-        ret = action.isArray ? [] : {};
+        ret = methodOptions.isArray ? [] : {};
       }
 
       let mainDeferredSubscriber: Subscriber<any> = null;
@@ -53,17 +54,17 @@ export function ResourceAction(action?: ResourceActionBase) {
       }
 
 
-      if (!action.isLazy) {
+      if (!methodOptions.isLazy) {
         ret.$observable = ret.$observable.publish();
         (<ConnectableObservable<any>>ret.$observable).connect();
       }
 
       Promise.all([
-        Promise.resolve(action.url || this.getUrl()),
-        Promise.resolve(action.path || this.getPath()),
-        Promise.resolve(action.headers || this.getHeaders()),
-        Promise.resolve(action.params || this.getParams()),
-        Promise.resolve(action.data || this.getData())
+        Promise.resolve(methodOptions.url || this.getUrl()),
+        Promise.resolve(methodOptions.path || this.getPath()),
+        Promise.resolve(methodOptions.headers || this.getHeaders()),
+        Promise.resolve(methodOptions.params || this.getParams()),
+        Promise.resolve(methodOptions.data || this.getData())
       ])
         .then((dataAll: any[]) => {
 
@@ -151,10 +152,10 @@ export function ResourceAction(action?: ResourceActionBase) {
           }
 
           // Remove trailing slash
-          if (typeof action.removeTrailingSlash === 'undefined') {
-            action.removeTrailingSlash = this.removeTrailingSlash();
+          if (typeof methodOptions.removeTrailingSlash === 'undefined') {
+            methodOptions.removeTrailingSlash = this.removeTrailingSlash();
           }
-          if (action.removeTrailingSlash) {
+          if (methodOptions.removeTrailingSlash) {
             while (url[url.length - 1] === '/') {
               url = url.substr(0, url.length - 1);
             }
@@ -198,14 +199,24 @@ export function ResourceAction(action?: ResourceActionBase) {
             }
           }
 
+          // Adding TS if needed
+          let tsName = methodOptions.addTimestamp || resourceOptions.addTimestamp;
+          if (tsName) {
+            if (tsName === true) {
+              tsName = 'ts';
+            }
+            search.append(tsName, '' + new Date().getTime());
+          }
+
           // Removing Content-Type header if no body
           if (!body) {
             headers.delete('content-type');
           }
 
+
           // Creating request options
           let requestOptions = new RequestOptions({
-            method: action.method,
+            method: methodOptions.method,
             headers: headers,
             body: body,
             url: url,
@@ -215,8 +226,8 @@ export function ResourceAction(action?: ResourceActionBase) {
           // Creating request object
           let req = new Request(requestOptions);
 
-          req = action.requestInterceptor ?
-            action.requestInterceptor(req) :
+          req = methodOptions.requestInterceptor ?
+            methodOptions.requestInterceptor(req) :
             this.requestInterceptor(req);
 
           if (!req) {
@@ -234,12 +245,12 @@ export function ResourceAction(action?: ResourceActionBase) {
           let requestObservable = this.http.request(req);
 
           // noinspection TypeScriptValidateTypes
-          requestObservable = action.responseInterceptor ?
-            action.responseInterceptor(requestObservable, req) :
+          requestObservable = methodOptions.responseInterceptor ?
+            methodOptions.responseInterceptor(requestObservable, req) :
             this.responseInterceptor(requestObservable, req);
 
 
-          if (action.isLazy) {
+          if (methodOptions.isLazy) {
             mainObservable = requestObservable;
           } else {
 
@@ -250,10 +261,10 @@ export function ResourceAction(action?: ResourceActionBase) {
 
                   if (resp !== null) {
 
-                    let map: ResourceResponseMap = action.map ? action.map : this.map;
-                    let filter: ResourceResponseFilter = action.filter ? action.filter : this.filter;
+                    let map: ResourceResponseMap = methodOptions.map ? methodOptions.map : this.map;
+                    let filter: ResourceResponseFilter = methodOptions.filter ? methodOptions.filter : this.filter;
 
-                    if (action.isArray) {
+                    if (methodOptions.isArray) {
                       if (!Array.isArray(resp)) {
                         console.error('Returned data should be an array. Received', resp);
                       } else {

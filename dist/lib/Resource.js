@@ -73,6 +73,9 @@ var Resource = (function () {
     Resource.prototype._getData = function () {
         return null;
     };
+    Resource.prototype._getResourceOptions = function () {
+        return null;
+    };
     return Resource;
 }());
 exports.Resource = Resource;

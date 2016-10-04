@@ -211,17 +211,16 @@ export type ResourceResult<R extends {}> = R & {
 }
 ```
 
-### `ResourceParamsBase`
+### `ResourceParamsCommon`
 ```javascript
-export interface ResourceParamsBase {
+export interface ResourceParamsCommon {
 	url?:string;
 	path?:string;
 	headers?:any;
 	params?:any;
 	data?:any;
 	removeTrailingSlash?: boolean;
-	add2Provides?: boolean;
-	providersSubSet?: string;
+	addTimestamp?: boolean | string;
 }
 ```
 
@@ -267,6 +266,20 @@ The params will be added to data object if they does not exists<br>
 Remove trailing slashed from url<br>
 **Default**: true<br>
 
+#### `addTimestamp`
+Will add timestamp to the url<br>
+Can be boolean or string representation of parameter name<br>
+**Default**: false<br>
+
+
+### `ResourceParamsBase`
+```javascript
+export interface ResourceParamsBase extends ResourceParamsCommon {
+	add2Provides?: boolean;
+	providersSubSet?: string;
+}
+```
+
 #### `add2Provides`
 To create service provider and it to ResourceModule.forRoot()<br>
 **Default**: true<br>
@@ -275,11 +288,11 @@ To create service provider and it to ResourceModule.forRoot()<br>
 To create service provider and it to ResourceModule.forChild(<providersSubSet>)<br>
 **Default**: null (so it goes to forRoot())<br>
 
-<br>
+
 
 ### `ResourceActionBase`
 ```javascript
-export interface ResourceActionBase extends ResourceParamsBase {
+export interface ResourceActionBase extends ResourceParamsCommon {
 	method?:RequestMethod; // from angular `@angular/http`
 	isArray?: boolean;
 	isLazy?: boolean;

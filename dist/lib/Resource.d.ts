@@ -33,4 +33,5 @@ export declare class Resource {
     private _getHeaders();
     private _getParams();
     private _getData();
+    private _getResourceOptions();
 }

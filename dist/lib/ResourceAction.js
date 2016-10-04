@@ -2,10 +2,10 @@
 var http_1 = require('@angular/http');
 var Rx_1 = require('rxjs/Rx');
 var core_1 = require('@angular/core');
-function ResourceAction(action) {
-    action = action || {};
-    if (action.method === undefined) {
-        action.method = http_1.RequestMethod.Get;
+function ResourceAction(methodOptions) {
+    methodOptions = methodOptions || {};
+    if (methodOptions.method === undefined) {
+        methodOptions.method = http_1.RequestMethod.Get;
     }
     return function (target, propertyKey) {
         target[propertyKey] = function () {
@@ -14,17 +14,18 @@ function ResourceAction(action) {
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i - 0] = arguments[_i];
             }
-            var isGetRequest = action.method === http_1.RequestMethod.Get;
+            var resourceOptions = this._getResourceOptions();
+            var isGetRequest = methodOptions.method === http_1.RequestMethod.Get;
             var ret;
-            var resourceModel = action.model || this.constructor['model'];
-            if (resourceModel && !action.isArray) {
+            var resourceModel = methodOptions.model || this.constructor['model'];
+            if (resourceModel && !methodOptions.isArray) {
                 ret = resourceModel.create({}, false);
             }
-            else if (action.isLazy) {
+            else if (methodOptions.isLazy) {
                 ret = {};
             }
             else {
-                ret = action.isArray ? [] : {};
+                ret = methodOptions.isArray ? [] : {};
             }
             var mainDeferredSubscriber = null;
             var mainObservable = null;
@@ -40,16 +41,16 @@ function ResourceAction(action) {
                 mainDeferredSubscriber.complete();
                 mainDeferredSubscriber = null;
             }
-            if (!action.isLazy) {
+            if (!methodOptions.isLazy) {
                 ret.$observable = ret.$observable.publish();
                 ret.$observable.connect();
             }
             Promise.all([
-                Promise.resolve(action.url || this.getUrl()),
-                Promise.resolve(action.path || this.getPath()),
-                Promise.resolve(action.headers || this.getHeaders()),
-                Promise.resolve(action.params || this.getParams()),
-                Promise.resolve(action.data || this.getData())
+                Promise.resolve(methodOptions.url || this.getUrl()),
+                Promise.resolve(methodOptions.path || this.getPath()),
+                Promise.resolve(methodOptions.headers || this.getHeaders()),
+                Promise.resolve(methodOptions.params || this.getParams()),
+                Promise.resolve(methodOptions.data || this.getData())
             ])
                 .then(function (dataAll) {
                 if (ret.$resolved) {
@@ -119,10 +120,10 @@ function ResourceAction(action) {
                 if (url.startsWith('http')) {
                     url = url.replace(':/', '://');
                 }
-                if (typeof action.removeTrailingSlash === 'undefined') {
-                    action.removeTrailingSlash = _this.removeTrailingSlash();
+                if (typeof methodOptions.removeTrailingSlash === 'undefined') {
+                    methodOptions.removeTrailingSlash = _this.removeTrailingSlash();
                 }
-                if (action.removeTrailingSlash) {
+                if (methodOptions.removeTrailingSlash) {
                     while (url[url.length - 1] === '/') {
                         url = url.substr(0, url.length - 1);
                     }
@@ -153,19 +154,26 @@ function ResourceAction(action) {
                         search.append(key, value);
                     }
                 }
+                var tsName = methodOptions.addTimestamp || resourceOptions.addTimestamp;
+                if (tsName) {
+                    if (tsName === true) {
+                        tsName = 'ts';
+                    }
+                    search.append(tsName, '' + new Date().getTime());
+                }
                 if (!body) {
                     headers.delete('content-type');
                 }
                 var requestOptions = new http_1.RequestOptions({
-                    method: action.method,
+                    method: methodOptions.method,
                     headers: headers,
                     body: body,
                     url: url,
                     search: search
                 });
                 var req = new http_1.Request(requestOptions);
-                req = action.requestInterceptor ?
-                    action.requestInterceptor(req) :
+                req = methodOptions.requestInterceptor ?
+                    methodOptions.requestInterceptor(req) :
                     _this.requestInterceptor(req);
                 if (!req) {
                     mainObservable = Rx_1.Observable.create(function (observer) {
@@ -176,19 +184,19 @@ function ResourceAction(action) {
                     return;
                 }
                 var requestObservable = _this.http.request(req);
-                requestObservable = action.responseInterceptor ?
-                    action.responseInterceptor(requestObservable, req) :
+                requestObservable = methodOptions.responseInterceptor ?
+                    methodOptions.responseInterceptor(requestObservable, req) :
                     _this.responseInterceptor(requestObservable, req);
-                if (action.isLazy) {
+                if (methodOptions.isLazy) {
                     mainObservable = requestObservable;
                 }
                 else {
                     mainObservable = Rx_1.Observable.create(function (subscriber) {
                         var reqSubscr = requestObservable.subscribe(function (resp) {
                             if (resp !== null) {
-                                var map = action.map ? action.map : _this.map;
-                                var filter = action.filter ? action.filter : _this.filter;
-                                if (action.isArray) {
+                                var map = methodOptions.map ? methodOptions.map : _this.map;
+                                var filter = methodOptions.filter ? methodOptions.filter : _this.filter;
+                                if (methodOptions.isArray) {
                                     if (!Array.isArray(resp)) {
                                         console.error('Returned data should be an array. Received', resp);
                                     }

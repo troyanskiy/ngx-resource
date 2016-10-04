@@ -1,9 +1,10 @@
-import {Http, Request} from '@angular/http';
-import {Injector} from '@angular/core';
-import {Type} from '@angular/core/src/type';
-import {Observable} from 'rxjs/Rx';
-import {ResourceGlobalConfig} from './ResourceGlobalConfig';
-import {ResourceModel} from './ResourceModel';
+import { Http, Request } from '@angular/http';
+import { Injector } from '@angular/core';
+import { Type } from '@angular/core/src/type';
+import { Observable } from 'rxjs/Rx';
+import { ResourceGlobalConfig } from './ResourceGlobalConfig';
+import { ResourceModel } from './ResourceModel';
+import { ResourceParamsBase } from './Interfaces';
 
 export class Resource {
 
@@ -149,6 +150,10 @@ export class Resource {
   }
 
   private _getData(): any | Promise<any> {
+    return null;
+  }
+
+  private _getResourceOptions(): ResourceParamsBase {
     return null;
   }
 

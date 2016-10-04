@@ -21,6 +21,7 @@ export interface ResourceParamsCommon {
     params?: any;
     data?: any;
     removeTrailingSlash?: boolean;
+    addTimestamp?: boolean | string;
 }
 export interface ResourceParamsBase extends ResourceParamsCommon {
     add2Provides?: boolean;

@@ -3,6 +3,9 @@ var ResourceProviders_1 = require('./ResourceProviders');
 function ResourceParams(params) {
     if (params === void 0) { params = {}; }
     return function (target) {
+        target.prototype._getResourceOptions = function () {
+            return params;
+        };
         if (params.add2Provides !== false) {
             ResourceProviders_1.ResourceProviders.add(target, params.providersSubSet);
         }

@@ -8,6 +8,11 @@ export function ResourceParams(params: ResourceParamsBase = {}) {
 
   return function (target: Type<Resource>) {
 
+
+    target.prototype._getResourceOptions = function() {
+      return params;
+    };
+
     if (params.add2Provides !== false) {
       ResourceProviders.add(target, params.providersSubSet);
     }
