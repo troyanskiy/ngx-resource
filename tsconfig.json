@@ -1,20 +1,33 @@
 {
-  "angularCompilerOptions": {
-    "genDir": "compiled"
-  },
   "compilerOptions": {
-    "module": "commonjs",
+    "noImplicitAny": true,
+    "module": "es2015",
     "target": "es5",
-    "noImplicitAny": false,
-    "outDir": ".",
-    "rootDir": ".",
-    "declaration": true,
-    "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "types": ["node"],
+    "lib": ["es2015", "dom"]
   },
+  "files": [
+    "ng2-resource-rest.ts",
+    "./src/Interfaces",
+    "./src/Resource",
+    "./src/ResourceAction",
+    "./src/ResourceCRUD",
+    "./src/ResourceCRUDBase",
+    "./src/ResourceGlobalConfig",
+    "./src/ResourceModel",
+    "./src/ResourceParams",
+    "./src/ResourceProviders"
+  ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true
+  }
 }
