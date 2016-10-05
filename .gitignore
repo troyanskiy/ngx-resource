@@ -1,12 +1,44 @@
-/node_modules
-*.iml
-.idea/
-/out/
-.idea_modules/
-atlassian-ide-plugin.xml
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-typings
-/compiled
-#*.metadata.json
+#################
+## Misc
+#################
+**/.DS_Store
+nbproject
+manifest.mf
+build.xml
+node_modules/*
+npm-debug.log
+*.js
+!config/*
+!karma.conf.js
+*.map
+*.d.ts
+!make.js
+!bundles/*.js
+!examples/**/*.js
+coverage
+*.metadata.json
+
+#################
+## JetBrains
+#################
+.idea
+.project
+.settings
+
+############
+## Windows
+############
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+############
+## Mac
+############
+
+# Mac crap
+.DS_Store
+
