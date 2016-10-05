@@ -20,14 +20,14 @@ export class ResourceModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: ResourceModule,
-      providers: [ResourceProviders.get()]
+      providers: ResourceProviders.providers[ResourceProviders.mainProvidersName]
     };
   }
 
   static forChild(subSet: string): ModuleWithProviders {
     return {
       ngModule: ResourceModule,
-      providers: [ResourceProviders.get(subSet)]
+      providers: ResourceProviders.providers[subSet] ? ResourceProviders.providers[subSet] : []
     };
   }
 

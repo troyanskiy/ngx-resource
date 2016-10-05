@@ -5,8 +5,10 @@ import {Resource} from './Resource';
 
 export class ResourceProviders {
 
-  private static mainProvidersName: string = '__mainProviders';
-  private static providers: {[id: string]: Provider[]} = {};
+  static mainProvidersName: string = '__mainProviders';
+  static providers: {[id: string]: Provider[]} = {
+    __mainProviders: []
+  };
 
   static add(resource: Type<Resource>, subSet: string = null) {
 
