@@ -48,9 +48,11 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
       };
 
       function releaseMainDeferredSubscriber() {
-        mainDeferredSubscriber.next();
-        mainDeferredSubscriber.complete();
-        mainDeferredSubscriber = null;
+        if (mainDeferredSubscriber) {
+          mainDeferredSubscriber.next();
+          mainDeferredSubscriber.complete();
+          mainDeferredSubscriber = null;
+        }
       }
 
 
