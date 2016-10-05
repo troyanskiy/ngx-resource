@@ -13,6 +13,7 @@ npm-debug.log
 !make.js
 !bundles/*.js
 *.metadata.json
+*.ngfactory.ts
 
 #################
 ## JetBrains
