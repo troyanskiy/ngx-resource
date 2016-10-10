@@ -216,8 +216,12 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
               } else {
 
                 if (typeof value === 'object') {
-                  // if (value instanceof Object) {
-                  value = JSON.stringify(value);
+                  /// Convert dates to ISO format string
+                  if (value instanceof Date) {
+                    value = value.toISOString();
+                  } else {
+                    value = JSON.stringify(value);
+                  }
                 }
                 search.append(key, value);
 
