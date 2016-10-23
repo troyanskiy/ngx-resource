@@ -289,7 +289,7 @@ $__System.registerDynamic('6', ['4', '9', 'a'], true, function ($__require, expo
             methodOptions.method = http_1.RequestMethod.Get;
         }
         if (methodOptions.useModel === undefined) {
-            methodOptions.useModel === true;
+            methodOptions.useModel = true;
         }
         return function (target, propertyKey) {
             target[propertyKey] = function () {
@@ -303,7 +303,11 @@ $__System.registerDynamic('6', ['4', '9', 'a'], true, function ($__require, expo
                 var ret;
                 var resourceModel;
                 if (methodOptions.useModel) {
-                    resourceModel = methodOptions.model || this.constructor['model'];
+                    if (this.constructor.hasOwnProperty('getResourceModel') && !methodOptions.model) {
+                        resourceModel = this.constructor.getResourceModel(args);
+                    } else {
+                        resourceModel = methodOptions.model || this.constructor['model'];
+                    }
                 }
                 if (resourceModel && !methodOptions.isArray) {
                     ret = resourceModel.create({}, false);
@@ -435,9 +439,17 @@ $__System.registerDynamic('6', ['4', '9', 'a'], true, function ($__require, expo
                     for (var key in searchParams) {
                         if (!usedPathParams[key]) {
                             var value = searchParams[key];
-                            if (typeof value === 'object') {
+                            if (Array.isArray(value)) {
+                                for (var _i = 0, value_1 = value; _i < value_1.length; _i++) {
+                                    var arr_value = value_1[_i];
+                                    search.append(key, arr_value);
+                                }
+                                continue;
+                            } else if (typeof value === 'object') {
                                 // if (value instanceof Object) {
                                 value = JSON.stringify(value);
+                                search.append(key, value);
+                                continue;
                             }
                             search.append(key, value);
                         }
@@ -613,7 +625,7 @@ $__System.registerDynamic('b', ['6'], true, function ($__require, exports, modul
             }
             var result = ResourceAction_1.mapToModel.bind(this.resourceInstance)(data, this);
             if (commit) {
-                result = result.save();
+                result = result.$save();
             }
             return result;
         };
@@ -634,16 +646,16 @@ $__System.registerDynamic('b', ['6'], true, function ($__require, exports, modul
         };
         ResourceModel.prototype.$save = function () {
             if (this[this.$primaryKey]) {
-                this.$update();
+                return this.$update();
             } else {
-                this.$create();
+                return this.$create();
             }
         };
         ResourceModel.prototype.$update = function () {
-            this.$resource_method('update');
+            return this.$resource_method('update');
         };
         ResourceModel.prototype.$remove = function () {
-            this.$resource_method('remove');
+            return this.$resource_method('remove');
         };
         ResourceModel.prototype.$resource_method = function (method_name) {
             var _this = this;
@@ -660,9 +672,10 @@ $__System.registerDynamic('b', ['6'], true, function ($__require, exports, modul
             this.$observable.subscribe(function (resp) {
                 _this.$fillFromObject(resp.$getData());
             });
+            return this;
         };
         ResourceModel.prototype.$create = function () {
-            this.$resource_method('create');
+            return this.$resource_method('create');
         };
         return ResourceModel;
     }();
