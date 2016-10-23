@@ -16,7 +16,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
   }
 
   if (methodOptions.useModel === undefined) {
-    methodOptions.useModel === true;
+    methodOptions.useModel = true;
   }
 
 
@@ -33,7 +33,11 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
       let resourceModel;
 
       if (methodOptions.useModel) {
-        resourceModel = methodOptions.model || this.constructor['model'];
+        if (this.constructor.hasOwnProperty('getResourceModel') && !methodOptions.model) {
+          resourceModel = this.constructor.getResourceModel(args);
+        } else {
+          resourceModel = methodOptions.model || this.constructor['model'];
+        }
       }
 
       if (resourceModel && !methodOptions.isArray) {
@@ -202,7 +206,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
             if (!usedPathParams[key]) {
               let value: any = searchParams[key];
               if (Array.isArray(value)) {
-                for (let arr_value in value) {
+                for (let arr_value of value) {
                   search.append(key, arr_value);
                 }
                 continue;
