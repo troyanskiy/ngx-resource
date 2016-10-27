@@ -78,7 +78,7 @@ export class ResourceModel {
     let _method = (<any>this.$resource)[method_name];
     if (!_method) {
       console.error(`Your Resource has no implemented ${method_name} method.`);
-      return;
+      return this;
     }
     let data = (method_name === 'remove') ? {id: (<any>this)[this.$primaryKey]} : this.$getData();
 
@@ -89,7 +89,8 @@ export class ResourceModel {
     this.$observable.subscribe(resp => {
       this.$fillFromObject(resp.$getData());
     });
-    return this
+
+    return this;
   }
 
   private $create() {

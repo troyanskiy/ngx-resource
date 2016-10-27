@@ -30,7 +30,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
       let ret: ResourceResult<any> | ResourceModel;
 
-      let resourceModel;
+      let resourceModel: any;
 
       if (methodOptions.useModel) {
         if (this.constructor.hasOwnProperty('getResourceModel') && !methodOptions.model) {
@@ -204,20 +204,24 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           let search: URLSearchParams = new URLSearchParams();
           for (let key in searchParams) {
             if (!usedPathParams[key]) {
+
               let value: any = searchParams[key];
+
               if (Array.isArray(value)) {
+
                 for (let arr_value of value) {
                   search.append(key, arr_value);
                 }
-                continue;
-              }
-              else if (typeof value === 'object') {
-                // if (value instanceof Object) {
-                value = JSON.stringify(value);
+
+              } else {
+
+                if (typeof value === 'object') {
+                  // if (value instanceof Object) {
+                  value = JSON.stringify(value);
+                }
                 search.append(key, value);
-                continue;
+
               }
-              search.append(key, value);
             }
           }
 
