@@ -36,7 +36,7 @@ export class ResourceModel {
     }
     let result = mapToModel.bind(this.resourceInstance)(data, this);
     if (commit) {
-      result = result.save();
+      result = result.$save();
     }
     return result;
   }
@@ -60,18 +60,18 @@ export class ResourceModel {
 
   public $save() {
     if ((<any>this)[this.$primaryKey]) {
-      this.$update();
+      return this.$update();
     } else {
-      this.$create();
+      return this.$create();
     }
   }
 
   public $update() {
-    this.$resource_method('update');
+    return this.$resource_method('update');
   }
 
   public $remove() {
-    this.$resource_method('remove');
+    return this.$resource_method('remove');
   }
 
   private $resource_method(method_name: string) {
@@ -89,10 +89,11 @@ export class ResourceModel {
     this.$observable.subscribe(resp => {
       this.$fillFromObject(resp.$getData());
     });
+    return this
   }
 
   private $create() {
-    this.$resource_method('create');
+    return this.$resource_method('create');
   }
 
 }

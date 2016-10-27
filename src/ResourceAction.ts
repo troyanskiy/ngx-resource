@@ -15,6 +15,10 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
     methodOptions.method = RequestMethod.Get;
   }
 
+  if (methodOptions.useModel === undefined) {
+    methodOptions.useModel = true;
+  }
+
 
   return function (target: Resource, propertyKey: string) {
 
@@ -26,7 +30,15 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
       let ret: ResourceResult<any> | ResourceModel;
 
-      let resourceModel = methodOptions.model || this.constructor['model'];
+      let resourceModel;
+
+      if (methodOptions.useModel) {
+        if (this.constructor.hasOwnProperty('getResourceModel') && !methodOptions.model) {
+          resourceModel = this.constructor.getResourceModel(args);
+        } else {
+          resourceModel = methodOptions.model || this.constructor['model'];
+        }
+      }
 
       if (resourceModel && !methodOptions.isArray) {
         ret = resourceModel.create({}, false);
@@ -48,9 +60,11 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
       };
 
       function releaseMainDeferredSubscriber() {
-        mainDeferredSubscriber.next();
-        mainDeferredSubscriber.complete();
-        mainDeferredSubscriber = null;
+        if (mainDeferredSubscriber) {
+          mainDeferredSubscriber.next();
+          mainDeferredSubscriber.complete();
+          mainDeferredSubscriber = null;
+        }
       }
 
 
@@ -191,9 +205,17 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           for (let key in searchParams) {
             if (!usedPathParams[key]) {
               let value: any = searchParams[key];
-              if (typeof value === 'object') {
+              if (Array.isArray(value)) {
+                for (let arr_value of value) {
+                  search.append(key, arr_value);
+                }
+                continue;
+              }
+              else if (typeof value === 'object') {
                 // if (value instanceof Object) {
                 value = JSON.stringify(value);
+                search.append(key, value);
+                continue;
               }
               search.append(key, value);
             }
