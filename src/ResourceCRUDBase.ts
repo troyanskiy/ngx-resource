@@ -8,7 +8,7 @@ export class ResourceCRUDBase<TQuery, TKeys, TShort, TFull> extends Resource {
   @ResourceAction({
     isArray: true
   })
-  query: ResourceMethod<TQuery, TShort>;
+  query: ResourceMethod<TQuery, TShort[]>;
 
   @ResourceAction()
   get: ResourceMethod<TKeys, TFull>;

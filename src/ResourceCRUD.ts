@@ -8,7 +8,7 @@ export class ResourceCRUD<TQuery, TShort, TFull> extends Resource {
   @ResourceAction({
     isArray: true
   })
-  query: ResourceMethod<TQuery, TShort>;
+  query: ResourceMethod<TQuery, TShort[]>;
 
   @ResourceAction({
     path: '/{!id}'
