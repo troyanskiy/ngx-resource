@@ -111,53 +111,60 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
           }
 
-          data = Object.assign({}, dataAll[4], data);
-
-          let pathParams = url.match(/{([^}]*)}/g) || [];
           let usedPathParams: any = {};
 
-          for (let i = 0; i < pathParams.length; i++) {
+          if (!Array.isArray(data)) {
 
-            let pathParam = pathParams[i];
+            data = Object.assign({}, dataAll[4], data);
 
-            let pathKey = pathParam.substr(1, pathParam.length - 2);
-            let isMandatory = pathKey[0] === '!';
-            if (isMandatory) {
-              pathKey = pathKey.substr(1);
-            }
+            let pathParams = url.match(/{([^}]*)}/g) || [];
 
-            let isGetOnly = pathKey[0] === ':';
-            if (isGetOnly) {
-              pathKey = pathKey.substr(1);
-            }
+            for (let i = 0; i < pathParams.length; i++) {
 
-            let value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
-            if (isGetOnly) {
-              delete data[pathKey];
-            }
+              let pathParam = pathParams[i];
 
-            if (!value) {
+              let pathKey = pathParam.substr(1, pathParam.length - 2);
+              let isMandatory = pathKey[0] === '!';
               if (isMandatory) {
-
-                let consoleMsg = `Mandatory ${pathParam} path parameter is missing`;
-
-                mainObservable = Observable.create((observer: any) => {
-                  observer.error(new Error(consoleMsg));
-                });
-
-                console.warn(consoleMsg);
-
-                releaseMainDeferredSubscriber();
-                return;
-
+                pathKey = pathKey.substr(1);
               }
-              url = url.substr(0, url.indexOf(pathParam));
-              break;
+
+              let isGetOnly = pathKey[0] === ':';
+              if (isGetOnly) {
+                pathKey = pathKey.substr(1);
+              }
+
+              let value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
+              if (isGetOnly) {
+                delete data[pathKey];
+              }
+
+              if (!value) {
+                if (isMandatory) {
+
+                  let consoleMsg = `Mandatory ${pathParam} path parameter is missing`;
+
+                  mainObservable = Observable.create((observer: any) => {
+                    observer.error(new Error(consoleMsg));
+                  });
+
+                  console.warn(consoleMsg);
+
+                  releaseMainDeferredSubscriber();
+                  return;
+
+                }
+                url = url.substr(0, url.indexOf(pathParam));
+                break;
+              }
+
+              // Replacing in the url
+              url = url.replace(pathParam, value);
             }
 
-            // Replacing in the url
-            url = url.replace(pathParam, value);
           }
+
+
 
           // Removing double slashed from final url
           url = url.replace(/\/\/+/g, '/');
