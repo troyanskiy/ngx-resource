@@ -28,6 +28,7 @@ export interface ResourceParamsCommon {
   data?: any;
   removeTrailingSlash?: boolean;
   addTimestamp?: boolean | string;
+  withCredentials?: boolean;
 }
 
 export interface ResourceParamsBase extends ResourceParamsCommon {

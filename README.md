@@ -221,6 +221,7 @@ export interface ResourceParamsCommon {
 	data?:any;
 	removeTrailingSlash?: boolean;
 	addTimestamp?: boolean | string;
+	withCredentials?: boolean;
 }
 ```
 
@@ -269,6 +270,10 @@ Remove trailing slashed from url<br>
 #### `addTimestamp`
 Will add timestamp to the url<br>
 Can be boolean or string representation of parameter name<br>
+**Default**: false<br>
+
+#### `withCredentials`
+Will add withCredentials option to request options<br>
 **Default**: false<br>
 
 
