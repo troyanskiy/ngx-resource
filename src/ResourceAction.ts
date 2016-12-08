@@ -139,7 +139,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                 delete data[pathKey];
               }
 
-              if (!value) {
+              if (isNullOrUndefined(value)) {
                 if (isMandatory) {
 
                   let consoleMsg = `Mandatory ${pathParam} path parameter is missing`;
@@ -397,12 +397,12 @@ export function mapToModel(resp: any, model: Type<ResourceModel>) {
 
 function getValueForPath(key: string, params: any, data: any, usedPathParams: any): string {
 
-  if (typeof data[key] !== 'object') {
+  if (!isNullOrUndefined(data[key]) && typeof data[key] !== 'object') {
     usedPathParams[key] = true;
     return data[key];
   }
 
-  if (!params[key]) {
+  if (isNullOrUndefined(params[key])) {
     return null;
   }
 
@@ -413,4 +413,8 @@ function getValueForPath(key: string, params: any, data: any, usedPathParams: an
   usedPathParams[key] = true;
   return params[key];
 
+}
+
+function isNullOrUndefined(value: any): boolean {
+  return value === null || value === undefined;
 }
