@@ -5,14 +5,16 @@
     "target": "es5",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
     "declaration": true,
+//    "inlineSourceMap": true,
+//    "inlineSources": true,
     "moduleResolution": "node",
+    "noUnusedLocals": true,
     "types": ["node"],
     "lib": ["es2015", "dom"]
   },
   "files": [
+    "index.ts",
     "ng2-resource-rest.ts",
     "./src/Interfaces",
     "./src/Resource",
@@ -25,9 +27,11 @@
     "./src/ResourceProviders"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "bundles"
   ],
   "angularCompilerOptions": {
-    "strictMetadataEmit": true
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true
   }
 }

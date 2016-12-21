@@ -43,7 +43,9 @@ export class ResourceModel {
 
   public $fillFromObject(_object: any) {
     for (let propName in _object) {
-      (<any>this)[propName] = _object[propName];
+      if (_object.hasOwnProperty(propName)) {
+        (<any>this)[propName] = _object[propName];
+      }
     }
     return this;
   }

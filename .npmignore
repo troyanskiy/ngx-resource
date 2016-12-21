@@ -9,9 +9,13 @@ node_modules/*
 npm-debug.log
 *.ts
 !*.d.ts
+tests
+examples
+config
 .github
+coverage
 !*.metadata.json
-make.js
+!bundles/*.js
 
 #################
 ## JetBrains

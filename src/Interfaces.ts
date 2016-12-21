@@ -60,4 +60,4 @@ export type ResourceResult<R extends {}> = R & {
   $resolved?: boolean;
   $observable?: Observable<R>;
   $abortRequest?: () => void;
-}
+};

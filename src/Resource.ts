@@ -4,7 +4,7 @@ import { Type } from '@angular/core/src/type';
 import { Observable } from 'rxjs/Rx';
 import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceModel } from './ResourceModel';
-import { ResourceParamsBase } from './Interfaces';
+// import { ResourceParamsBase } from './Interfaces';
 
 export class Resource {
 
@@ -153,8 +153,8 @@ export class Resource {
     return null;
   }
 
-  private _getResourceOptions(): ResourceParamsBase {
-    return null;
-  }
+  // private _getResourceOptions(): ResourceParamsBase {
+  //   return null;
+  // }
 
 }

@@ -8,12 +8,16 @@ build.xml
 node_modules/*
 npm-debug.log
 *.js
+!config/*
+!karma.conf.js
+!webpack.config.js
 *.map
 *.d.ts
 !make.js
-!bundles/*.js
+!examples/**/*.js
+coverage
 *.metadata.json
-*.ngfactory.ts
+bundles
 
 #################
 ## JetBrains
