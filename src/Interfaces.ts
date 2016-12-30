@@ -1,7 +1,8 @@
-import {Observable} from 'rxjs/Rx';
-import {Request, RequestMethod} from '@angular/http';
-import {Type} from '@angular/core/src/type';
-import {ResourceModel} from './ResourceModel';
+import { Observable } from 'rxjs/Rx';
+import { Request, RequestMethod } from '@angular/http';
+import { Type } from '@angular/core/src/type';
+import { ResourceModel } from './ResourceModel';
+import { Resource } from './Resource';
 
 
 export interface ResourceRequestInterceptor {
@@ -44,7 +45,7 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   responseInterceptor?: ResourceResponseInterceptor;
   map?: ResourceResponseMap;
   filter?: ResourceResponseFilter;
-  model?: Type<ResourceModel>;
+  model?: Type<ResourceModel<Resource>>;
   useModel?: boolean;
 }
 

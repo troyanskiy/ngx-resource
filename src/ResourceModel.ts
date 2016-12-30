@@ -8,7 +8,7 @@ import {mapToModel} from './ResourceAction';
 
 export function ResourceModelParams(params?: ResourceModelParamsBase) {
 
-  return function (target: Type<ResourceModel>) {
+  return function (target: Type<ResourceModel<any>>) {
     let providers: any[] = [];
     if (params) {
       providers = params.providers || [];
@@ -19,7 +19,7 @@ export function ResourceModelParams(params?: ResourceModelParamsBase) {
 }
 
 
-export class ResourceModel {
+export class ResourceModel<R> {
 
   static resourceClass: Type<Resource>;
   static resourceInstance: Resource;
@@ -28,7 +28,7 @@ export class ResourceModel {
   $observable: Observable<any>;
   $abortRequest: () => void;
   $primaryKey: string = 'id';
-  $resource: Resource;
+  $resource: R;
 
   static create(data: any = {}, commit: boolean = true) {
     if (!this.resourceInstance) {

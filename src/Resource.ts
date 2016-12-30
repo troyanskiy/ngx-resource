@@ -8,7 +8,7 @@ import { ResourceModel } from './ResourceModel';
 
 export class Resource {
 
-  static model: Type<ResourceModel>;
+  static model: Type<ResourceModel<Resource>>;
 
   private _url: string = null;
   private _path: string = null;

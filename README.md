@@ -589,7 +589,7 @@ export interface User extends IUser {}
 @ResourceModelParams({
   providers: [SomeService]
 })
-export class User extends ResourceModel {
+export class User extends ResourceModel<UserResource> {
 
   static resourceClass = UserResource;
 

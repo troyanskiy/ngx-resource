@@ -22,13 +22,13 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
   return function (target: Resource, propertyKey: string) {
 
-    (<any>target)[propertyKey] = function (...args: any[]): ResourceResult<any> | ResourceModel {
+    (<any>target)[propertyKey] = function (...args: any[]): ResourceResult<any> | ResourceModel<Resource> {
 
       let resourceOptions = this._getResourceOptions();
 
       let isGetRequest = methodOptions.method === RequestMethod.Get;
 
-      let ret: ResourceResult<any> | ResourceModel;
+      let ret: ResourceResult<any> | ResourceModel<Resource>;
 
       let resourceModel: any;
 
@@ -317,7 +317,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                       } else {
                         if (filter(resp)) {
                           if (!!resourceModel) {
-                            (<ResourceModel>ret).$fillFromObject(map(resp));
+                            (<ResourceModel<Resource>>ret).$fillFromObject(map(resp));
                           } else {
                             Object.assign(ret, map(resp));
                           }
@@ -368,7 +368,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
   };
 }
 
-export function mapToModel(resp: any, model: Type<ResourceModel>) {
+export function mapToModel(resp: any, model: Type<ResourceModel<Resource>>) {
   let modelProviders = (<any>Reflect).getMetadata('providers', model) || [];
   let providers = ReflectiveInjector.resolve(modelProviders);
   let injector = ReflectiveInjector.fromResolvedProviders(providers, this.injector);

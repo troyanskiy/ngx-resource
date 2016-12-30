@@ -1,7 +1,7 @@
-import {NgModule, ModuleWithProviders} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {HttpModule} from '@angular/http';
-import {ResourceProviders} from './src/ResourceProviders';
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpModule } from '@angular/http';
+import { ResourceProviders } from './src/ResourceProviders';
 
 export * from './src/Resource';
 export * from './src/ResourceAction';
