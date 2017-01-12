@@ -22,7 +22,7 @@ export class ResourceProviders {
 
     let deps: any[] = (<any>Reflect).getMetadata('design:paramtypes', resource);
 
-    if (deps.length === 0) {
+    if (!deps || deps.length === 0) {
       deps = [Http, Injector];
     }
 
