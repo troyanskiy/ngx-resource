@@ -24,7 +24,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
     (<any>target)[propertyKey] = function (...args: any[]): ResourceResult<any> | ResourceModel<Resource> {
 
-      let resourceOptions = this._getResourceOptions();
+      let resourceOptions = this.getResourceOptions();
 
       let isGetRequest = methodOptions.method === RequestMethod.Get;
 
@@ -285,8 +285,8 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
           // noinspection TypeScriptValidateTypes
           requestObservable = methodOptions.responseInterceptor ?
-            methodOptions.responseInterceptor(requestObservable, req) :
-            this.responseInterceptor(requestObservable, req);
+            methodOptions.responseInterceptor(requestObservable, req, methodOptions) :
+            this.responseInterceptor(requestObservable, req, methodOptions);
 
 
           if (methodOptions.isLazy) {

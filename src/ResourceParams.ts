@@ -9,7 +9,7 @@ export function ResourceParams(params: ResourceParamsBase = {}) {
   return function (target: Type<Resource>) {
 
 
-    target.prototype._getResourceOptions = function() {
+    target.prototype.getResourceOptions = function() {
       return params;
     };
 

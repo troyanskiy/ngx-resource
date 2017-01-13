@@ -10,7 +10,7 @@ export interface ResourceRequestInterceptor {
 }
 
 export interface ResourceResponseInterceptor {
-  (observable: Observable<any>, request?: Request): Observable<any>;
+  (observable: Observable<any>, request?: Request, methodOptions?: ResourceActionBase): Observable<any>;
 }
 
 export interface ResourceResponseMap {
@@ -30,6 +30,7 @@ export interface ResourceParamsCommon {
   removeTrailingSlash?: boolean;
   addTimestamp?: boolean | string;
   withCredentials?: boolean;
+  [propName: string]: any;
 }
 
 export interface ResourceParamsBase extends ResourceParamsCommon {

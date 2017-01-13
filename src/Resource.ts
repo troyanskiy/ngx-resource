@@ -4,7 +4,8 @@ import { Type } from '@angular/core/src/type';
 import { Observable } from 'rxjs/Rx';
 import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceModel } from './ResourceModel';
-// import { ResourceParamsBase } from './Interfaces';
+import { ResourceParamsBase } from './Interfaces';
+import { ResourceActionBase } from './Interfaces';
 
 export class Resource {
 
@@ -116,7 +117,7 @@ export class Resource {
    * @param observable
    * @returns {Observable<any>}
    */
-  responseInterceptor(observable: Observable<any>, req: Request): Observable<any> {
+  responseInterceptor(observable: Observable<any>, req: Request, methodOptions?: ResourceActionBase): Observable<any> {
     return observable.map(res => res._body ? res.json() : null);
   }
 
@@ -130,6 +131,10 @@ export class Resource {
 
   filter(item: any): boolean {
     return true;
+  }
+
+  getResourceOptions(): ResourceParamsBase {
+    return null;
   }
 
 
@@ -150,11 +155,9 @@ export class Resource {
   }
 
   private _getData(): any | Promise<any> {
+    this.getResourceOptions();
     return null;
   }
 
-  // private _getResourceOptions(): ResourceParamsBase {
-  //   return null;
-  // }
 
 }
