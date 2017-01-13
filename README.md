@@ -168,7 +168,7 @@ export class PageComponent implements OnInit {
 
     // Creating the news
     let newNews:INews = {
-      date: '17.06.2016,
+      date: '17.06.2016',
       title: 'The great day',
       text: 'The best day ever',
       fullText: 'Should be full text here';
