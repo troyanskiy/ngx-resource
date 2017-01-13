@@ -223,6 +223,7 @@ export interface ResourceParamsCommon {
 	removeTrailingSlash?: boolean;
 	addTimestamp?: boolean | string;
 	withCredentials?: boolean;
+	[propName: string]: any;
 }
 ```
 
@@ -332,7 +333,7 @@ Default request interceptor is a function which recieves `Request` object from `
 **Default**: *doing nothing*
 
 #### `responseInterceptor`
-`(observable:Observable<any>, request?:Request):Observable<any>;`
+`(observable:Observable<any>, request?:Request, methodOptions?: ResourceActionBase):Observable<any>;`
 
 Custom response interceptor for the method<br>
 Default response interceptor is a function which receives `Observable` object from `rxjs/Observable` and returns also `Observable` object.<br>
@@ -370,40 +371,40 @@ Called before map method
 
 ### Default methods
 
-#### `getUrl(): string | Promise<string>`
+#### `getUrl(methodOptions?: ResourceActionBase): string | Promise<string>`
 To get url. Used in methods.
 
 #### `setUrl(url: string)`
 To set resource url
 
-#### `getPath(): string | Promise<string>`
+#### `getPath(methodOptions?: ResourceActionBase): string | Promise<string>`
 To get path. Used in methods
 
 #### `setPath(path: string)`
 To set resource path
 
-#### `getHeaders(): any | Promise<any>`
+#### `getHeaders(methodOptions?: ResourceActionBase): any | Promise<any>`
 To get headers. Used in methods.
 
 #### `setHeaders(headers: any)`
 To set resource headers
 
-#### `getParams(): any | Promise<any>`
+#### `getParams(methodOptions?: ResourceActionBase): any | Promise<any>`
 To get params. Used in methods.
 
 #### `getParams(params: any)`
 To set resource params
 
-#### `getData(): any | Promise<any>`
+#### `getData(methodOptions?: ResourceActionBase): any | Promise<any>`
 To get data. Used in methods.
 
 #### `getData(data: any)`
 To set resource data
 
-#### `requestInterceptor(req: Request): Request`
+#### `requestInterceptor(req: Request, methodOptions?: ResourceActionBase): Request`
 Default request interceptor
 
-#### `responseInterceptor(observable: Observable<any>, req: Request): Observable<any>`
+#### `responseInterceptor(observable: Observable<any>, req: Request, methodOptions?: ResourceActionBase): Observable<any>`
 Default response interceptor
 
 #### `removeTrailingSlash(): boolean`
@@ -484,16 +485,18 @@ export class AuthGuardResource extends Resource {
   private deferredQ: Subscriber<any>[] = [];
   private configListenerSet: boolean = false;
 
-  getHeaders(): any {
+  getHeaders(methodOptions: ResourceActionBase): any {
     let headers = super.getHeaders();
 
     // Extending our headers with Authorization
-    headers = AuthServiceHelper.extendHeaders(headers);
+    if (!methodOptions.noAuth) {
+      headers = AuthServiceHelper.extendHeaders(headers);
+    }
 
     return headers;
   }
 
-  responseInterceptor(observable: Observable<any>, request?: Request): Observable<any> {
+  responseInterceptor(observable: Observable<any>, request: Request, methodOptions: ResourceActionBase): Observable<any> {
 
     return Observable.create((subscriber: Subscriber<any>) => {
 
@@ -529,8 +532,8 @@ export class AuthGuardResource extends Resource {
 import { Injectable } from '@angular/core';
 import { RequestMethod } from '@angular/http';
 import { AppProject } from '../../project/app.project';
-import {ResourceAction, ResourceMethod, ResourceParams} from 'ng2-resource-rest';
-import {AuthGuardResource} from './authGuard.resource';
+import { ResourceAction, ResourceMethod, ResourceParams } from 'ng2-resource-rest';
+import { AuthGuardResource } from './authGuard.resource';
 
 
 @Injectable()
@@ -541,7 +544,9 @@ export class AuthResource extends AuthGuardResource {
 
   @ResourceAction({
     method: RequestMethod.Post,
-    path: '/login'
+    path: '/login',
+    // Custom param
+    noAuth: true
   })
   login: ResourceMethod<{login: string, password: string}, any>;
 

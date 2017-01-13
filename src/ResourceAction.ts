@@ -74,11 +74,11 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
       }
 
       Promise.all([
-        Promise.resolve(methodOptions.url || this.getUrl()),
-        Promise.resolve(methodOptions.path || this.getPath()),
-        Promise.resolve(methodOptions.headers || this.getHeaders()),
-        Promise.resolve(methodOptions.params || this.getParams()),
-        Promise.resolve(methodOptions.data || this.getData())
+        Promise.resolve(methodOptions.url || this.getUrl(methodOptions)),
+        Promise.resolve(methodOptions.path || this.getPath(methodOptions)),
+        Promise.resolve(methodOptions.headers || this.getHeaders(methodOptions)),
+        Promise.resolve(methodOptions.params || this.getParams(methodOptions)),
+        Promise.resolve(methodOptions.data || this.getData(methodOptions))
       ])
         .then((dataAll: any[]) => {
 
@@ -266,8 +266,8 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           let req = new Request(requestOptions);
 
           req = methodOptions.requestInterceptor ?
-            methodOptions.requestInterceptor(req) :
-            this.requestInterceptor(req);
+            methodOptions.requestInterceptor(req, methodOptions) :
+            this.requestInterceptor(req, methodOptions);
 
           if (!req) {
             mainObservable = Observable.create((observer: any) => {

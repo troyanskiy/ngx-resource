@@ -6,7 +6,7 @@ import { Resource } from './Resource';
 
 
 export interface ResourceRequestInterceptor {
-  (req: Request): Request;
+  (req: Request, methodOptions?: ResourceActionBase): Request;
 }
 
 export interface ResourceResponseInterceptor {
