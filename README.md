@@ -485,7 +485,7 @@ export class AuthGuardResource extends Resource {
   private deferredQ: Subscriber<any>[] = [];
   private configListenerSet: boolean = false;
 
-  getHeaders(methodOptions: ResourceActionBase): any {
+  getHeaders(methodOptions: any): any {
     let headers = super.getHeaders();
 
     // Extending our headers with Authorization
