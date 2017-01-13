@@ -185,6 +185,7 @@ export class PageComponent implements OnInit {
 ```
 
 
+
 # Docs (WIP)
 
 ## @ResourceParams class decorator
