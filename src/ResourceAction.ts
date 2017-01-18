@@ -95,27 +95,40 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           let defPathParams = dataAll[3];
 
           let data = args.length ? args[0] : null;
-          let callback = args.length > 1 ? args[1] : null;
+          let params = args.length > 1 ? args[1] : null;
+          let callback = args.length > 2 ? args[2] : null;
 
           if (typeof data === 'function') {
-            if (!callback) {
-              callback = data;
-              data = null;
-            } else if (typeof callback !== 'function') {
-              let tmpData = callback;
-              callback = data;
-              data = tmpData;
-            } else {
-              data = null;
-            }
-
+            callback = data;
+            data = null;
+          } else
+          if (typeof params === 'function') {
+            callback = params;
+            params = null;
           }
+
+          // if (typeof data === 'function') {
+          //   if (!callback) {
+          //     callback = data;
+          //     data = null;
+          //   } else if (typeof callback !== 'function') {
+          //     let tmpData = callback;
+          //     callback = data;
+          //     data = tmpData;
+          //   } else {
+          //     data = null;
+          //   }
+					//
+          // }
+
 
           let usedPathParams: any = {};
 
-          if (!Array.isArray(data)) {
+          if (!Array.isArray(data) || params) {
 
-            data = Object.assign({}, dataAll[4], data);
+            if (!Array.isArray(data)) {
+              data = Object.assign({}, dataAll[4], data);
+            }
 
             let pathParams = url.match(/{([^}]*)}/g) || [];
 
@@ -134,8 +147,8 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                 pathKey = pathKey.substr(1);
               }
 
-              let value = getValueForPath(pathKey, defPathParams, data, usedPathParams);
-              if (isGetOnly) {
+              let value = getValueForPath(pathKey, defPathParams, params || data, usedPathParams);
+              if (isGetOnly && !params) {
                 delete data[pathKey];
               }
 
@@ -210,7 +223,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           // Setting search params
           let search: URLSearchParams = new URLSearchParams();
           for (let key in searchParams) {
-            if (!usedPathParams[key]) {
+            if (!usedPathParams[key] && !params) {
 
               let value: any = searchParams[key];
 

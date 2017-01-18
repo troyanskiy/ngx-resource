@@ -54,6 +54,10 @@ export interface ResourceMethod<I, O> {
   (data?: I, callback?: (res: O) => any): ResourceResult<O>;
 }
 
+export interface ResourceMethodStrict<IB, IP, O> {
+  (body?: IB, params?: IP, callback?: (res: O) => any): ResourceResult<O>;
+}
+
 export interface ResourceModelParamsBase {
   providers?: any[];
 }
