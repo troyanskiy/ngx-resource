@@ -320,19 +320,22 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                       if (!Array.isArray(resp)) {
                         console.error('Returned data should be an array. Received', resp);
                       } else {
-                        let result = resp.filter(filter).map(map);
-                        result = !!resourceModel ? mapToModel.bind(this)(result, resourceModel) : result;
-                        Array.prototype.push.apply(ret, result);
+                        resp = resp.filter(filter).map(map);
+                        resp = !!resourceModel ? mapToModel.bind(this)(resp, resourceModel) : resp;
+                        Array.prototype.push.apply(ret, resp);
                       }
                     } else {
                       if (Array.isArray(resp)) {
                         console.error('Returned data should be an object. Received', resp);
                       } else {
                         if (filter(resp)) {
+
+                          resp = map(resp);
+
                           if (!!resourceModel) {
-                            (<ResourceModel<Resource>>ret).$fillFromObject(map(resp));
+                            (<ResourceModel<Resource>>ret).$fillFromObject(resp);
                           } else {
-                            Object.assign(ret, map(resp));
+                            Object.assign(ret, resp);
                           }
                         }
                       }
