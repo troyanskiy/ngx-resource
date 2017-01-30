@@ -55,6 +55,11 @@ export class NewsRes extends Resource {
     path: '/{!id}'
   })
   get: ResourceMethod<{id: any}, INews>;
+  
+  @ResourceAction({
+    path: '/{!id}'
+  })
+  get2: ResourceMethodStrict<INews, {id: any}, INews>;
 
   @ResourceAction({
     method: RequestMethod.Post
@@ -203,6 +208,16 @@ All default decorated options will be overwritten for the method.
 
 
 ## Types
+
+### `ResourceMethod<I, O>`
+Resource method type with specified `input data type` as `I` and `output data type` as `O`<br>
+In fact it's a function type (input?: I, callback?: (res: O) => void): ResourceResult<O>
+
+### `ResourceMethodStrict<IB, IP, O>`
+Resource method type with specified  `input body data type` as `IB`, `input path data type` as `IP` and `output data type` as `O`<br>
+In fact it's a function type (body?: IB, params?: IP, callback?: (res: O) => any): ResourceResult<O>
+`ResourceMethodStrict` developed in purpose to respove [issue #76](https://github.com/troyanskiy/ng2-resource-rest/issues/76)
+
 
 ### `ResourceResult<R>`
 Every request method is returning given data type which is extended by `ResourceResult`
