@@ -88,9 +88,10 @@ export class ResourceModel<R> {
     this.$resolved = result.$resolved;
     this.$observable = result.$observable;
     this.$abortRequest = result.$abortRequest;
-    this.$observable.subscribe(resp => {
-      this.$fillFromObject(resp.$getData());
-    });
+    this.$observable.subscribe(
+      (resp: any) => this.$fillFromObject(resp.$getData()),
+      (error: any)=> {} //do nothing when error
+    );
 
     return this;
   }
