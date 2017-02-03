@@ -48,6 +48,7 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   filter?: ResourceResponseFilter;
   model?: Type<ResourceModel<Resource>>;
   useModel?: boolean;
+  rootNode?: string;
 }
 
 export interface ResourceMethod<I, O> {
