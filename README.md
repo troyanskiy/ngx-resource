@@ -324,6 +324,7 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   responseInterceptor?: ResourceResponseInterceptor;
   map?: ResourceResponseMap;
   filter?: ResourceResponseFilter;
+  rootNode?: string;
 }
 ```
 
@@ -377,6 +378,8 @@ Will be called for each array element if response is an array.<br>
 Will called for the object if response is an object<br>
 Called before map method
 
+#### `rootNode`
+The data sent to the API will be wrapped into the root node provided
 
 <br>
 
