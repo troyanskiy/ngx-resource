@@ -214,7 +214,13 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           } else {
             // NON GET
             if (data) {
-              body = JSON.stringify(data);
+              let _body: any = {};
+              if (methodOptions.rootNode) {
+                _body[`${methodOptions.rootNode}`] = data;
+              } else {
+                _body = data;
+              }
+              body = JSON.stringify(_body);
             }
             searchParams = defPathParams;
           }
