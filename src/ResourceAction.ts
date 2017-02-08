@@ -241,7 +241,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
               } else {
 
-                if (typeof value === 'object') {
+                if (value && typeof value === 'object') {
                   /// Convert dates to ISO format string
                   if (value instanceof Date) {
                     value = value.toISOString();
