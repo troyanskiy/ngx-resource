@@ -188,7 +188,11 @@ export class PageComponent implements OnInit {
 }
 
 ```
+# Changes
 
+## Version 1.11.0
+ 
+Added protected method _request to Resource class. Can be used to replace default http requests with custom one.
 
 
 # Docs (WIP)

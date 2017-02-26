@@ -138,6 +138,18 @@ export class Resource {
   }
 
 
+  protected _request(req: Request, methodOptions: ResourceActionBase = {}): Observable<any> {
+
+    let requestObservable = this.http.request(req);
+
+    // noinspection TypeScriptValidateTypes
+    return methodOptions.responseInterceptor ?
+      methodOptions.responseInterceptor(requestObservable, req, methodOptions) :
+      this.responseInterceptor(requestObservable, req, methodOptions);
+
+  }
+
+
   private _getUrl(methodOptions?: ResourceActionBase): string|Promise<string> {
     return null;
   }

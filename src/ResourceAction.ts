@@ -300,12 +300,12 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           }
 
           // Doing the request
-          let requestObservable = this.http.request(req);
+          let requestObservable = this._request(req, methodOptions);
 
           // noinspection TypeScriptValidateTypes
-          requestObservable = methodOptions.responseInterceptor ?
-            methodOptions.responseInterceptor(requestObservable, req, methodOptions) :
-            this.responseInterceptor(requestObservable, req, methodOptions);
+          // requestObservable = methodOptions.responseInterceptor ?
+          //   methodOptions.responseInterceptor(requestObservable, req, methodOptions) :
+          //   this.responseInterceptor(requestObservable, req, methodOptions);
 
 
           if (methodOptions.isLazy) {
