@@ -190,6 +190,16 @@ export class PageComponent implements OnInit {
 ```
 # Changes
 
+## Version 1.12.0
+
+Added possibility to switch array/object mapping to get params.
+For now it's possible to switch between 2 ways of mapping, which are: 
+- `TGetParamsConverType.Plain` (default and old behavior)<br>
+`params: ['one', 'two']` will be converted to `/some/url/?params=one&params=two`
+- `GetParamsConverType.Braket` (proposed by PR https://github.com/troyanskiy/ng2-resource-rest/pull/87)<br>
+`params: ['one', 'two']` will be converted to `/some/url?params[0]=one&params[1]=two`<br>
+`params: { data: ['one', 'two'] }` will be converted to `/some/url?params[data][0]=one&params[data][1]=two`
+
 ## Version 1.11.0
  
 Added protected method _request to Resource class. Can be used to replace default http requests with custom one.
@@ -469,6 +479,9 @@ Defines params
 
 #### `ResourceGlobalConfig.data: any | Promise<any> = null`
 Defines data
+
+#### `getParamsConvertType: any = TGetParamsConverType.Plain`
+Defines mapping method of arrays/objects to get params
 
 
 ## Priority of getting params by methods

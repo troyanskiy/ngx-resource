@@ -7,4 +7,11 @@ export class ResourceGlobalConfig {
   };
   static params: any | Promise<any> = null;
   static data: any | Promise<any> = null;
+
+  static getParamsConvertType: any = TGetParamsConverType.Plain;
+}
+
+export enum TGetParamsConverType {
+  Plain,
+  Bracket
 }

@@ -1,10 +1,11 @@
-import { RequestMethod, Response, Headers, URLSearchParams, RequestOptions, Request } from '@angular/http';
-import { Subscriber, Observable, ConnectableObservable, Subscription } from 'rxjs/Rx';
+import { Headers, Request, RequestMethod, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { ConnectableObservable, Observable, Subscriber, Subscription } from 'rxjs/Rx';
 import { ReflectiveInjector } from '@angular/core';
 import { Type } from '@angular/core/src/type';
-import { ResourceActionBase, ResourceResult, ResourceResponseMap, ResourceResponseFilter } from './Interfaces';
+import { ResourceActionBase, ResourceResponseFilter, ResourceResponseMap, ResourceResult } from './Interfaces';
 import { Resource } from './Resource';
 import { ResourceModel } from './ResourceModel';
+import { ResourceGlobalConfig, TGetParamsConverType } from './ResourceGlobalConfig';
 
 
 export function ResourceAction(methodOptions?: ResourceActionBase) {
@@ -379,16 +380,38 @@ export function appendSearchParams(search: URLSearchParams, key: string, value: 
     value = value.toISOString();
   }
 
-  /// Convert object and arrays to query params
-  if (Array.isArray(value) || typeof value === 'object') {
-    for (let k in value) {
-      if (value.hasOwnProperty(k)) {
-        appendSearchParams(search, key + '[' +k+ ']', value[k]);
-      }
+  if (typeof value === 'object') {
+
+    switch (ResourceGlobalConfig.getParamsConvertType) {
+
+      case TGetParamsConverType.Plain:
+
+        if (Array.isArray(value)) {
+          for (let arr_value of value) {
+            search.append(key, arr_value);
+          }
+        } else {
+          search.append(key, JSON.stringify(value));
+        }
+        break;
+
+      case TGetParamsConverType.Bracket:
+        /// Convert object and arrays to query params
+        for (let k in value) {
+          if (value.hasOwnProperty(k)) {
+            appendSearchParams(search, key + '[' + k + ']', value[k]);
+          }
+        }
+        break;
     }
-  } else {
-    search.append(key, value);
+
+    return;
   }
+
+
+
+  search.append(key, value);
+
 }
 
 export function mapToModel(resp: any, model: Type<ResourceModel<Resource>>) {
