@@ -5,7 +5,7 @@ import { Type } from '@angular/core/src/type';
 import { ResourceActionBase, ResourceResponseFilter, ResourceResponseMap, ResourceResult } from './Interfaces';
 import { Resource } from './Resource';
 import { ResourceModel } from './ResourceModel';
-import { ResourceGlobalConfig, TGetParamsConverType } from './ResourceGlobalConfig';
+import { ResourceGlobalConfig, TGetParamsMappingType } from './ResourceGlobalConfig';
 
 
 export function ResourceAction(methodOptions?: ResourceActionBase) {
@@ -377,14 +377,15 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 export function appendSearchParams(search: URLSearchParams, key: string, value: any): void {
   /// Convert dates to ISO format string
   if (value instanceof Date) {
-    value = value.toISOString();
+    search.append(key, value.toISOString());
+    return;
   }
 
   if (typeof value === 'object') {
 
-    switch (ResourceGlobalConfig.getParamsConvertType) {
+    switch (ResourceGlobalConfig.getParamsMappingType) {
 
-      case TGetParamsConverType.Plain:
+      case TGetParamsMappingType.Plain:
 
         if (Array.isArray(value)) {
           for (let arr_value of value) {
@@ -395,7 +396,7 @@ export function appendSearchParams(search: URLSearchParams, key: string, value: 
         }
         break;
 
-      case TGetParamsConverType.Bracket:
+      case TGetParamsMappingType.Bracket:
         /// Convert object and arrays to query params
         for (let k in value) {
           if (value.hasOwnProperty(k)) {
@@ -407,7 +408,6 @@ export function appendSearchParams(search: URLSearchParams, key: string, value: 
 
     return;
   }
-
 
 
   search.append(key, value);
