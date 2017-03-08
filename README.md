@@ -196,7 +196,7 @@ Added possibility to switch array/object mapping to get params.
 For now it's possible to switch between 2 ways of mapping, which are: 
 - `TGetParamsConverType.Plain` (default and old behavior)<br>
 `params: ['one', 'two']` will be converted to `/some/url/?params=one&params=two`
-- `GetParamsConverType.Braket` (proposed by PR https://github.com/troyanskiy/ng2-resource-rest/pull/87)<br>
+- `GetParamsConverType.Braket` (proposed by [PR #87](https://github.com/troyanskiy/ng2-resource-rest/pull/87))<br>
 `params: ['one', 'two']` will be converted to `/some/url?params[0]=one&params[1]=two`<br>
 `params: { data: ['one', 'two'] }` will be converted to `/some/url?params[data][0]=one&params[data][1]=two`
 
