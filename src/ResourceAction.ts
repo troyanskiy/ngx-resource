@@ -228,29 +228,12 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
           // Setting search params
           let search: URLSearchParams = new URLSearchParams();
-          for (let key in searchParams) {
-            if (!usedPathParams[key] && !params) {
 
-              let value: any = searchParams[key];
-
-              if (Array.isArray(value)) {
-
-                for (let arr_value of value) {
-                  search.append(key, arr_value);
-                }
-
-              } else {
-
-                if (value && typeof value === 'object') {
-                  /// Convert dates to ISO format string
-                  if (value instanceof Date) {
-                    value = value.toISOString();
-                  } else {
-                    value = JSON.stringify(value);
-                  }
-                }
-                search.append(key, value);
-
+          if (!params) {
+            for (let key in searchParams) {
+              if (searchParams.hasOwnProperty(key) && !usedPathParams[key]) {
+                let value: any = searchParams[key];
+                appendSearchParams(search, key, value);
               }
             }
           }
@@ -388,6 +371,24 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
     };
 
   };
+}
+
+export function appendSearchParams(search: URLSearchParams, key: string, value: any): void {
+  /// Convert dates to ISO format string
+  if (value instanceof Date) {
+    value = value.toISOString();
+  }
+
+  /// Convert object and arrays to query params
+  if (Array.isArray(value) || typeof value === 'object') {
+    for (let k in value) {
+      if (value.hasOwnProperty(k)) {
+        appendSearchParams(search, key + '[' +k+ ']', value[k]);
+      }
+    }
+  } else {
+    search.append(key, value);
+  }
 }
 
 export function mapToModel(resp: any, model: Type<ResourceModel<Resource>>) {
