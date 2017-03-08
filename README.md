@@ -416,13 +416,13 @@ To set resource headers
 #### `getParams(methodOptions?: ResourceActionBase): any | Promise<any>`
 To get params. Used in methods.
 
-#### `getParams(params: any)`
+#### `setParams(params: any)`
 To set resource params
 
 #### `getData(methodOptions?: ResourceActionBase): any | Promise<any>`
 To get data. Used in methods.
 
-#### `getData(data: any)`
+#### `setData(data: any)`
 To set resource data
 
 #### `requestInterceptor(req: Request, methodOptions?: ResourceActionBase): Request`
