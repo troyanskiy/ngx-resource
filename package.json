@@ -5,7 +5,8 @@
   "scripts": {
     "ngc": "ngc",
     "compile": "ngc && npm run build",
-    "build": "webpack && cp bundles/ng2-resource-rest.umd.js bundles/index.js"
+    "build": "webpack && cp bundles/ng2-resource-rest.umd.js bundles/index.js",
+    "postinstall": "npm run compile"
   },
   "keywords": [
     "ng2-resource",
@@ -42,15 +43,15 @@
     "@angular/platform-browser": "2.4.0",
     "@angular/platform-server": "2.4.0",
     "@types/node": "6.0.52",
+    "rxjs": "5.0.1"
+  },
+  "dependencies": {
     "awesome-typescript-loader": "3.0.0-beta.17",
     "codelyzer": "2.0.0-beta.3",
-    "rxjs": "5.0.1",
     "ts-helpers": "1.1.2",
     "tslint": "4.0.2",
     "tslint-loader": "3.3.0",
     "typescript": "2.0.10",
-    "webpack": "2.1.0-beta.28",
-    "zone.js": "0.7.2"
-  },
-  "dependencies": {}
+    "webpack": "2.1.0-beta.28"
+  }
 }

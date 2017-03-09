@@ -5,11 +5,9 @@
 nbproject
 manifest.mf
 build.xml
-node_modules/*
 npm-debug.log
 tests
 examples
-config
 .github
 coverage
 !*.metadata.json
