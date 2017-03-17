@@ -289,56 +289,29 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           // Doing the request
           let requestObservable = this._request(req, methodOptions);
 
-          let handleResponse = (resp: any) => {
-            if (resp !== null) {
-
-              let map: ResourceResponseMap = methodOptions.map ? methodOptions.map : this.map;
-              let filter: ResourceResponseFilter = methodOptions.filter ? methodOptions.filter : this.filter;
-
-              if (methodOptions.isArray) {
-                if (!Array.isArray(resp)) {
-                  console.error('Returned data should be an array. Received', resp);
-                } else {
-                  resp = resp.filter(filter).map(map);
-                  resp = !!resourceModel ? mapToModel.bind(this)(resp, resourceModel) : resp;
-                  Array.prototype.push.apply(ret, resp);
-                }
-              } else {
-                if (Array.isArray(resp)) {
-                  console.error('Returned data should be an object. Received', resp);
-                } else {
-                  if (filter(resp)) {
-
-                    resp = map(resp);
-
-                    if (!!resourceModel) {
-                      (<ResourceModel<Resource>>ret).$fillFromObject(resp);
-                    } else {
-                      Object.assign(ret, resp);
-                    }
-                  }
-                }
-              }
-            }
-            return resp;
-          };
           // noinspection TypeScriptValidateTypes
           // requestObservable = methodOptions.responseInterceptor ?
           //   methodOptions.responseInterceptor(requestObservable, req, methodOptions) :
           //   this.responseInterceptor(requestObservable, req, methodOptions);
 
           if (ResourceGlobalConfig.mockResponses && resourceOptions.mock !== false && methodOptions.mock !== false && (!!methodOptions.mockCollection || !!resourceOptions.mockCollection)) {
-            mainObservable = Observable.create((subscriber: Subscriber<any>) => {
-              let mockCollection = !!methodOptions.mockCollection ? methodOptions.mockCollection : {collection: resourceOptions.mockCollection};
-              let resp: any = null;
-              if (typeof mockCollection === 'function') {
-                resp = mockCollection(propertyKey, usedPathParamsValues, JSON.parse(body), methodOptions.method);
-              } else {
-                resp = getMockedResponse(mockCollection, usedPathParamsValues, JSON.parse(body), methodOptions.method);
-              }
-              subscriber.next(handleResponse(resp));
-            });
-          } else if (methodOptions.isLazy) {
+            let mockCollection = !!methodOptions.mockCollection ? methodOptions.mockCollection : {collection: resourceOptions.mockCollection};
+            let resp: any = null;
+            if (typeof mockCollection === 'function') {
+              resp = mockCollection(propertyKey, usedPathParamsValues, JSON.parse(body), methodOptions.method);
+            } else {
+              resp = getMockedResponse(mockCollection, usedPathParamsValues, JSON.parse(body), methodOptions.method);
+            }
+            resp = new FakeResponse(resp);
+            requestObservable = Observable.from([resp]);
+
+            // noinspection TypeScriptValidateTypes
+            requestObservable = methodOptions.responseInterceptor ?
+              methodOptions.responseInterceptor(requestObservable, req, methodOptions) :
+              this.responseInterceptor(requestObservable, req, methodOptions);
+          };
+
+          if (methodOptions.isLazy) {
             mainObservable = requestObservable;
           } else {
 
@@ -346,7 +319,37 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
               let reqSubscr: Subscription = requestObservable.subscribe(
                 (resp: any) => {
-                  subscriber.next(handleResponse(resp));
+                  if (resp !== null) {
+
+                    let map: ResourceResponseMap = methodOptions.map ? methodOptions.map : this.map;
+                    let filter: ResourceResponseFilter = methodOptions.filter ? methodOptions.filter : this.filter;
+
+                    if (methodOptions.isArray) {
+                      if (!Array.isArray(resp)) {
+                        console.error('Returned data should be an array. Received', resp);
+                      } else {
+                        resp = resp.filter(filter).map(map);
+                        resp = !!resourceModel ? mapToModel.bind(this)(resp, resourceModel) : resp;
+                        Array.prototype.push.apply(ret, resp);
+                      }
+                    } else {
+                      if (Array.isArray(resp)) {
+                        console.error('Returned data should be an object. Received', resp);
+                      } else {
+                        if (filter(resp)) {
+
+                          resp = map(resp);
+
+                          if (!!resourceModel) {
+                            (<ResourceModel<Resource>>ret).$fillFromObject(resp);
+                          } else {
+                            Object.assign(ret, resp);
+                          }
+                        }
+                      }
+                    }
+                  }
+                  subscriber.next(resp);
                 },
                 (err: any) => subscriber.error(err),
                 () => {
@@ -476,6 +479,20 @@ function getValueForPath(key: string, params: any, data: any, usedPathParams: an
 
 function isNullOrUndefined(value: any): boolean {
   return value === null || value === undefined;
+}
+
+class FakeResponse {
+  private _resp: any;
+
+  constructor(resp: any) {
+    this._resp = resp;
+  }
+
+  get _body(): string {
+    return JSON.stringify(this._resp);
+  }
+
+  json = () => this._resp;
 }
 
 function getMockedResponse(collection: {collection: any, lookupParams?: any}, params: any, data: any, requestMethod: RequestMethod) {
