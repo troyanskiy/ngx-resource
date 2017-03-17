@@ -14,4 +14,5 @@ export class ResourceGlobalConfig {
   static data: any | Promise<any> = null;
 
   static getParamsMappingType: any = TGetParamsMappingType.Plain;
+  static mockResponses: boolean = false;
 }
