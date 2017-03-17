@@ -124,6 +124,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
 
           let usedPathParams: any = {};
+          let usedPathParamsValues: any = {};
 
           if (!Array.isArray(data) || params) {
 
@@ -170,6 +171,8 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                 }
                 url = url.substr(0, url.indexOf(pathParam));
                 break;
+              } else {
+                usedPathParamsValues[pathKey] = value;
               }
 
               // Replacing in the url
@@ -291,6 +294,22 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           //   methodOptions.responseInterceptor(requestObservable, req, methodOptions) :
           //   this.responseInterceptor(requestObservable, req, methodOptions);
 
+          if (ResourceGlobalConfig.mockResponses && resourceOptions.mock !== false && methodOptions.mock !== false && (!!methodOptions.mockCollection || !!resourceOptions.mockCollection)) {
+            let mockCollection = !!methodOptions.mockCollection ? methodOptions.mockCollection : {collection: resourceOptions.mockCollection};
+            let resp: any = null;
+            if (typeof mockCollection === 'function') {
+              resp = mockCollection(propertyKey, usedPathParamsValues, JSON.parse(body), methodOptions.method);
+            } else {
+              resp = getMockedResponse(mockCollection, usedPathParamsValues, JSON.parse(body), methodOptions.method);
+            }
+            resp = new FakeResponse(resp);
+            requestObservable = Observable.from([resp]);
+
+            // noinspection TypeScriptValidateTypes
+            requestObservable = methodOptions.responseInterceptor ?
+              methodOptions.responseInterceptor(requestObservable, req, methodOptions) :
+              this.responseInterceptor(requestObservable, req, methodOptions);
+          };
 
           if (methodOptions.isLazy) {
             mainObservable = requestObservable;
@@ -300,7 +319,6 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
               let reqSubscr: Subscription = requestObservable.subscribe(
                 (resp: any) => {
-
                   if (resp !== null) {
 
                     let map: ResourceResponseMap = methodOptions.map ? methodOptions.map : this.map;
@@ -331,9 +349,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                       }
                     }
                   }
-
                   subscriber.next(resp);
-
                 },
                 (err: any) => subscriber.error(err),
                 () => {
@@ -463,4 +479,73 @@ function getValueForPath(key: string, params: any, data: any, usedPathParams: an
 
 function isNullOrUndefined(value: any): boolean {
   return value === null || value === undefined;
+}
+
+class FakeResponse {
+  private _resp: any;
+
+  constructor(resp: any) {
+    this._resp = resp;
+  }
+
+  get _body(): string {
+    return JSON.stringify(this._resp);
+  }
+
+  json = () => this._resp;
+}
+
+function getMockedResponse(collection: {collection: any, lookupParams?: any}, params: any, data: any, requestMethod: RequestMethod) {
+  if (requestMethod === RequestMethod.Get) {
+    if (Object.keys(params).length === 0) {
+      return collection.collection;
+    } else {
+      if (!collection.lookupParams || Object.keys(collection.lookupParams).length === 0) {
+        let result = collection.collection;
+        for (let key in params) {
+          if (params.hasOwnProperty(key)) {
+            result = result.filter((item: any) => item[key] === params[key]);
+          }
+        }
+        return !!result.length ? result[0] : null;
+      } else {
+        return collection.collection.filter((itm: any) => {
+          let result: boolean = true;
+          for (let key in collection.lookupParams) {
+            if (collection.lookupParams.hasOwnProperty(key)) {
+              result = result && params[key] === itm[collection.lookupParams[key]];
+            }
+          }
+          return result;
+        });
+      }
+    }
+  } else if (requestMethod === RequestMethod.Post) {
+    collection.collection.push(data);
+    return data;
+  } else if (requestMethod === RequestMethod.Put || requestMethod === RequestMethod.Patch ) {
+      let result = collection.collection.find((item: any) => {
+        for (let key in params) {
+          if (item[key] !== params[key]) {
+            return false;
+          }
+        }
+        return true;
+      });
+      if (!!result) {
+        Object.assign(result, data);
+        return result;
+      }
+  } else if (requestMethod === RequestMethod.Delete) {
+      let resultIdx = collection.collection.findIndex((item: any) => {
+        for (let key in params) {
+          if (item[key] !== params[key]) {
+            return false;
+          }
+        }
+        return true;
+      });
+      collection.collection.splice(resultIdx, 1);
+  }
+  return null;
 }

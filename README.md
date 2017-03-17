@@ -55,7 +55,7 @@ export class NewsRes extends Resource {
     path: '/{!id}'
   })
   get: ResourceMethod<{id: any}, INews>;
-  
+
   @ResourceAction({
     path: '/{!id}'
   })
@@ -193,7 +193,7 @@ export class PageComponent implements OnInit {
 ## Version 1.12.0
 
 Added possibility to switch array/object mapping to get params.
-For now it's possible to switch between 2 ways of mapping, which are: 
+For now it's possible to switch between 2 ways of mapping, which are:
 - `TGetParamsMappingType.Plain` (default and old behavior)<br>
 `params: ['one', 'two']` will be mapped to `/some/url/?params=one&params=two`
 - `TGetParamsMappingType.Braket` (proposed by [PR #87](https://github.com/troyanskiy/ng2-resource-rest/pull/87))<br>
@@ -201,7 +201,7 @@ For now it's possible to switch between 2 ways of mapping, which are:
 `params: { data: ['one', 'two'] }` will be mapped to `/some/url?params[data][0]=one&params[data][1]=two`
 
 ## Version 1.11.0
- 
+
 Added protected method _request to Resource class. Can be used to replace default http requests with custom one.
 
 
@@ -726,6 +726,110 @@ export class PageComponent implements OnInit {
 
     //call some action from SomeService for user
     this.user.someAction()
-
 );
+```
+
+###Use mocking for resource actions
+
+You can use mocking for testing purposes or in development process (when API not ready yet)
+
+For example, imagine the situation when we have `NewsResource` with some actions. But we don't have api for this. Lets mock data:
+
+```ts
+
+var newsCollection = [
+  {id: 1, fullText: 'First News'},
+  {id: 2, fullText: 'Second News'},
+];
+
+var commentsCollection = [
+  {id: 1, news_id: 1, text: 'First News Comment'},
+  {id: 2, news_id: 2, fullText: 'Second News Comment'},
+];
+
+function customMockFunction(resourceActionName: string, pathParams: any, data: any, method: RequestMethod) {
+  return {key1: 'value1', key2: 'value2'}
+}
+```
+There is two mockCollections and one mockFunction. For use these in our resource we should set flag `mockResponses` in `ResourceGlobalConfig` to `true`:
+
+```
+ResourceGlobalConfig.mockResponses = true;
+```
+
+Also we should set `mockCollection: newsCollection` in our `@ResourceParams` or/and set `mockCollection` for our `@ResourceAction`s. Resource example:
+
+```ts
+@ResourceParams({
+  url: 'https://domain.net/api/news',
+  mockCollection: newsCollection
+})
+export class NewsRes extends Resource {
+
+  @ResourceAction({
+    isArray: true
+  })
+  query: ResourceMethod<IQueryInput, INewsShort[]>;
+
+  @ResourceAction({
+    path: '/{!id}'
+  })
+  get: ResourceMethod<{id: any}, INews>;
+
+  @ResourceAction({
+    path: '/{!id}/comments',
+    isArray: true,
+    mockCollection: {collection: commentsCollection, lookupParams: {id: 'news_id'}}
+  })
+  comments: ResourceMethod<{id: any}, IComment[]>;
+
+  @ResourceAction({
+    path: '/{!id}/something',
+    mockCollection: customMockFunction
+  })
+  something: ResourceMethod<{id: any}, any>;
+
+  @ResourceAction({
+    method: RequestMethod.Post
+  })
+  save: ResourceMethod<INews, INews>;
+
+  @ResourceAction({
+    method: RequestMethod.Put,
+    path: '/{!id}'
+  })
+  update: ResourceMethod<INews, INews>;
+
+  @ResourceAction({
+    method: RequestMethod.Delete,
+    path: '/{!id}'
+  })
+  remove: ResourceMethod<{id: any}, any>;
+}
+```
+
+So then image situation when our backend developer said that API for `query` and `get` action are ready. What we should do for exclude these methods from mocking? Lets do this:
+
+```ts
+  @ResourceAction({
+    isArray: true,
+    mock: false
+  })
+  query: ResourceMethod<IQueryInput, INewsShort[]>;
+
+  @ResourceAction({
+    path: '/{!id}',
+    mock: false
+  })
+  get: ResourceMethod<{id: any}, INews>;
+```
+
+Or for all actions in news resource:
+
+```ts
+@ResourceParams({
+  url: 'https://domain.net/api/news',
+  mockCollection: newsCollection,
+  mock: false
+})
 ```

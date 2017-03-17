@@ -10,7 +10,7 @@
 //    "inlineSources": true,
     "moduleResolution": "node",
     "noUnusedLocals": true,
-    "types": ["node"],
+    "types": ["node", "jasmine"],
     "lib": ["es2015", "dom"]
   },
   "files": [

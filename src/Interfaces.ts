@@ -30,6 +30,8 @@ export interface ResourceParamsCommon {
   removeTrailingSlash?: boolean;
   addTimestamp?: boolean | string;
   withCredentials?: boolean;
+  mock?: boolean;
+  mockCollection?: any;
   [propName: string]: any;
 }
 
@@ -49,6 +51,8 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   model?: Type<ResourceModel<Resource>>;
   useModel?: boolean;
   rootNode?: string;
+  mockCollection?: {collection: any, lookupParams?: any} | any;
+  mock?: boolean;
 }
 
 export interface ResourceMethod<I, O> {
