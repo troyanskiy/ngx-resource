@@ -325,7 +325,19 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                           if (!!resourceModel) {
                             (<ResourceModel<Resource>>ret).$fillFromObject(resp);
                           } else {
-                            Object.assign(ret, resp);
+                            let descriptors = Object.keys(resp).reduce((descriptors, key) => {
+                              descriptors[key] = Object.getOwnPropertyDescriptor(resp, key);
+                              return descriptors;
+                            }, {});
+                            
+                            Object.getOwnPropertySymbols(resp).forEach(sym => {
+                              let descriptor = Object.getOwnPropertyDescriptor(resp, sym);
+                              if (descriptor.enumerable) {
+                                descriptors[sym] = descriptor;
+                              }
+                            });
+                            
+                            Object.defineProperties(ret, descriptors);
                           }
                         }
                       }
