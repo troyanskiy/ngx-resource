@@ -750,6 +750,16 @@ export class CTest {
   get prop(): string {
     return this.prop1 + ' ' + this.prop2;
   }
+  
+  constructor(data: any = null) {
+    this.setFromJson(data);
+  }
+  
+  setFromJson(data: any) {
+    if (data) {
+      Object.assign(this, data);
+    }
+  }
 
 }
 
@@ -770,7 +780,7 @@ export class TestRes extends Resource {
   get: ResourceMethod<{id: any}, CTest>;
   
   map(item: any): any {
-    return new CTest();
+    return new CTest(item);
   }
 
 }
