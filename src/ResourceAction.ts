@@ -332,6 +332,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                     }
                   }
 
+                  ret.$resolved = true;
                   subscriber.next(resp);
 
                 },
