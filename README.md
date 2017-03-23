@@ -190,6 +190,13 @@ export class PageComponent implements OnInit {
 ```
 # Changes
 
+## Version 1.13.0 (Might Broke)
+`map` method is used to create main return object<br>
+`map` method will be called with `null` as data in order to create initial object 
+and again will be called with real data after receiving.
+
+See example of usage below
+
 ## Version 1.12.0
 
 Added possibility to switch array/object mapping to get params.
@@ -728,4 +735,83 @@ export class PageComponent implements OnInit {
     this.user.someAction()
 
 );
+```
+
+
+## Example of mapping object
+
+```ts
+
+export class CTest {
+
+  prop1: string;
+  prop2: string;
+  
+  get prop(): string {
+    return this.prop1 + ' ' + this.prop2;
+  }
+
+}
+
+@Injectable()
+@ResourceParams({
+  url: 'https://domain.net/api/test'
+})
+export class TestRes extends Resource {
+
+  @ResourceAction({
+    isArray: true
+  })
+  query: ResourceMethod<any, CTest[]>;
+
+  @ResourceAction({
+    path: '/{!id}'
+  })
+  get: ResourceMethod<{id: any}, CTest>;
+  
+  map(item: any): any {
+    return new CTest();
+  }
+
+}
+
+@Component({
+  moduleId: module.id,
+  selector: 'test-component',
+  templateUrl: 'test.page.component.html',
+  styleUrls: ['test.page.component.css'],
+})
+export class TestComponent implements OnInit {
+
+  list: CTest[] = [];
+  test: CTest;
+  
+  prop: string;
+
+  constructor(private testRes:TestRes) {}
+
+  ngOnInit():any {
+
+    this.list = this.testRes.query();
+
+    this.test = this.testRes.get({id:1});
+    
+    console.log(this.test.prop); // a space ' ' will be returned because data is not yet received
+    
+    // so to get the prop we will need to wait data to be received
+    this.test
+      .$observable
+      .subscribe(
+        // Now the data is received and assigned on the object
+        () => this.prepareData()
+      );
+  }
+  
+  private preprareData() {
+    this.prop = this.test.prop;
+  }
+}
+
+
+
 ```
