@@ -33,6 +33,9 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
       let resourceModel: any;
 
+      let map: ResourceResponseMap = methodOptions.map ? methodOptions.map : this.map;
+      let filter: ResourceResponseFilter = methodOptions.filter ? methodOptions.filter : this.filter;
+
       if (methodOptions.useModel) {
         if (this.constructor.hasOwnProperty('getResourceModel') && !methodOptions.model) {
           resourceModel = this.constructor.getResourceModel(args);
@@ -46,7 +49,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
       } else if (methodOptions.isLazy) {
         ret = {};
       } else {
-        ret = methodOptions.isArray ? [] : {};
+        ret = methodOptions.isArray ? [] : map(null) || {};
       }
 
       let mainDeferredSubscriber: Subscriber<any> = null;
@@ -302,9 +305,6 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                 (resp: any) => {
 
                   if (resp !== null) {
-
-                    let map: ResourceResponseMap = methodOptions.map ? methodOptions.map : this.map;
-                    let filter: ResourceResponseFilter = methodOptions.filter ? methodOptions.filter : this.filter;
 
                     if (methodOptions.isArray) {
                       if (!Array.isArray(resp)) {
