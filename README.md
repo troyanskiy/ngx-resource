@@ -744,8 +744,8 @@ export class PageComponent implements OnInit {
 
 export class CTest {
 
-  prop1: string;
-  prop2: string;
+  prop1: string = '';
+  prop2: string = '';
   
   get prop(): string {
     return this.prop1 + ' ' + this.prop2;
