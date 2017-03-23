@@ -806,7 +806,9 @@ export class TestComponent implements OnInit {
 
     this.test = this.testRes.get({id:1});
     
+    this.prepareData(); // will not set prop, test is not yet resolved
     console.log(this.test.prop); // a space ' ' will be returned because data is not yet received
+    
     
     // so to get the prop we will need to wait data to be received
     this.test
@@ -818,7 +820,9 @@ export class TestComponent implements OnInit {
   }
   
   private preprareData() {
-    this.prop = this.test.prop;
+    if (this.test && this.test.$resolved) {
+      this.prop = this.test.prop;
+    }
   }
 }
 
