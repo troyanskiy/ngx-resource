@@ -21,6 +21,10 @@ export interface ResourceResponseFilter {
   (item: any): boolean;
 }
 
+export interface ResourceResponseInstantiate {
+  (): ResourceResult<any>;
+}
+
 export interface ResourceParamsCommon {
   url?: string;
   path?: string;
@@ -46,6 +50,7 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   responseInterceptor?: ResourceResponseInterceptor;
   map?: ResourceResponseMap;
   filter?: ResourceResponseFilter;
+  instantiate?: ResourceResult<any>;
   model?: Type<ResourceModel<Resource>>;
   useModel?: boolean;
   rootNode?: string;

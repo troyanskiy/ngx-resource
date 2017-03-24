@@ -2,7 +2,7 @@ import { Headers, Request, RequestMethod, RequestOptions, Response, URLSearchPar
 import { ConnectableObservable, Observable, Subscriber, Subscription } from 'rxjs/Rx';
 import { ReflectiveInjector } from '@angular/core';
 import { Type } from '@angular/core/src/type';
-import { ResourceActionBase, ResourceResponseFilter, ResourceResponseMap, ResourceResult } from './Interfaces';
+import { ResourceActionBase, ResourceResponseFilter, ResourceResponseMap, ResourceResult, ResourceResponseInstantiate } from './Interfaces';
 import { Resource } from './Resource';
 import { ResourceModel } from './ResourceModel';
 import { ResourceGlobalConfig, TGetParamsMappingType } from './ResourceGlobalConfig';
@@ -35,6 +35,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
       let map: ResourceResponseMap = methodOptions.map ? methodOptions.map : this.map;
       let filter: ResourceResponseFilter = methodOptions.filter ? methodOptions.filter : this.filter;
+      let instantiate: ResourceResponseInstantiate = methodOptions.instantiate ?  methodOptions.instantiate : this.instantiate;
 
       if (methodOptions.useModel) {
         if (this.constructor.hasOwnProperty('getResourceModel') && !methodOptions.model) {
@@ -47,9 +48,9 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
       if (resourceModel && !methodOptions.isArray) {
         ret = resourceModel.create({}, false);
       } else if (methodOptions.isLazy) {
-        ret = {};
+        ret = instantiate();
       } else {
-        ret = methodOptions.isArray ? [] : map(null) || {};
+        ret = methodOptions.isArray ? [] : instantiate();
       }
 
       let mainDeferredSubscriber: Subscriber<any> = null;

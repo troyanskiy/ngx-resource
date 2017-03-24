@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Rx';
 import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceModel } from './ResourceModel';
 import { ResourceParamsBase } from './Interfaces';
-import { ResourceActionBase } from './Interfaces';
+import { ResourceActionBase, ResourceResult } from './Interfaces';
 
 export class Resource {
 
@@ -131,6 +131,10 @@ export class Resource {
 
   filter(item: any): boolean {
     return true;
+  }
+
+  instantiate(): ResourceResult<any> {
+    return {};
   }
 
   getResourceOptions(): ResourceParamsBase {
