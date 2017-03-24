@@ -190,7 +190,7 @@ export class PageComponent implements OnInit {
 ```
 # Changes
 
-## Version 1.14.0 $NOT PUBLISHED YET$ (Removed broken chance from ver 1.13.0)
+## Version 1.14.0 (Removed broken chance from ver 1.13.0)
 Added resource method `initResultObject` which is used to create return object or items in returned array.<br>
 The method should return object. If method `$setData` exists on the return object, then it will be called with 
 received data, so the method is kind of constructor to set received data. If method does not exists on the
