@@ -2,7 +2,10 @@ import { Headers, Request, RequestMethod, RequestOptions, Response, URLSearchPar
 import { ConnectableObservable, Observable, Subscriber, Subscription } from 'rxjs/Rx';
 import { ReflectiveInjector } from '@angular/core';
 import { Type } from '@angular/core/src/type';
-import { ResourceActionBase, ResourceResponseFilter, ResourceResponseMap, ResourceResult } from './Interfaces';
+import {
+  ResourceActionBase, ResourceResponseFilter, ResourceResponseInitResult, ResourceResponseMap,
+  ResourceResult
+} from './Interfaces';
 import { Resource } from './Resource';
 import { ResourceModel } from './ResourceModel';
 import { ResourceGlobalConfig, TGetParamsMappingType } from './ResourceGlobalConfig';
@@ -35,6 +38,8 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
       let map: ResourceResponseMap = methodOptions.map ? methodOptions.map : this.map;
       let filter: ResourceResponseFilter = methodOptions.filter ? methodOptions.filter : this.filter;
+      let initObject: ResourceResponseInitResult = methodOptions.initResultObject ?
+        methodOptions.initResultObject : this.initResultObject;
 
       if (methodOptions.useModel) {
         if (this.constructor.hasOwnProperty('getResourceModel') && !methodOptions.model) {
@@ -49,7 +54,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
       } else if (methodOptions.isLazy) {
         ret = {};
       } else {
-        ret = methodOptions.isArray ? [] : map(null) || {};
+        ret = methodOptions.isArray ? [] : initObject();
       }
 
       let mainDeferredSubscriber: Subscriber<any> = null;
@@ -310,9 +315,21 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                       if (!Array.isArray(resp)) {
                         console.error('Returned data should be an array. Received', resp);
                       } else {
+
                         resp = resp.filter(filter).map(map);
-                        resp = !!resourceModel ? mapToModel.bind(this)(resp, resourceModel) : resp;
+
+                        if (!!resourceModel) {
+
+                          resp = mapToModel.bind(this)(resp, resourceModel);
+
+                        } else {
+
+                          resp = resp.map((respItem: any) => setDataToObject(initObject(), respItem));
+
+                        }
+
                         Array.prototype.push.apply(ret, resp);
+
                       }
                     } else {
                       if (Array.isArray(resp)) {
@@ -323,9 +340,13 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                           resp = map(resp);
 
                           if (!!resourceModel) {
+
                             (<ResourceModel<Resource>>ret).$fillFromObject(resp);
+
                           } else {
-                            Object.assign(ret, resp);
+
+                            setDataToObject(ret, resp);
+
                           }
                         }
                       }
@@ -333,7 +354,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                   }
 
                   ret.$resolved = true;
-                  subscriber.next(resp);
+                  subscriber.next(ret);
 
                 },
                 (err: any) => subscriber.error(err),
@@ -373,6 +394,18 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
     };
 
   };
+}
+
+export function setDataToObject(ret: any, resp: any): any {
+
+  if (ret.$setData) {
+    ret.$setData(resp);
+  } else {
+    Object.assign(ret, resp);
+  }
+
+  return ret;
+
 }
 
 export function appendSearchParams(search: URLSearchParams, key: string, value: any): void {

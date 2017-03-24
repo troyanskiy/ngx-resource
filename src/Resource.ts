@@ -125,6 +125,10 @@ export class Resource {
     return true;
   }
 
+  initResultObject(): any {
+    return {};
+  }
+
   map(item: any): any {
     return item;
   }

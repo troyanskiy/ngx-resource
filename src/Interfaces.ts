@@ -17,6 +17,10 @@ export interface ResourceResponseMap {
   (item: any): any;
 }
 
+export interface ResourceResponseInitResult {
+  (): any;
+}
+
 export interface ResourceResponseFilter {
   (item: any): boolean;
 }
@@ -44,6 +48,7 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   isLazy?: boolean;
   requestInterceptor?: ResourceRequestInterceptor;
   responseInterceptor?: ResourceResponseInterceptor;
+  initResultObject?: ResourceResponseInitResult;
   map?: ResourceResponseMap;
   filter?: ResourceResponseFilter;
   model?: Type<ResourceModel<Resource>>;
