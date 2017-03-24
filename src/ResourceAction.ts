@@ -312,6 +312,9 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                   if (resp !== null) {
 
                     if (methodOptions.isArray) {
+
+                      // Expecting array
+
                       if (!Array.isArray(resp)) {
                         console.error('Returned data should be an array. Received', resp);
                       } else {
@@ -331,10 +334,15 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
                         Array.prototype.push.apply(ret, resp);
 
                       }
+
                     } else {
+
+                      // Expecting object
+
                       if (Array.isArray(resp)) {
                         console.error('Returned data should be an object. Received', resp);
                       } else {
+
                         if (filter(resp)) {
 
                           resp = map(resp);
@@ -349,6 +357,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
                           }
                         }
+
                       }
                     }
                   }

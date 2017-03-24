@@ -704,7 +704,7 @@ export class UserResource extends ResourceCRUD<IUserQueryInput, IUserShort, User
 
 ```
 
-###Using resource with model in your app
+### Using resource with model in your app
 
 ```ts
 import {Component, OnInit} from '@angular/core';
