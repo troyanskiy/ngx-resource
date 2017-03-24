@@ -350,13 +350,14 @@ export interface ResourceActionBase extends ResourceParamsCommon {
 	isLazy?: boolean;
   requestInterceptor?: ResourceRequestInterceptor;
   responseInterceptor?: ResourceResponseInterceptor;
+  initResultObject?: ResourceResponseInitResult;
   map?: ResourceResponseMap;
   filter?: ResourceResponseFilter;
   rootNode?: string;
 }
 ```
 
-All parametes will overwrite default one from `ResourceParamsBase`
+All parameters will overwrite default one from `ResourceParamsBase`
 
 #### `method`
 Http request method of the action.<br>
@@ -389,6 +390,11 @@ function (observable:Observable<any>):Observable<any> {
 	return observable.map(res => res._body ? res.json() : null);
 }
 ```
+
+#### `initResultObject`
+`(): any;`
+
+Custom object creator. Added on Ver 1.14.0
 
 #### `map`
 `(item: any):any;`
@@ -457,6 +463,9 @@ Default response interceptor
 
 #### `removeTrailingSlash(): boolean`
 Called by method if needs to trim trailing slashes from final url
+
+#### `initResultObject(): any`
+Called on return object initialization
 
 #### `map(item: any): any<any>`
 Default response mapper
