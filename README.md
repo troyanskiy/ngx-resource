@@ -190,6 +190,18 @@ export class PageComponent implements OnInit {
 ```
 # Changes
 
+## Version 2.0.0
+Support Angular 4
+
+#### Breaking
+ResourceModel is simplified.
+
+New model migration steps:
+
+ 
+Please check bellow the example. 
+
+
 ## Version 1.14.0 (Removed broken chance from ver 1.13.0)
 Added resource method `initResultObject` which is used to create return object or items in returned array.<br>
 The method should return object. If method `$setData` exists on the return object, then it will be called with 

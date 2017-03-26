@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs/Rx';
 import { Request, RequestMethod } from '@angular/http';
-import { Type } from '@angular/core/src/type';
+import { Type } from '@angular/core';
 import { ResourceModel } from './ResourceModel';
 import { Resource } from './Resource';
 
@@ -72,4 +72,5 @@ export type ResourceResult<R extends {}> = R & {
   $resolved?: boolean;
   $observable?: Observable<R>;
   $abortRequest?: () => void;
+  $resource?: Resource;
 };

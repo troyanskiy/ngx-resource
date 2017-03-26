@@ -1,7 +1,7 @@
-import {Type} from '@angular/core/src/type';
-import {ResourceParamsBase} from './Interfaces';
-import {ResourceProviders} from './ResourceProviders';
-import {Resource} from './Resource';
+import { Type } from '@angular/core';
+import { ResourceParamsBase } from './Interfaces';
+import { ResourceProviders } from './ResourceProviders';
+import { Resource } from './Resource';
 
 
 export function ResourceParams(params: ResourceParamsBase = {}) {
@@ -9,7 +9,7 @@ export function ResourceParams(params: ResourceParamsBase = {}) {
   return function (target: Type<Resource>) {
 
 
-    target.prototype.getResourceOptions = function() {
+    target.prototype.getResourceOptions = function () {
       return params;
     };
 

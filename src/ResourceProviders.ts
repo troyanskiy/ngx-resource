@@ -1,12 +1,11 @@
-import {Provider, Injector} from '@angular/core';
-import {Type} from '@angular/core/src/type';
-import {Http} from '@angular/http';
-import {Resource} from './Resource';
+import { Injector, Provider, Type } from '@angular/core';
+import { Http } from '@angular/http';
+import { Resource } from './Resource';
 
 export class ResourceProviders {
 
   static mainProvidersName: string = '__mainProviders';
-  static providers: {[id: string]: Provider[]} = {
+  static providers: { [id: string]: Provider[] } = {
     __mainProviders: []
   };
 
