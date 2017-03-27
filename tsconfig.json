@@ -15,7 +15,7 @@
   },
   "files": [
     "index.ts",
-    "ng2-resource-rest.ts",
+    "ngx-resource.ts",
     "./src/Interfaces.ts",
     "./src/Resource.ts",
     "./src/ResourceAction.ts",

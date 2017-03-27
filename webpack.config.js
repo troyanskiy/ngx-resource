@@ -20,14 +20,14 @@ module.exports = {
     extensions: ['.ts', '.js']
   },
 
-  entry: helpers.root('ng2-resource-rest.ts'),
+  entry: helpers.root('ngx-resource.ts'),
 
   output: {
     path: helpers.root('bundles'),
     publicPath: '/',
-    filename: 'ng2-resource-rest.umd.js',
+    filename: 'ngx-resource.umd.js',
     libraryTarget: 'umd',
-    library: 'ng2-resource-rest'
+    library: 'ngx-resource'
   },
 
   // require those dependencies but don't bundle them

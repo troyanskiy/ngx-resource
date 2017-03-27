@@ -1,13 +1,13 @@
-[![npm version](https://badge.fury.io/js/ng2-resource-rest.svg)](http://badge.fury.io/js/ng2-resource-rest)
+[![npm version](https://badge.fury.io/js/ngx-resource.svg)](http://badge.fury.io/js/ngx-resource)
 
-[![NPM](https://nodei.co/npm/ng2-resource-rest.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ng2-resource-rest/)
+[![NPM](https://nodei.co/npm/ngx-resource.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ngx-resource/)
 
-# ng2-resource-rest
+# ngx-resource
 Resource (REST) Client for Angular 2
 
 To use the module install the module using below command
 
-`npm install ng2-resource-rest --save`
+`npm install ngx-resource --save`
 
 ### How to use articles
 Good explanation how to use the library in the article "[Angular2, a rest client interface](http://blog.slals.io/angular2-a-rest-client-interface)" by [Jonathan Serra](https://github.com/Slaals)
@@ -17,7 +17,7 @@ Good explanation how to use the library in the article "[Angular2, a rest client
 ***Creating simple resource CRUD (./resources/NewsRes.ts)***
 ```ts
 import {Injectable} from '@angular/core';
-import {Resource, ResourceParams, ResourceAction, ResourceMethod} from 'ng2-resource-rest';
+import {Resource, ResourceParams, ResourceAction, ResourceMethod} from 'ngx-resource';
 import {RequestMethod} from '@angular/http';
 
 interface IQueryInput {
@@ -558,7 +558,7 @@ export class UnitRes extends Resource {
 import {Request, Response} from '@angular/http';
 import {Observable, Subscriber} from 'rxjs';
 import {AuthServiceHelper} from '../helpers/index';
-import {Resource} from 'ng2-resource-rest';
+import {Resource} from 'ngx-resource';
 
 export class AuthGuardResource extends Resource {
 
@@ -612,7 +612,7 @@ export class AuthGuardResource extends Resource {
 import { Injectable } from '@angular/core';
 import { RequestMethod } from '@angular/http';
 import { AppProject } from '../../project/app.project';
-import { ResourceAction, ResourceMethod, ResourceParams } from 'ng2-resource-rest';
+import { ResourceAction, ResourceMethod, ResourceParams } from 'ngx-resource';
 import { AuthGuardResource } from './authGuard.resource';
 
 
