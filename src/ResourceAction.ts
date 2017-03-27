@@ -53,7 +53,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           ret = [];
         } else {
 
-          if (data.$resource === this) {
+          if (data && data.$resource === this) {
             // Setting data to ret
             ret = data;
             data = data.toJSON();

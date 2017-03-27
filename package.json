@@ -1,6 +1,6 @@
 {
   "name": "ng2-resource-rest",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Angular2 resource module with simple decorators",
   "scripts": {
     "clear": "rm ./*.d.ts && rm ./*.metadata.json && rm ./index.js && rm ./ng2-resource-rest.js && rm ./src/*.json && rm ./src/*.d.ts && rm ./src/*.js",
