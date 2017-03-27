@@ -197,8 +197,15 @@ Support Angular 4
 ResourceModel is simplified.
 
 New model migration steps:
-
- 
+1. Model Class
+    1. Remove model decorator.
+    1. Remove `static resourceClass`.
+    1. If you have data `id` different then default `id`, then overwrite method `protected isNew(): boolean`.
+    `Create` resource method will be used if `isNew()` return's `true`, otherwise `update` method will be called.
+1. Model's resource class
+    1. Remove `static model`
+    1. Overwrite default `initResultObject()` resource method. Normally it should just contain `return new MyModel()`
+    
 Please check bellow the example. 
 
 
