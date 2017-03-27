@@ -8,6 +8,9 @@ export class ResourceModel<R> {
   $abortRequest: () => void;
   $resource: R;
 
+  static create(data: any = {}, commit: boolean = true) {
+    console.error('Model static create is not availbale anymore. Please use resource.createModel() method');
+  }
 
   public $setData(data: any) {
     Object.assign(this, data);
@@ -57,7 +60,7 @@ export class ResourceModel<R> {
   private $resource_method(methodName: string) {
 
     if (!this.$resource) {
-      console.error(`Your Resource is not set.`);
+      console.error(`Your Resource is not set. Please use resource.createModel() method to create model.`);
       return this;
     }
 

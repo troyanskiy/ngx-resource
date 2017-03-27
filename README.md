@@ -202,11 +202,12 @@ New model migration steps:
     1. Remove `static resourceClass`.
     1. If you have data `id` different then default `id`, then overwrite method `protected isNew(): boolean`.
     `Create` resource method will be used if `isNew()` return's `true`, otherwise `update` method will be called.
+    1. Static `create` method does not exists anymore. Please use `myResource.createModel()`.
 1. Model's resource class
     1. Remove `static model`
     1. Overwrite default `initResultObject()` resource method. Normally it should just contain `return new MyModel()`
     
-Please check bellow the example. 
+Please check bellow the example.
 
 
 ## Version 1.14.0 (Removed broken chance from ver 1.13.0)
@@ -647,77 +648,45 @@ export class AuthResource extends AuthGuardResource {
 
 
 ```ts
-import { Injectable } from '@angular/core';
-import { RequestMethod } from '@angular/http';
-import { AppProject } from '../../project/app.project';
-import { Resource, ResourceAction, ResourceMethod, ResourceParams, ResourceModelParams, ResourceModel } from 'ng2-resource-rest';
-import { SomeService } from './some.service'
-import { GroupResource, Group } from './group.resource'
-
-export interface IUserQueryInput {
-  is_active?: boolean;
+export interface ITestModel {
+  id?: string;
+  name?: string;
 }
 
-export interface IUserShort {
-  id: number;
-  email: string;
+export interface ITestQueryInput {
+  name?: string;
 }
 
-export interface IUser extends IUserShort {
-  avatar: string;
-  first_name: string;
-  last_name: string;
-}
+export class TestModel extends ResourceModel<TestResource> implements ITestModel {
 
-export interface User extends IUser {}
-
-@ResourceModelParams({
-  providers: [SomeService]
-})
-export class User extends ResourceModel<UserResource> {
-
-  static resourceClass = UserResource;
-
-  constructor(private someService: SomeService, private groupResource: GroupResource) {
-    super();
+  id: string;
+  name: string;
+  
+  $setData(data: any) {
+    // You can overwrite $setData method
+    if (data) {
+      this.id = data.id;
+      this.name = data.name;
+      // do something else
+    }
   }
 
-  someAction() {
-      return this.someService.someAction(this.id);
+  protected isNew(): boolean {
+    return !this.id;
   }
-
-  followers(): User[] {
-      return this.$resource.followers({id: this.id})
-  }
-
-  groups(): Group[] {
-      return this.groupResource.query({user: this.id})
-  }
+  
 }
 
 
 @Injectable()
 @ResourceParams({
-  url: 'https://domain.net/api/users'
+  url: 'https://domain.net/api/test'
 })
-export class UserResource extends ResourceCRUD<IUserQueryInput, IUserShort, User> {
+export class TestResource extends ResourceCRUD<ITestQueryInput, TestModel, TestModel> {
 
-  static model = User;
-
-  @ResourceAction({
-    method: RequestMethod.Get,
-    isArray: true,
-    path: '/followers'
-  })
-  followers: ResourceMethod<{id: any}, User[]>;
-
-  @ResourceAction({
-    method: RequestMethod.Get,
-    isArray: true,
-    path: '/followers',
-    model: Group
-  })
-  groups: ResourceMethod<{id: any}, Group[]>;
+  initResultObject(): TestModel {
+    return new TestModel();
+  }
 
 }
 
@@ -727,47 +696,43 @@ export class UserResource extends ResourceCRUD<IUserQueryInput, IUserShort, User
 
 ```ts
 import {Component, OnInit} from '@angular/core';
-import {UserResource, GroupResource, User, Group} from '../../resources/index';
 
 @Component({
   moduleId: module.id,
-  selector: 'user-component',
-  templateUrl: 'users.page.component.html',
-  styleUrls: ['users.page.component.css'],
+  selector: 'test-component',
+  templateUrl: 'test.page.component.html',
+  styleUrls: ['test.page.component.css'],
 })
-export class PageComponent implements OnInit {
+export class TestComponent implements OnInit {
 
-  usersList: User[] = [];
-  groupsList: Group[] = []
-  group: Group;
-  user: User;
+  constructor(private testRes: TestResource) {}
 
-  constructor(private userResource: UserResource, private groupResource: GroupResource) {}
-
-  ngOnInit():any {
-
-    // That will execute GET request https://domain.net/api/users
-    // and after will assign the data to this.usersList
-    this.usersList = this.userResource.query();
-
-    //Get user
-    this.user = this.userResource.get({id: 1});
-
-    //change and save user
-    this.user.first_name = 'Bob'
-    this.user.$save()
-
-    //get followers, get first follower, change and save
-    let followers: User[] = this.user.followers()
-    let follower: User = followers[0]
-    follower.first_name = 'Mary'
-    follower.$save()
-
-    //get user groups
-    let groups: Group[] = this.user.groups()
-
-    //call some action from SomeService for user
-    this.user.someAction()
+  ngOnInit() {
+  
+    let modelTest = this.testRes.createModel();
+    console.log('New modelTest', modelTest);
+  
+    modelTest.$save().$observable.subscribe(() => {
+      console.log('Saved and updated modelTest', modelTest);
+    });
+  
+    let modelTest2 = this.testRes.query();
+    console.log('Array of models', modelTest2);
+    
+    modelTest2.$observable.subscribe(() => {
+      // Data received
+      console.log('Array filled with test models', modelTest2);
+  
+      let modelTest3 = modelTest2[1];
+  
+      modelTest3.name = 'Roma';
+      modelTest3.$save().$observable.subscribe(() => {
+        console.log('Saved and updated', modelTest3);
+      });
+  
+    });
+  
+  }
 
 );
 ```
