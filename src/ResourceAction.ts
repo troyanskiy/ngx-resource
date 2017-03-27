@@ -56,7 +56,8 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           if (data && data.$resource === this) {
             // Setting data to ret
             ret = data;
-            data = data.toJSON();
+            data = data.toJSON ? data.toJSON() : toJSON(data);
+
           } else {
             ret = initObject();
           }
@@ -442,3 +443,15 @@ function isNullOrUndefined(value: any): boolean {
   return value === null || value === undefined;
 }
 
+function toJSON(obj: any):any {
+  let retObj: any = {};
+
+  for (let propName in obj) {
+
+    if (!(obj[propName] instanceof Function) && !(propName.charAt(0) === '$')) {
+      retObj[propName] = obj[propName];
+    }
+
+  }
+  return retObj;
+}
