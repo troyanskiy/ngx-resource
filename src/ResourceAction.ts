@@ -397,7 +397,12 @@ export function appendSearchParams(search: URLSearchParams, key: string, value: 
             search.append(key, arr_value);
           }
         } else {
-          search.append(key, JSON.stringify(value));
+          if (value instanceof Date) {
+            value = value.toISOString();
+          } else {
+            value = JSON.stringify(value);
+          }
+          search.append(key, value);
         }
         break;
 
