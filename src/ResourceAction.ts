@@ -397,12 +397,17 @@ export function appendSearchParams(search: URLSearchParams, key: string, value: 
             search.append(key, arr_value);
           }
         } else {
-          if (value instanceof Date) {
-            value = value.toISOString();
-          } else {
-            value = JSON.stringify(value);
+
+          if (value && typeof value === 'object') {
+            /// Convert dates to ISO format string
+            if (value instanceof Date) {
+              value = value.toISOString();
+            } else {
+              value = JSON.stringify(value);
+            }
           }
           search.append(key, value);
+
         }
         break;
 
