@@ -390,7 +390,7 @@ Used if received data is an array
 
 
 #### `isLazy`
-Is `isLazy` set to true, then the request will not be executed immediately. To execute the request you should subsribe to abservable and hande responces by yourself.
+Is `isLazy` set to true, then the request will not be executed immediately. To execute the request you should subscribe to observable and handle responses by yourself.
 
 #### `requestInterceptor`
 `(req: Request): Request;`
