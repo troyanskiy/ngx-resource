@@ -56,8 +56,6 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
           if (data && data.$resource === this) {
             // Setting data to ret
             ret = data;
-            data = data.toJSON ? data.toJSON() : toJSON(data);
-
           } else {
             ret = initObject();
           }
@@ -65,6 +63,9 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
         }
       }
 
+      if (data) {
+        data = data.toJSON ? data.toJSON() : toJSON(data);
+      }
 
       let mainDeferredSubscriber: Subscriber<any> = null;
       let mainObservable: Observable<Response> = null;
