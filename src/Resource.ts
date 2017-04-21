@@ -1,11 +1,12 @@
 import { Http, Request } from '@angular/http';
-import { Injector } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceParamsBase } from './Interfaces';
 import { ResourceActionBase } from './Interfaces';
 import { ResourceModel } from './ResourceModel';
 
+@Injectable()
 export class Resource {
 
   private _url: string = null;
