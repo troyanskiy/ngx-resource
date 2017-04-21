@@ -1,10 +1,9 @@
 import { Http, Request } from '@angular/http';
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ResourceGlobalConfig } from './ResourceGlobalConfig';
-import { ResourceParamsBase } from './Interfaces';
-import { ResourceActionBase } from './Interfaces';
 import { ResourceModel } from './ResourceModel';
+import { ResourceActionBase, ResourceParamsBase } from './Interfaces';
 
 @Injectable()
 export class Resource {
@@ -15,7 +14,7 @@ export class Resource {
   private _params: any = null;
   private _data: any = null;
 
-  constructor(protected http: Http, protected injector: Injector) {}
+  constructor(protected http: Http) {}
 
   /**
    * Get main url of the resource

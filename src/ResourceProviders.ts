@@ -1,4 +1,4 @@
-import { Injector, Provider, Type } from '@angular/core';
+import { Provider, Type } from '@angular/core';
 import { Http } from '@angular/http';
 import { Resource } from './Resource';
 
@@ -22,7 +22,7 @@ export class ResourceProviders {
     let deps: any[] = (<any>Reflect).getMetadata('design:paramtypes', resource);
 
     if (!deps || deps.length === 0) {
-      deps = [Http, Injector];
+      deps = [Http];
     }
 
     this.providers[subSet].push(
