@@ -23,6 +23,7 @@ bundles
 ## JetBrains
 #################
 .idea
+*.iml
 .project
 .settings
 
