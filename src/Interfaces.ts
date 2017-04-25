@@ -54,6 +54,7 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   model?: Type<ResourceModel<Resource>>;
   useModel?: boolean;
   rootNode?: string;
+  skipDataCleaning?: boolean;
 }
 
 export interface ResourceMethod<I, O> {

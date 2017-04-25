@@ -3,10 +3,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceModel } from './ResourceModel';
-import { ResourceActionBase, ResourceParamsBase } from './Interfaces';
+import { ResourceActionBase, ResourceParamsBase, ResourceResult } from './Interfaces';
 
 @Injectable()
 export class Resource {
+
+  protected cleanDataFields: string[] = [
+    '$resolved',
+    '$observable',
+    '$abortRequest',
+    '$resource'
+  ];
 
   private _url: string = null;
   private _path: string = null;
@@ -134,6 +141,19 @@ export class Resource {
     return null;
   }
 
+  cleanData(obj: ResourceResult<any>): any {
+    let newObj: any = {};
+
+    for (let propName in obj) {
+
+      if (!(obj[propName] instanceof Function) && this.cleanDataFields.indexOf(propName) === -1) {
+        newObj[propName] = obj[propName];
+      }
+
+    }
+
+    return newObj;
+  }
 
   createModel(): ResourceModel<any> {
     let ret = this.initResultObject();

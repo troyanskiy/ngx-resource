@@ -374,6 +374,7 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   map?: ResourceResponseMap;
   filter?: ResourceResponseFilter;
   rootNode?: string;
+  skipDataCleaning?: boolean;
 }
 ```
 
@@ -435,6 +436,11 @@ Called before map method
 #### `rootNode`
 The data sent to the API will be wrapped into the root node provided
 
+#### `skipDataCleaning`
+Every time before making the request the data object is cleaned from `ResourceModel` system variables which are staring
+with `$` prefix or toJSON function will be called if it exists on data object.<br>
+By setting the flag to `true` the object will not be cleaned from system variables.
+
 <br>
 
 
@@ -492,6 +498,10 @@ Default response mapper
 
 #### `filter(item: any): boolean`
 Default filter method. By default always `true`
+
+#### `cleanData(obj: ResourceResult<any>): any`
+Default object cleaning. 
+Returns clean from functions and (`$resolved`, `$observable`, `$abortRequest`, `$resource`) variables
 
 
 ## `ResourceCRUD` class

@@ -63,8 +63,8 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
         }
       }
 
-      if (data) {
-        data = data.toJSON ? data.toJSON() : toJSON(data);
+      if (data && !methodOptions.skipDataCleaning) {
+        data = data.toJSON ? data.toJSON() : this.cleanData(data);
       }
 
       let mainDeferredSubscriber: Subscriber<any> = null;
@@ -452,17 +452,4 @@ function getValueForPath(key: string, params: any, data: any, usedPathParams: an
 
 function isNullOrUndefined(value: any): boolean {
   return value === null || value === undefined;
-}
-
-function toJSON(obj: any):any {
-  let retObj: any = {};
-
-  for (let propName in obj) {
-
-    if (!(obj[propName] instanceof Function) && !(propName.charAt(0) === '$')) {
-      retObj[propName] = obj[propName];
-    }
-
-  }
-  return retObj;
 }

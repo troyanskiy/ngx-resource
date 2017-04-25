@@ -8,6 +8,13 @@ export class ResourceModel<R> {
   $abortRequest: () => void;
   $resource: R;
 
+  protected cleanDataFields: string[] = [
+    '$resolved',
+    '$observable',
+    '$abortRequest',
+    '$resource'
+  ];
+
   static create(data: any = {}, commit: boolean = true) {
     console.error('Model static create is not availbale anymore. Please use resource.createModel() method');
   }
@@ -45,7 +52,7 @@ export class ResourceModel<R> {
 
     for (let propName in this) {
 
-      if (!((<any>this)[propName] instanceof Function) && !(propName.charAt(0) === '$')) {
+      if (!((<any>this)[propName] instanceof Function) && this.cleanDataFields.indexOf(propName) === -1) {
         retObj[propName] = (<any>this)[propName];
       }
 
