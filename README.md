@@ -190,6 +190,10 @@ export class PageComponent implements OnInit {
 ```
 # Changes
 
+## Version 2.1.0
+1. (Breaking) Removed Injector from Resource class constructor
+2. Added `cleanData` method to resource to remove from some predefined by response/create model methods/properties from data  
+
 ## Version 2.0.0
 Support Angular 4
 
