@@ -1,6 +1,6 @@
 {
   "name": "ngx-resource",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Angular2 resource module with simple decorators",
   "scripts": {
     "clear": "rm ./*.d.ts && rm ./*.metadata.json && rm ./index.js && rm ./ngx-resource.js && rm ./src/*.json && rm ./src/*.d.ts && rm ./src/*.js",
@@ -23,14 +23,14 @@
   "typings": "index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/troyanskiy/ng2-resource-rest.git"
+    "url": "git+https://github.com/troyanskiy/ngx-resource.git"
   },
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/troyanskiy/ng2-resource-rest/issues"
+    "url": "https://github.com/troyanskiy/ngx-resource/issues"
   },
-  "homepage": "https://github.com/troyanskiy/ng2-resource-rest#readme",
+  "homepage": "http://troyanskiy.github.io/ngx-resource/",
   "peerDependencies": {
     "@angular/core": ">=2.0.0",
     "@angular/common": ">=2.0.0",
