@@ -18,8 +18,7 @@ export interface ODATAQuery {
 
 /** A ODATA object for querying a single entity. */
 export interface SingleODATAQuery extends ODATAQuery {
-	// TODO better use the JSON standard id
-	Id: any;
+	id: any;
 }
 
 /** A Resource base class for ODATA entities. To create a resource is just
@@ -27,7 +26,7 @@ export interface SingleODATAQuery extends ODATAQuery {
  */
 export abstract class ODATAResource<R> extends Resource {
 	@ResourceAction({
-		path: '/{!Id}'
+		path: '/{!id}'
 	})
 	get: ResourceMethod<SingleODATAQuery, R>;
 
@@ -55,7 +54,7 @@ export abstract class ODATAResource<R> extends Resource {
 	}
 }
 
-interface ODATAResourceParamsBase extends ResourceParamsBase {
+export interface ODATAResourceParamsBase extends ResourceParamsBase {
 	/** The entity associated with this resource. */
 	entity: any;
 	/** The entity name in case it is different than the entity.
