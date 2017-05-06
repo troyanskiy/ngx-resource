@@ -188,32 +188,10 @@ export class PageComponent implements OnInit {
 }
 ```
 
-### ODATA
-
-[OData](http://www.odata.org) (Open Data Protocol) is an OASIS standard that defines a set of best practices for building and consuming RESTful APIs.
-
-This module also includes a class for dealing with ODATA endpoints.
-
-```ts
-import {ODATAResource, ODATAResourceParams} from 'ngx-resource';
-
-
-@ODATAResourceParams({entity: News, name: "News"})
-export class NewsResource extends ODATAResource<News> {
-}
-```
-
-Then when using this resource you already can use the following predefined methods:
-
- - newsResource.get({id: 1})
- - newsResource.save(news)
- - newsResource.search({"$filter": "ODATA filter expression", "$search": "search string", "$expand": "comma separated list of fields to include in response", "$limit": "count limit for results"})
-
-For more information please check out the [standard](http://www.odata.org/documentation/odata-version-2-0/uri-conventions/).
-
-More capabilities will be added in the future.
-
 # Changes
+
+## Version 2.2.0
+Added ODATA support.
 
 ## Version 2.1.0
 1. (Breaking) Removed Injector from Resource class constructor
@@ -575,6 +553,31 @@ Lower number - higher priority
 3. Defined by @ResourceParams decorator
 4. Defined in ResourceGlobalConfig
 5. Default value
+
+## ODATA
+
+[OData](http://www.odata.org) (Open Data Protocol) is an OASIS standard that defines a set of best practices for building and consuming RESTful APIs.
+
+This module also includes a class for dealing with ODATA endpoints.
+
+```ts
+import {ResourceODATA, ResourceODATAParams} from 'ngx-resource';
+
+
+@ResourceODATAParams({entity: News, name: "News"})
+export class NewsResource extends ResourceODATA<News> {
+}
+```
+
+Then when using this resource you already can use the following predefined methods:
+
+ - newsResource.get({id: 1})
+ - newsResource.save(news)
+ - newsResource.search({"$filter": "ODATA filter expression", "$search": "search string", "$expand": "comma separated list of fields to include in response", "$limit": "count limit for results"})
+
+For more information please check out the [standard](http://www.odata.org/documentation/odata-version-2-0/uri-conventions/).
+
+More capabilities will be added in the future.
 
 
 ## Example of auth resource service with custom headers

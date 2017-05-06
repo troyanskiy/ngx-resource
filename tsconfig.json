@@ -23,6 +23,7 @@
     "./src/ResourceCRUDBase.ts",
     "./src/ResourceGlobalConfig.ts",
     "./src/ResourceModel.ts",
+    "./src/ResourceODATA.ts",
     "./src/ResourceParams.ts",
     "./src/ResourceProviders.ts"
   ],
