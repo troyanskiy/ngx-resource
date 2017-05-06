@@ -12,6 +12,7 @@ export * from './src/ResourceModel';
 export * from './src/ResourceParams';
 export * from './src/ResourceProviders';
 export * from './src/Interfaces';
+export * from './src/ODATAResource';
 
 @NgModule({
   imports: [CommonModule, HttpModule]
