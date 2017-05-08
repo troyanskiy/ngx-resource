@@ -9,6 +9,7 @@ import { ResourceActionBase, ResourceParamsBase, ResourceResult } from './Interf
 export class Resource {
 
   protected cleanDataFields: string[] = [
+    '$cleanDataFields',
     '$resolved',
     '$observable',
     '$abortRequest',

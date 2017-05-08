@@ -8,7 +8,8 @@ export class ResourceModel<R> {
   $abortRequest: () => void;
   $resource: R;
 
-  protected cleanDataFields: string[] = [
+  protected $cleanDataFields: string[] = [
+    '$cleanDataFields',
     '$resolved',
     '$observable',
     '$abortRequest',
@@ -52,7 +53,7 @@ export class ResourceModel<R> {
 
     for (let propName in this) {
 
-      if (!((<any>this)[propName] instanceof Function) && this.cleanDataFields.indexOf(propName) === -1) {
+      if (!((<any>this)[propName] instanceof Function) && this.$cleanDataFields.indexOf(propName) === -1) {
         retObj[propName] = (<any>this)[propName];
       }
 

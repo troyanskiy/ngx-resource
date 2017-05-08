@@ -190,6 +190,9 @@ export class PageComponent implements OnInit {
 
 # Changes
 
+## Version 2.2.1
+Fixes #108
+
 ## Version 2.2.0
 Added ODATA support.
 
