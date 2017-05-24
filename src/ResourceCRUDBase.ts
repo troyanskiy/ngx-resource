@@ -1,4 +1,5 @@
 import { RequestMethod } from '@angular/http';
+
 import { Resource } from './Resource';
 import { ResourceMethod } from './Interfaces';
 import { ResourceAction } from './ResourceAction';

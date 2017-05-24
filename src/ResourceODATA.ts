@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { RequestMethod } from '@angular/http';
 import { Type } from '@angular/core/src/type';
+
 import { Resource } from './Resource';
 import { ResourceMethod, ResourceParamsBase } from './Interfaces';
 import { ResourceAction } from './ResourceAction';
 import { ResourceParams } from './ResourceParams';
-import { RequestMethod } from '@angular/http';
 
 /**
  * A ODATA object for querying entities.

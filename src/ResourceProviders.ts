@@ -1,5 +1,6 @@
 import { Provider, Type } from '@angular/core';
 import { Http } from '@angular/http';
+
 import { Resource } from './Resource';
 
 export class ResourceProviders {

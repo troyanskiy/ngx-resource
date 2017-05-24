@@ -1,9 +1,12 @@
-import { Http, Request } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Http, Request } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+
 import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceModel } from './ResourceModel';
 import { ResourceActionBase, ResourceParamsBase, ResourceResult } from './Interfaces';
+
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class Resource {

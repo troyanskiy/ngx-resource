@@ -1,11 +1,18 @@
 import { Headers, Request, RequestMethod, RequestOptions, Response, URLSearchParams } from '@angular/http';
+// import { ConnectableObservable, Observable, Subscriber, Subscription } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
+import { Subscription} from 'rxjs/Subscription';
+import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
+
+import 'rxjs/add/operator/mergeMap';
+
 import {
   ResourceActionBase, ResourceResponseFilter, ResourceResponseInitResult, ResourceResponseMap,
   ResourceResult
 } from './Interfaces';
 import { Resource } from './Resource';
 import { ResourceModel } from './ResourceModel';
-import { ConnectableObservable, Observable, Subscriber, Subscription } from 'rxjs/Rx';
 import { ResourceGlobalConfig, TGetParamsMappingType } from './ResourceGlobalConfig';
 
 
