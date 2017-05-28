@@ -190,6 +190,35 @@ export class PageComponent implements OnInit {
 
 # Changes
 
+## Version 3.0.0
+1. Breaking changes on Resource class. All methods and properties starts from `$` in order to split users 
+methods and Resource methods (starts from `$`):
+- `getUrl` -> `$getUrl`
+- `setUrl` -> `$setUrl`
+- `getPath` -> `$getPath`
+- `setPath` -> `$setPath`
+- `getHeaders` -> `$getHeaders`
+- `setHeaders` -> `$setHeaders`
+- `getParams` -> `$getParams`
+- `setParams` -> `$setParams`
+- `getData` -> `$getData`
+- `setData` -> `$setData`
+- `createModel` -> `$createModel`
+- `requestInterceptor` -> `$requestInterceptor`
+- `responseInterceptor` -> `$responseInterceptor`
+- `initResultObject` -> `$initResultObject`
+- `map` -> `$map`
+- `filter` -> `$filter`
+- `getResourceOptions` -> `$getResourceOptions`
+- `_request` -> `$request`
+
+2. Added new flag `lean` to resource params or action. Will prevent adding `$` variables to result. Fixes #110
+
+3. Removed full import of `rxjs/Rx`. Might broke your app, if need some extra operators or something else, 
+import them in your app. Fixes #111 
+
+4. Removed deprecated static method `create` from `ResourceModel` class
+
 ## Version 2.2.1
 Fixes #108
 
@@ -298,6 +327,7 @@ export interface ResourceParamsCommon {
 	removeTrailingSlash?: boolean;
 	addTimestamp?: boolean | string;
 	withCredentials?: boolean;
+	lean?: boolean;
 	[propName: string]: any;
 }
 ```
@@ -352,6 +382,9 @@ Can be boolean or string representation of parameter name<br>
 #### `withCredentials`
 Will add withCredentials option to request options<br>
 **Default**: false<br>
+
+#### `lean`
+Will prevent assigning `$` variables on the result
 
 
 ### `ResourceParamsBase`
@@ -461,55 +494,55 @@ By setting the flag to `true` the object will not be cleaned from system variabl
 
 ### Default methods
 
-#### `getUrl(methodOptions?: ResourceActionBase): string | Promise<string>`
+#### `$getUrl(methodOptions?: ResourceActionBase): string | Promise<string>`
 To get url. Used in methods.
 
-#### `setUrl(url: string)`
+#### `$setUrl(url: string)`
 To set resource url
 
-#### `getPath(methodOptions?: ResourceActionBase): string | Promise<string>`
+#### `$getPath(methodOptions?: ResourceActionBase): string | Promise<string>`
 To get path. Used in methods
 
-#### `setPath(path: string)`
+#### `$setPath(path: string)`
 To set resource path
 
-#### `getHeaders(methodOptions?: ResourceActionBase): any | Promise<any>`
+#### `$getHeaders(methodOptions?: ResourceActionBase): any | Promise<any>`
 To get headers. Used in methods.
 
-#### `setHeaders(headers: any)`
+#### `$setHeaders(headers: any)`
 To set resource headers
 
-#### `getParams(methodOptions?: ResourceActionBase): any | Promise<any>`
+#### `$getParams(methodOptions?: ResourceActionBase): any | Promise<any>`
 To get params. Used in methods.
 
-#### `setParams(params: any)`
+#### `$setParams(params: any)`
 To set resource params
 
-#### `getData(methodOptions?: ResourceActionBase): any | Promise<any>`
+#### `$getData(methodOptions?: ResourceActionBase): any | Promise<any>`
 To get data. Used in methods.
 
-#### `setData(data: any)`
+#### `$setData(data: any)`
 To set resource data
 
-#### `requestInterceptor(req: Request, methodOptions?: ResourceActionBase): Request`
+#### `$requestInterceptor(req: Request, methodOptions?: ResourceActionBase): Request`
 Default request interceptor
 
-#### `responseInterceptor(observable: Observable<any>, req: Request, methodOptions?: ResourceActionBase): Observable<any>`
+#### `$responseInterceptor(observable: Observable<any>, req: Request, methodOptions?: ResourceActionBase): Observable<any>`
 Default response interceptor
 
-#### `removeTrailingSlash(): boolean`
+#### `$removeTrailingSlash(): boolean`
 Called by method if needs to trim trailing slashes from final url
 
-#### `initResultObject(): any`
+#### `$initResultObject(): any`
 Called on return object initialization
 
-#### `map(item: any): any<any>`
+#### `$map(item: any): any<any>`
 Default response mapper
 
-#### `filter(item: any): boolean`
+#### `$filter(item: any): boolean`
 Default filter method. By default always `true`
 
-#### `cleanData(obj: ResourceResult<any>): any`
+#### `$cleanData(obj: ResourceResult<any>): any`
 Default object cleaning.
 Returns clean from functions and (`$resolved`, `$observable`, `$abortRequest`, `$resource`) variables
 
@@ -598,8 +631,8 @@ export class AuthGuardResource extends Resource {
   private deferredQ: Subscriber<any>[] = [];
   private configListenerSet: boolean = false;
 
-  getHeaders(methodOptions: any): any {
-    let headers = super.getHeaders();
+  $getHeaders(methodOptions: any): any {
+    let headers = super.$getHeaders();
 
     // Extending our headers with Authorization
     if (!methodOptions.noAuth) {
@@ -609,7 +642,7 @@ export class AuthGuardResource extends Resource {
     return headers;
   }
 
-  responseInterceptor(observable: Observable<any>, request: Request, methodOptions: ResourceActionBase): Observable<any> {
+  $responseInterceptor(observable: Observable<any>, request: Request, methodOptions: ResourceActionBase): Observable<any> {
 
     return Observable.create((subscriber: Subscriber<any>) => {
 
@@ -717,7 +750,7 @@ export class TestModel extends ResourceModel<TestResource> implements ITestModel
 })
 export class TestResource extends ResourceCRUD<ITestQueryInput, TestModel, TestModel> {
 
-  initResultObject(): TestModel {
+  $initResultObject(): TestModel {
     return new TestModel();
   }
 
@@ -814,7 +847,7 @@ export class TestRes extends Resource {
   })
   get: ResourceMethod<{id: any}, CTest>;
 
-  initResultObject(): any {
+  $initResultObject(): any {
     return new CTest();
   }
 

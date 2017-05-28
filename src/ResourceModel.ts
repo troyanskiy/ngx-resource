@@ -1,4 +1,5 @@
 import {Observable} from 'rxjs/Observable';
+import { Resource } from './Resource';
 
 
 export class ResourceModel<R> {
@@ -8,23 +9,10 @@ export class ResourceModel<R> {
   $abortRequest: () => void;
   $resource: R;
 
-  protected $cleanDataFields: string[] = [
-    '$cleanDataFields',
-    '$resolved',
-    '$observable',
-    '$abortRequest',
-    '$resource'
-  ];
-
-  static create(data: any = {}, commit: boolean = true) {
-    console.error('Model static create is not availbale anymore. Please use resource.createModel() method');
-  }
-
   public $setData(data: any) {
     Object.assign(this, data);
     return this;
   }
-
 
   public $save() {
 
@@ -49,16 +37,7 @@ export class ResourceModel<R> {
   }
 
   public toJSON():any {
-    let retObj: any = {};
-
-    for (let propName in this) {
-
-      if (!((<any>this)[propName] instanceof Function) && this.$cleanDataFields.indexOf(propName) === -1) {
-        retObj[propName] = (<any>this)[propName];
-      }
-
-    }
-    return retObj;
+    return Resource.$cleanData(this);
   }
 
   protected isNew(): boolean {

@@ -35,6 +35,7 @@ export interface ResourceParamsCommon {
   removeTrailingSlash?: boolean;
   addTimestamp?: boolean | string;
   withCredentials?: boolean;
+  lean?: boolean;
   [propName: string]: any;
 }
 

@@ -48,8 +48,8 @@ export abstract class ResourceODATA<R> extends Resource {
   })
   search: ResourceMethod<IResourceODATAQuery, R[]>;
 
-  getUrl(): string | Promise<string> {
-    return super.getUrl() + "/" + this.getEntitySetName();
+  $getUrl(): string | Promise<string> {
+    return super.$getUrl() + "/" + this.getEntitySetName();
   }
 
   getEntityName(): string {
