@@ -36,6 +36,7 @@ export interface ResourceParamsCommon {
   addTimestamp?: boolean | string;
   withCredentials?: boolean;
   lean?: boolean;
+  angularV2?: boolean;
   [propName: string]: any;
 }
 

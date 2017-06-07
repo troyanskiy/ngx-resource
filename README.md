@@ -190,6 +190,9 @@ export class PageComponent implements OnInit {
 
 # Changes
 
+## Version 3.0.2
+Added angular v2 support by setting flag `angularV2` on `ResourceParams` to `true`. Fixes #116.
+
 ## Version 3.0.0
 1. Breaking changes on Resource class. All methods and properties starts from `$` in order to split users 
 methods and Resource methods (starts from `$`):

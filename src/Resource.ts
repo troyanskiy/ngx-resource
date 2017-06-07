@@ -493,9 +493,15 @@ export class Resource {
       headers: shell.extraOptions.headers,
       body: shell.body,
       url: shell.url,
-      params: shell.search,
       withCredentials: shell.options.withCredentials
     };
+
+    if (shell.options.angularV2) {
+      shell.requestOptions.search = shell.search;
+    } else {
+      shell.requestOptions.params = shell.search;
+    }
+
   }
 
   private $_createMainObservable(shell: IResourceActionShell, requestObservable: Observable<Response>): Observable<any> {
