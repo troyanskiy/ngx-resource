@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, Request, RequestMethod, Response } from '@angular/http';
+import { Headers, Http, Request, RequestMethod, Response, URLSearchParams } from '@angular/http';
 import { RequestArgs } from '@angular/http/src/interfaces';
 import { Observable } from 'rxjs/Observable';
 import { ConnectableObservable } from 'rxjs/observable/ConnectableObservable';
@@ -14,10 +14,13 @@ import 'rxjs/add/operator/publish';
 import { ResourceGlobalConfig, TGetParamsMappingType } from './ResourceGlobalConfig';
 import { ResourceModel } from './ResourceModel';
 import {
-  ResourceActionBase, ResourceParamsBase, ResourceResponseFilter, ResourceResponseInitResult, ResourceResponseMap,
+  ResourceActionBase,
+  ResourceParamsBase,
+  ResourceResponseFilter,
+  ResourceResponseInitResult,
+  ResourceResponseMap,
   ResourceResult
 } from './Interfaces';
-
 
 
 @Injectable()
@@ -371,7 +374,7 @@ export class Resource {
 
       const pathParams = shell.url.match(/{([^}]*)}/g) || [];
 
-      for (let i=0; i< pathParams.length; i++) {
+      for (let i = 0; i < pathParams.length; i++) {
         let pathParam = pathParams[i];
 
         let pathKey = pathParam.substr(1, pathParam.length - 2);
