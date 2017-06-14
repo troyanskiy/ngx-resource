@@ -44,17 +44,16 @@ export class Resource {
   }
 
   static $cleanData(obj: ResourceResult<any>): any {
-    let newObj: any = {};
 
     for (let propName in obj) {
 
-      if (!(obj[propName] instanceof Function) && this.$cleanDataFields.indexOf(propName) === -1) {
-        newObj[propName] = obj[propName];
+      if ((obj[propName] instanceof Function) || this.$cleanDataFields.indexOf(propName) > -1) {
+        delete obj[propName];
       }
 
     }
 
-    return newObj;
+    return obj;
   }
 
 
@@ -348,7 +347,7 @@ export class Resource {
           path: data[1],
           headers: new Headers(data[2] ? Object.assign({}, data[2]) : data[2]),
           params: data[3] ? Object.assign({}, data[3]) : data[3],
-          data: data[4] ? Object.assign({}, data[4]) : data[4]
+          data: data[4]
         };
       });
   }
