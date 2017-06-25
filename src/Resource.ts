@@ -531,10 +531,20 @@ export class Resource {
                     .filter(filter)
                     .map(map)
                     .map((respItem: any) => {
-                      if (!shell.options.lean) {
-                        respItem.$resource = this;
+
+                      if (!respItem) {
+                        return respItem;
                       }
-                      return this.$_setDataToObject(this.$_initResultObject(shell.options), respItem);
+
+                      if (typeof respItem === 'object') {
+                        if (!shell.options.lean) {
+                          respItem.$resource = this;
+                        }
+                        return this.$_setDataToObject(this.$_initResultObject(shell.options), respItem);
+                      }
+
+                      return respItem;
+
                     })
                 );
 
