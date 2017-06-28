@@ -10,7 +10,7 @@ To use the module install the module using below command
 `npm install ngx-resource --save`
 
 ### How to use articles
-Good explanation how to use the library in the article "[Angular2, a rest client interface](http://blog.slals.io/angular2-a-rest-client-interface)" by [Jonathan Serra](https://github.com/Slaals)
+Good explanation how to use the library in the article "[Angular2, a rest client interface](http://blog.slals.net/programming/2017/01/12/angular2-a-rest-client-interface.html)" by [Jonathan Serra](https://github.com/Slaals)
 
 ### How to use
 
