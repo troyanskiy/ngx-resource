@@ -25,31 +25,31 @@ export function ResourceParams(params: ResourceParamsBase = {}) {
     }
 
     if (params.url) {
-      target.prototype._getUrl = function () {
+      target.prototype.$_getUrl = function () {
         return params.url;
       };
     }
 
     if (params.path) {
-      target.prototype._getPath = function () {
+      target.prototype.$_getPath = function () {
         return params.path;
       };
     }
 
     if (params.headers) {
-      target.prototype._getHeaders = function () {
+      target.prototype.$_getHeaders = function () {
         return params.headers;
       };
     }
 
     if (params.params) {
-      target.prototype._getParams = function () {
+      target.prototype.$_getParams = function () {
         return params.params;
       };
     }
 
     if (params.data) {
-      target.prototype._getData = function () {
+      target.prototype.$_getData = function () {
         return params.data;
       };
     }
