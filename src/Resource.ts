@@ -79,8 +79,7 @@ export class Resource {
    * @returns {string|Promise<string>}
    */
   $getPath(methodOptions?: ResourceActionBase): string | Promise<string> {
-    const path = this.$path || this.$_getPath(methodOptions) || ResourceGlobalConfig.path || '';
-    return (methodOptions.pathPrefix || '') + path;
+    return  this.$path || this.$_getPath(methodOptions) || ResourceGlobalConfig.path || '';
   }
 
   /**
@@ -347,6 +346,10 @@ export class Resource {
         Promise.resolve(shell.options.data || this.$getData(shell.options))
       ])
       .then((data: any[]) => {
+
+        if (shell.options.pathPrefix) {
+          data[1] = shell.options.pathPrefix + data[1];
+        }
 
         return <IResourceActionMainOptions> {
           url: data[0],
