@@ -190,6 +190,9 @@ export class PageComponent implements OnInit {
 
 # Changes
 
+## Version 3.2.0
+Added `toPromise` flag to ResourceAction to get promise directly from method
+
 ## Version 3.1.0
 Added path prefix param `pathPrefix`
 
@@ -429,6 +432,7 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   filter?: ResourceResponseFilter;
   rootNode?: string;
   skipDataCleaning?: boolean;
+  toPromise?: boolean;
 }
 ```
 
@@ -494,6 +498,10 @@ The data sent to the API will be wrapped into the root node provided
 Every time before making the request the data object is cleaned from `ResourceModel` system variables which are staring
 with `$` prefix or toJSON function will be called if it exists on data object.<br>
 By setting the flag to `true` the object will not be cleaned from system variables.
+
+
+#### `toPromise`
+To return promise directly from resource method
 
 <br>
 

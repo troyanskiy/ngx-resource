@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/publish';
+import 'rxjs/add/operator/toPromise';
 
 
 import { ResourceGlobalConfig, TGetParamsMappingType } from './ResourceGlobalConfig';
@@ -198,7 +199,7 @@ export class Resource {
 
   }
 
-  protected $resourceAction(data: any, params: any, callback: () => any, methodOptions: ResourceActionBase): ResourceResult<any> | ResourceModel<Resource> {
+  protected $resourceAction(data: any, params: any, callback: () => any, methodOptions: ResourceActionBase): ResourceResult<any> | ResourceModel<Resource> | Promise<any> {
 
     const shell: IResourceActionShell = <IResourceActionShell>{
       returnInternal: this.$_createReturnData(data, methodOptions),
@@ -216,7 +217,11 @@ export class Resource {
     this.$_mainRequest(shell);
 
 
-    return shell.returnExternal;
+    if (methodOptions.toPromise) {
+      return shell.returnExternal.$observable.toPromise();
+    } else {
+      return shell.returnExternal;
+    }
 
   }
 

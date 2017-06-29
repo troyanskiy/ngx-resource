@@ -59,10 +59,15 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   useModel?: boolean;
   rootNode?: string;
   skipDataCleaning?: boolean;
+  toPromise?: boolean;
 }
 
 export interface ResourceMethod<I, O> {
   (data?: I, callback?: (res: O) => any): ResourceResult<O>;
+}
+
+export interface ResourceMethodPromise<I, O> {
+  (data?: I, callback?: (res: O) => any): Promise<O>;
 }
 
 export interface ResourceMethodStrict<IB, IP, O> {
