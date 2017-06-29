@@ -28,6 +28,7 @@ export interface ResourceResponseFilter {
 
 export interface ResourceParamsCommon {
   url?: string;
+  pathPrefix?: string;
   path?: string;
   headers?: any;
   params?: any;

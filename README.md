@@ -190,6 +190,9 @@ export class PageComponent implements OnInit {
 
 # Changes
 
+## Version 3.1.0
+Added path prefix param `pathPrefix`
+
 ## Version 3.0.2
 Added angular v2 support by setting flag `angularV2` on `ResourceParams` to `true`. Fixes #116.
 
@@ -323,6 +326,7 @@ export type ResourceResult<R extends {}> = R & {
 ```javascript
 export interface ResourceParamsCommon {
 	url?:string;
+	pathPrefix?:string;
 	path?:string;
 	headers?:any;
 	params?:any;
@@ -339,6 +343,10 @@ export interface ResourceParamsCommon {
 Default resource common address<br>
 **Default**: *empty*<br>
 **Ex**: https://domain.com/api
+
+#### `pathPrefix`
+Default resource path prefix to api.<br>
+url + pathPrefix + path
 
 #### `path`
 Default resource path to api.<br>

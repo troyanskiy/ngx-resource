@@ -78,7 +78,8 @@ export class Resource {
    * @returns {string|Promise<string>}
    */
   $getPath(methodOptions?: ResourceActionBase): string | Promise<string> {
-    return this.$path || this.$_getPath(methodOptions) || ResourceGlobalConfig.path || '';
+    const path = this.$path || this.$_getPath(methodOptions) || ResourceGlobalConfig.path || '';
+    return (methodOptions.pathPrefix || '') + path;
   }
 
   /**
