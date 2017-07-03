@@ -569,7 +569,7 @@ export class Resource {
 
                 if (filter(resp)) {
 
-                  this.$_setDataToObject(shell.returnExternal, map(resp));
+                  shell.returnExternal = this.$_setDataToObject(shell.returnExternal, map(resp));
 
                 }
 
