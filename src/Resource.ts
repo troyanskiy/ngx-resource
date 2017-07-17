@@ -217,7 +217,11 @@ export class Resource {
 
 
     if (methodOptions.toPromise) {
-      return shell.returnExternal.$observable.toPromise();
+      if (methodOptions.lean) {
+        return shell.returnInternal.$observable.toPromise();
+      } else {
+        return shell.returnExternal.$observable.toPromise();
+      }
     } else {
       return shell.returnExternal;
     }
