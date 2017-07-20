@@ -46,15 +46,17 @@ export class Resource {
 
   static $cleanData(obj: ResourceResult<any>): any {
 
+    const cleanedObj: any = {};
+
     for (let propName in obj) {
 
-      if ((obj[propName] instanceof Function) || this.$cleanDataFields.indexOf(propName) > -1) {
-        delete obj[propName];
+      if (typeof obj[propName] !== 'function' && this.$cleanDataFields.indexOf(propName) === -1) {
+        cleanedObj[propName] = obj[propName];
       }
 
     }
 
-    return obj;
+    return cleanedObj;
   }
 
 
@@ -587,7 +589,7 @@ export class Resource {
         },
         (err: any) => subscriber.error(err),
         () => {
-          shell.returnInternal.$resolved = true;
+          // shell.returnInternal.$resolved = true;
           subscriber.complete();
           if (shell.callback) {
             shell.callback(shell.returnExternal);
