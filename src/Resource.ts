@@ -46,6 +46,26 @@ export class Resource {
 
   static $cleanData(obj: ResourceResult<any>): any {
 
+    if (Array.isArray(obj)) {
+      return this.$cleanDataArray(obj);
+    } else {
+      return this.$cleanDataObject(obj);
+    }
+
+  }
+
+  static $cleanDataArray(obj: any[]): any[] {
+    for (let propName in obj) {
+
+      if (typeof obj[propName] === 'function' || this.$cleanDataFields.indexOf(propName) > -1) {
+        delete obj[propName];
+      }
+
+    }
+    return obj;
+  }
+
+  static $cleanDataObject(obj: ResourceResult<any>): any {
     const cleanedObj: any = {};
 
     for (let propName in obj) {
