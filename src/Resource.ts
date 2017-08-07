@@ -303,7 +303,7 @@ export class Resource {
 
     if (!shell.options.isLazy) {
       $observable = $observable.publish();
-      (<ConnectableObservable<any>>returnInternal.$observable).connect();
+      (<ConnectableObservable<any>>$observable).connect();
     }
 
     Object.defineProperty(returnInternal, '$resolved', {
