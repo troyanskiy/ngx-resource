@@ -292,22 +292,47 @@ export class Resource {
 
     const returnInternal = shell.returnInternal;
 
-    returnInternal.$resolved = false;
-
-    returnInternal.$observable = Observable.create((subscriber: Subscriber<any>) => {
+    let $observable = Observable.create((subscriber: Subscriber<any>) => {
       shell.mainDeferredSubscriber = subscriber;
     }).flatMap(() => shell.mainObservable);
 
-    returnInternal.$abortRequest = () => {
+
+    const $abortRequest = () => {
       returnInternal.$resolved = true;
     };
 
-    returnInternal.$resource = this;
-
     if (!shell.options.isLazy) {
-      returnInternal.$observable = returnInternal.$observable.publish();
+      $observable = $observable.publish();
       (<ConnectableObservable<any>>returnInternal.$observable).connect();
     }
+
+    Object.defineProperty(returnInternal, '$resolved', {
+      enumerable: false,
+      configurable: true,
+      writable: true,
+      value: false
+    });
+
+    Object.defineProperty(returnInternal, '$observable', {
+      enumerable: false,
+      configurable: true,
+      writable: true,
+      value: $observable
+    });
+
+    Object.defineProperty(returnInternal, '$abortRequest', {
+      enumerable: false,
+      configurable: true,
+      writable: true,
+      value: $abortRequest
+    });
+
+    Object.defineProperty(returnInternal, '$resource', {
+      enumerable: false,
+      configurable: true,
+      writable: true,
+      value: this
+    });
 
   }
 
