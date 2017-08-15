@@ -190,6 +190,9 @@ export class PageComponent implements OnInit {
 
 # Changes
 
+## Version 3.3.0
+Added `bodySerializer` method to implement custom data serializer
+
 ## Version 3.2.0
 Added `toPromise` flag to ResourceAction to get promise directly from method
 
@@ -338,6 +341,8 @@ export interface ResourceParamsCommon {
 	addTimestamp?: boolean | string;
 	withCredentials?: boolean;
 	lean?: boolean;
+  angularV2?: boolean;
+  bodySerializer?(body: any): string;
 	[propName: string]: any;
 }
 ```
@@ -397,8 +402,11 @@ Can be boolean or string representation of parameter name<br>
 Will add withCredentials option to request options<br>
 **Default**: false<br>
 
-#### `lean`
-Will prevent assigning `$` variables on the result
+#### `angularV2`
+Use the flag for angular version 2
+
+#### `bodySerializer`
+Custom method to serialise data body
 
 
 ### `ResourceParamsBase`
@@ -542,6 +550,9 @@ To get data. Used in methods.
 
 #### `$setData(data: any)`
 To set resource data
+
+#### `$bodySerializer(body: any): string`
+To serialize the data before send. Default `JSON.stringify`
 
 #### `$requestInterceptor(req: Request, methodOptions?: ResourceActionBase): Request`
 Default request interceptor

@@ -1,6 +1,6 @@
 {
   "name": "ngx-resource",
-  "version": "3.2.7",
+  "version": "3.3.0",
   "description": "Angular2 resource module with simple decorators",
   "scripts": {
     "clear": "rm ./*.d.ts && rm ./*.metadata.json && rm ./index.js && rm ./ngx-resource.js && rm ./src/*.json && rm ./src/*.d.ts && rm ./src/*.js",

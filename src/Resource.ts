@@ -171,6 +171,16 @@ export class Resource {
     return ret;
   }
 
+  /**
+   * Body serializer
+   *
+   * @param body
+   * @returns {string}
+   */
+  $bodySerializer(body: any): string {
+    return JSON.stringify(body);
+  }
+
 
   /**
    * That is called before executing request
@@ -516,7 +526,8 @@ export class Resource {
         } else {
           _body = shell.data;
         }
-        shell.body = JSON.stringify(_body);
+        // shell.body = JSON.stringify(_body);
+        shell.body = shell.options.bodySerializer ? shell.options.bodySerializer(_body) : this.$bodySerializer(_body);
       }
       shell.searchParams = shell.params;
     }

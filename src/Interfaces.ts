@@ -38,6 +38,7 @@ export interface ResourceParamsCommon {
   withCredentials?: boolean;
   lean?: boolean;
   angularV2?: boolean;
+  bodySerializer?(body: any): string;
   [propName: string]: any;
 }
 
