@@ -611,10 +611,22 @@ Defines headers
 #### `ResourceGlobalConfig.params: any | Promise<any> = null`
 Defines params
 
+#### `ResourceGlobalConfig.add2Provides: boolean = null`
+Defines global default `add2Providers` flag
+
+#### `ResourceGlobalConfig.lean: boolean = null`
+Defines global default `lean` flag
+
+#### `ResourceGlobalConfig.toPromise: boolean = null`
+Defines global default `toPromise` flag
+
+#### `ResourceGlobalConfig.toObservable: boolean = null`
+Defines global default `toObservable` flag
+
 #### `ResourceGlobalConfig.data: any | Promise<any> = null`
 Defines data
 
-#### `getParamsMappingType: any = TGetParamsMappingType.Plain`
+#### `ResourceGlobalConfig.getParamsMappingType: any = TGetParamsMappingType.Plain`
 Defines mapping method of arrays/objects to get params
 
 

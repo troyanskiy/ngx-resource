@@ -3,6 +3,7 @@ import { Type } from '@angular/core';
 import { ResourceParamsBase } from './Interfaces';
 import { ResourceProviders } from './ResourceProviders';
 import { Resource } from './Resource';
+import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 
 
 export function ResourceParams(params: ResourceParamsBase = {}) {
@@ -13,6 +14,10 @@ export function ResourceParams(params: ResourceParamsBase = {}) {
     target.prototype.getResourceOptions = function () {
       return params;
     };
+
+    if (params.add2Provides === undefined && ResourceGlobalConfig.add2Provides !== null) {
+      params.add2Provides = ResourceGlobalConfig.add2Provides;
+    }
 
     if (params.add2Provides !== false) {
       ResourceProviders.add(target, params.providersSubSet);

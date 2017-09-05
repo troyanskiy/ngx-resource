@@ -13,6 +13,8 @@ export class ResourceGlobalConfig {
   static params: any | Promise<any> = null;
   static data: any | Promise<any> = null;
 
+  static add2Provides: boolean = null;
+
   static lean: boolean = null;
 
   static toPromise: boolean = null;
