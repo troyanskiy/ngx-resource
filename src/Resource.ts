@@ -232,13 +232,7 @@ export class Resource {
 
   protected $resourceAction(data: any, params: any, callback: () => any, methodOptions: ResourceActionBase): ResourceResult<any> | ResourceModel<Resource> | Promise<any> {
 
-    if (methodOptions.toPromise === undefined && ResourceGlobalConfig.toPromise !== null) {
-      methodOptions.toPromise = ResourceGlobalConfig.toPromise;
-    }
-
-    if (methodOptions.toObservable === undefined && ResourceGlobalConfig.toObservable !== null) {
-      methodOptions.toObservable = ResourceGlobalConfig.toObservable;
-    }
+    this.$_setGlobalsToOptions(methodOptions);
 
     if (methodOptions.toObservable && methodOptions.isLazy === undefined) {
       methodOptions.isLazy = true;
@@ -824,6 +818,19 @@ export class Resource {
     return null;
   }
 
+  private $_setGlobalsToOptions(methodOptions: ResourceActionBase) {
+    if (methodOptions.toPromise === undefined && ResourceGlobalConfig.toPromise !== null) {
+      methodOptions.toPromise = ResourceGlobalConfig.toPromise;
+    }
+
+    if (methodOptions.toObservable === undefined && ResourceGlobalConfig.toObservable !== null) {
+      methodOptions.toObservable = ResourceGlobalConfig.toObservable;
+    }
+
+    if (methodOptions.lean === undefined && ResourceGlobalConfig.lean !== null) {
+      methodOptions.lean = ResourceGlobalConfig.lean;
+    }
+  }
 
 }
 
