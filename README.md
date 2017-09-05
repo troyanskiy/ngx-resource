@@ -190,11 +190,16 @@ export class PageComponent implements OnInit {
 
 # Changes
 
+## Version 3.4.0
+Added `toObservable` flag to ResourceAction or ResourceParam to get observable directly from method<br>
+Method type `ResourceMethodObservable<I, O>` should be used
+
 ## Version 3.3.0
 Added `bodySerializer` method to implement custom data serializer
 
 ## Version 3.2.0
-Added `toPromise` flag to ResourceAction to get promise directly from method
+Added `toPromise` flag to ResourceAction or ResourceParam to get promise directly from method<br>
+Method type `ResourceMethodPromise<I, O>` should be used
 
 ## Version 3.1.0
 Added path prefix param `pathPrefix`
@@ -342,6 +347,8 @@ export interface ResourceParamsCommon {
 	withCredentials?: boolean;
 	lean?: boolean;
   angularV2?: boolean;
+  toPromise?: boolean;
+  toObservable?: boolean;
   bodySerializer?(body: any): string;
 	[propName: string]: any;
 }
@@ -405,6 +412,12 @@ Will add withCredentials option to request options<br>
 #### `angularV2`
 Use the flag for angular version 2
 
+#### `toPromise`
+To return promise directly from resource method
+
+#### `toObservable`
+To return observable directly from resource method. The observable will be `lazy` by default if `isLazy` is not specified.
+
 #### `bodySerializer`
 Custom method to serialise data body
 
@@ -440,7 +453,6 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   filter?: ResourceResponseFilter;
   rootNode?: string;
   skipDataCleaning?: boolean;
-  toPromise?: boolean;
 }
 ```
 
@@ -506,10 +518,6 @@ The data sent to the API will be wrapped into the root node provided
 Every time before making the request the data object is cleaned from `ResourceModel` system variables which are staring
 with `$` prefix or toJSON function will be called if it exists on data object.<br>
 By setting the flag to `true` the object will not be cleaned from system variables.
-
-
-#### `toPromise`
-To return promise directly from resource method
 
 <br>
 

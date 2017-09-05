@@ -232,6 +232,18 @@ export class Resource {
 
   protected $resourceAction(data: any, params: any, callback: () => any, methodOptions: ResourceActionBase): ResourceResult<any> | ResourceModel<Resource> | Promise<any> {
 
+    if (methodOptions.toPromise === undefined && ResourceGlobalConfig.toPromise !== null) {
+      methodOptions.toPromise = ResourceGlobalConfig.toPromise;
+    }
+
+    if (methodOptions.toObservable === undefined && ResourceGlobalConfig.toObservable !== null) {
+      methodOptions.toObservable = ResourceGlobalConfig.toObservable;
+    }
+
+    if (methodOptions.toObservable && methodOptions.isLazy === undefined) {
+      methodOptions.isLazy = true;
+    }
+
     const shell: IResourceActionShell = <IResourceActionShell>{
       returnInternal: this.$_createReturnData(data, methodOptions),
       data: data,
@@ -248,15 +260,17 @@ export class Resource {
     this.$_mainRequest(shell);
 
 
-    if (methodOptions.toPromise) {
-      if (methodOptions.lean) {
-        return shell.returnInternal.$observable.toPromise();
-      } else {
-        return shell.returnExternal.$observable.toPromise();
-      }
-    } else {
-      return shell.returnExternal;
+    const $observable = methodOptions.lean ? shell.returnInternal.$observable : shell.returnExternal.$observable;
+
+    if (methodOptions.toObservable) {
+      return $observable;
     }
+
+    if (methodOptions.toPromise) {
+      return $observable.toPromise();
+    }
+
+    return shell.returnExternal;
 
   }
 

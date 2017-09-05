@@ -38,6 +38,8 @@ export interface ResourceParamsCommon {
   withCredentials?: boolean;
   lean?: boolean;
   angularV2?: boolean;
+  toPromise?: boolean;
+  toObservable?: boolean;
   bodySerializer?(body: any): string;
   [propName: string]: any;
 }
@@ -60,7 +62,6 @@ export interface ResourceActionBase extends ResourceParamsCommon {
   useModel?: boolean;
   rootNode?: string;
   skipDataCleaning?: boolean;
-  toPromise?: boolean;
 }
 
 export interface ResourceMethod<I, O> {
@@ -69,6 +70,10 @@ export interface ResourceMethod<I, O> {
 
 export interface ResourceMethodPromise<I, O> {
   (data?: I, callback?: (res: O) => any): Promise<O>;
+}
+
+export interface ResourceMethodObservable<I, O> {
+  (data?: I, callback?: (res: O) => any): Observable<O>;
 }
 
 export interface ResourceMethodStrict<IB, IP, O> {
