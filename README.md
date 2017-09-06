@@ -221,6 +221,9 @@ Output: `?a[0][b]=10383&a[0][c][]=2&a[0][c][]=3`
 
 # Changes
 
+## Version 3.5.0
+Added `JQueryParamsBracket` method to convert query params
+
 ## Version 3.4.0
 Added `toObservable` flag to ResourceAction or ResourceParam to get observable directly from method<br>
 Method type `ResourceMethodObservable<I, O>` should be used

@@ -758,9 +758,9 @@ export class Resource {
           /// Convert object and arrays to query params according to $.params
           for (let k in value) {
             if (value.hasOwnProperty(k)) {
-              let path = `${key}[${k}]`
-              if (Array.isArray(value) && typeof value[k] !== 'object') {
-                path = `${key}[]`
+              let path = `${key}[${k}]`;
+              if (Array.isArray(value) && typeof value[<any>k] !== 'object') {
+                path = `${key}[]`;
               }
               this.$_appendSearchParams(search, path, value[k]);
             }
