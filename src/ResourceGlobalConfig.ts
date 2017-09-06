@@ -1,6 +1,7 @@
 export enum TGetParamsMappingType {
   Plain,
-  Bracket
+  Bracket,
+  JQueryParamsBracket
 }
 
 export class ResourceGlobalConfig {
