@@ -1,7 +1,8 @@
-import {RequestMethod} from '@angular/http';
-import {Resource} from './Resource';
-import {ResourceMethod} from './Interfaces';
-import {ResourceAction} from './ResourceAction';
+import { RequestMethod } from '@angular/http';
+
+import { Resource } from './Resource';
+import { ResourceMethod } from './Interfaces';
+import { ResourceAction } from './ResourceAction';
 
 export class ResourceCRUD<TQuery, TShort, TFull> extends Resource {
 
@@ -13,7 +14,7 @@ export class ResourceCRUD<TQuery, TShort, TFull> extends Resource {
   @ResourceAction({
     path: '/{!id}'
   })
-  get: ResourceMethod<{id: any}, TFull>;
+  get: ResourceMethod<{ id: any }, TFull>;
 
   @ResourceAction({
     method: RequestMethod.Post
@@ -30,7 +31,7 @@ export class ResourceCRUD<TQuery, TShort, TFull> extends Resource {
     method: RequestMethod.Delete,
     path: '/{!id}'
   })
-  remove: ResourceMethod<{id: any}, any>;
+  remove: ResourceMethod<{ id: any }, any>;
 
   // Alias to save
   create(data: TFull, callback?: (res: TFull) => any): TFull {

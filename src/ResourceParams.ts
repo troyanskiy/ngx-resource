@@ -1,7 +1,9 @@
-import {Type} from '@angular/core/src/type';
-import {ResourceParamsBase} from './Interfaces';
-import {ResourceProviders} from './ResourceProviders';
-import {Resource} from './Resource';
+import { Type } from '@angular/core';
+
+import { ResourceParamsBase } from './Interfaces';
+import { ResourceProviders } from './ResourceProviders';
+import { Resource } from './Resource';
+import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 
 
 export function ResourceParams(params: ResourceParamsBase = {}) {
@@ -9,9 +11,13 @@ export function ResourceParams(params: ResourceParamsBase = {}) {
   return function (target: Type<Resource>) {
 
 
-    target.prototype.getResourceOptions = function() {
+    target.prototype.getResourceOptions = function () {
       return params;
     };
+
+    if (params.add2Provides === undefined && ResourceGlobalConfig.add2Provides !== null) {
+      params.add2Provides = ResourceGlobalConfig.add2Provides;
+    }
 
     if (params.add2Provides !== false) {
       ResourceProviders.add(target, params.providersSubSet);
@@ -24,31 +30,31 @@ export function ResourceParams(params: ResourceParamsBase = {}) {
     }
 
     if (params.url) {
-      target.prototype._getUrl = function () {
+      target.prototype.$_getUrl = function () {
         return params.url;
       };
     }
 
     if (params.path) {
-      target.prototype._getPath = function () {
+      target.prototype.$_getPath = function () {
         return params.path;
       };
     }
 
     if (params.headers) {
-      target.prototype._getHeaders = function () {
+      target.prototype.$_getHeaders = function () {
         return params.headers;
       };
     }
 
     if (params.params) {
-      target.prototype._getParams = function () {
+      target.prototype.$_getParams = function () {
         return params.params;
       };
     }
 
     if (params.data) {
-      target.prototype._getData = function () {
+      target.prototype.$_getData = function () {
         return params.data;
       };
     }

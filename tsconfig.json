@@ -15,16 +15,17 @@
   },
   "files": [
     "index.ts",
-    "ng2-resource-rest.ts",
-    "./src/Interfaces",
-    "./src/Resource",
-    "./src/ResourceAction",
-    "./src/ResourceCRUD",
-    "./src/ResourceCRUDBase",
-    "./src/ResourceGlobalConfig",
-    "./src/ResourceModel",
-    "./src/ResourceParams",
-    "./src/ResourceProviders"
+    "ngx-resource.ts",
+    "./src/Interfaces.ts",
+    "./src/Resource.ts",
+    "./src/ResourceAction.ts",
+    "./src/ResourceCRUD.ts",
+    "./src/ResourceCRUDBase.ts",
+    "./src/ResourceGlobalConfig.ts",
+    "./src/ResourceModel.ts",
+    "./src/ResourceODATA.ts",
+    "./src/ResourceParams.ts",
+    "./src/ResourceProviders.ts"
   ],
   "exclude": [
     "node_modules",

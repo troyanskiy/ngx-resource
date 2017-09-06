@@ -1,56 +1,61 @@
 {
-  "name": "ng2-resource-rest",
-  "version": "1.9.1",
+  "name": "ngx-resource",
+  "version": "3.4.2",
   "description": "Angular2 resource module with simple decorators",
   "scripts": {
+    "clear": "rm ./*.d.ts && rm ./*.metadata.json && rm ./index.js && rm ./ngx-resource.js && rm ./src/*.json && rm ./src/*.d.ts && rm ./src/*.js",
     "ngc": "ngc",
     "compile": "ngc && npm run build",
-    "build": "webpack && cp bundles/ng2-resource-rest.umd.js bundles/index.js"
+    "build": "webpack && cp bundles/ngx-resource.umd.js bundles/index.js"
   },
   "keywords": [
+    "ngx-resource",
+    "ngx-resource-rest",
     "ng2-resource",
     "ng2-resource-rest",
     "ng2",
     "ng2-rest",
     "Angular2",
-    "Resource"
+    "Resource",
+    "ODATA"
   ],
-  "main": "bundles/ng2-resource-rest.umd.js",
+  "main": "bundles/ngx-resource.umd.js",
   "module": "index.js",
   "typings": "index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/troyanskiy/ng2-resource-rest.git"
+    "url": "git+https://github.com/troyanskiy/ngx-resource.git"
   },
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/troyanskiy/ng2-resource-rest/issues"
+    "url": "https://github.com/troyanskiy/ngx-resource/issues"
   },
-  "homepage": "https://github.com/troyanskiy/ng2-resource-rest#readme",
+  "homepage": "http://troyanskiy.github.io/ngx-resource/",
   "peerDependencies": {
-    "@angular/core": "^2.0.0",
-    "@angular/common": "^2.0.0",
-    "@angular/http": "^2.0.0"
+    "@angular/core": ">=2.0.0",
+    "@angular/common": ">=2.0.0",
+    "@angular/http": ">=2.0.0"
   },
   "devDependencies": {
-    "@angular/common": "2.4.0",
-    "@angular/compiler": "2.4.0",
-    "@angular/compiler-cli": "2.4.0",
-    "@angular/core": "2.4.0",
-    "@angular/http": "2.4.0",
-    "@angular/platform-browser": "2.4.0",
-    "@angular/platform-server": "2.4.0",
-    "@types/node": "6.0.52",
-    "awesome-typescript-loader": "3.0.0-beta.17",
-    "codelyzer": "2.0.0-beta.3",
-    "rxjs": "5.0.1",
+    "@angular/common": "4.0.0",
+    "@angular/compiler": "4.0.0",
+    "@angular/compiler-cli": "4.0.0",
+    "@angular/core": "4.0.0",
+    "@angular/http": "4.0.0",
+    "@angular/platform-browser": "4.0.0",
+    "@angular/platform-server": "4.0.0",
+    "@types/node": "7.0.11",
+    "awesome-typescript-loader": "3.1.2",
+    "clean-webpack-plugin": "0.1.16",
+    "codelyzer": "3.0.0-beta.4",
+    "rxjs": "5.2.0",
     "ts-helpers": "1.1.2",
-    "tslint": "4.0.2",
-    "tslint-loader": "3.3.0",
-    "typescript": "2.0.10",
-    "webpack": "2.1.0-beta.28",
-    "zone.js": "0.7.2"
+    "tslint": "4.5.1",
+    "tslint-loader": "3.4.3",
+    "typescript": "2.2.1",
+    "webpack": "2.3.2",
+    "zone.js": "0.8.5"
   },
   "dependencies": {}
 }

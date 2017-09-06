@@ -1,3 +1,8 @@
+export enum TGetParamsMappingType {
+  Plain,
+  Bracket
+}
+
 export class ResourceGlobalConfig {
   static url: string | Promise<string> = null;
   static path: string | Promise<string> = null;
@@ -7,4 +12,13 @@ export class ResourceGlobalConfig {
   };
   static params: any | Promise<any> = null;
   static data: any | Promise<any> = null;
+
+  static add2Provides: boolean = null;
+
+  static lean: boolean = null;
+
+  static toPromise: boolean = null;
+  static toObservable: boolean = null;
+
+  static getParamsMappingType: any = TGetParamsMappingType.Plain;
 }
