@@ -188,6 +188,37 @@ export class PageComponent implements OnInit {
 }
 ```
 
+***QueryParams Conversion***
+
+You can define the way query params are converted
+Set the global config at the root of your app.
+
+`ResourceGlobalConfig.getParamsMappingType = TGetParamsMappingType.<CONVERTION_STRATEGY>`
+
+```
+{
+  a: [{ b:1, c: [2, 3] }]
+}
+```
+
+With `<CONVERTION_STRATEGY>` being an enumerable within
+
+#### Plain (default)
+No convertion at all. 
+
+Output: `?a=[Object object]`
+
+#### Bracket
+All array elements will be indexed
+
+Output: `?a[0][b]=10383&a[0][c][0]=2&a[0][c][1]=3`
+
+#### JQueryParamsBracket (TGetParamsMappingType.JQueryParamsBracket
+Implements the standard $.params way of converting
+
+Output: `?a[0][b]=10383&a[0][c][]=2&a[0][c][]=3`
+
+
 # Changes
 
 ## Version 3.4.0
