@@ -213,7 +213,7 @@ All array elements will be indexed
 
 Output: `?a[0][b]=10383&a[0][c][0]=2&a[0][c][1]=3`
 
-#### JQueryParamsBracket (TGetParamsMappingType.JQueryParamsBracket
+#### JQueryParamsBracket 
 Implements the standard $.params way of converting
 
 Output: `?a[0][b]=10383&a[0][c][]=2&a[0][c][]=3`
