@@ -9,6 +9,8 @@ To use the module install the module using below command
 
 `npm install ngx-resource --save`
 
+### Buy me a Coffee with [PayPal.Me](https://www.paypal.me/troyanskiy)
+
 ### How to use articles
 Good explanation how to use the library in the article "[Angular2, a rest client interface](http://blog.slals.net/programming/2017/01/12/angular2-a-rest-client-interface.html)" by [Jonathan Serra](https://github.com/Slaals)
 
