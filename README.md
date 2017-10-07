@@ -223,6 +223,9 @@ Output: `?a[0][b]=10383&a[0][c][]=2&a[0][c][]=3`
 
 # Changes
 
+## Version 3.6.0
+Added `onError` method. See issue #141
+
 ## Version 3.5.0
 Added `JQueryParamsBracket` method to convert query params
 
@@ -351,11 +354,19 @@ All default decorated options will be overwritten for the method.
 
 ### `ResourceMethod<I, O>`
 Resource method type with specified `input data type` as `I` and `output data type` as `O`<br>
-In fact it's a function type (input?: I, callback?: (res: O) => void): ResourceResult<O>
+In fact it's a function type (input?: I, callback?: (res: O) => void, onError?: (res: Response) => any): ResourceResult<O>
+
+### `ResourceMethodPromise<I, O>`
+Resource method type with specified `input data type` as `I` and `output data type` as `O`<br>
+In fact it's a function type (input?: I, callback?: (res: O) => void, onError?: (res: Response) => any): Promise<O>
+
+### `ResourceMethodObservable<I, O>`
+Resource method type with specified `input data type` as `I` and `output data type` as `O`<br>
+In fact it's a function type (input?: I, callback?: (res: O) => void, onError?: (res: Response) => any): Observable<O>
 
 ### `ResourceMethodStrict<IB, IP, O>`
 Resource method type with specified  `input body data type` as `IB`, `input path data type` as `IP` and `output data type` as `O`<br>
-In fact it's a function type (body?: IB, params?: IP, callback?: (res: O) => any): ResourceResult<O>
+In fact it's a function type (body?: IB, params?: IP, callback?: (res: O) => any, onError?: (res: Response) => any): ResourceResult<O>
 `ResourceMethodStrict` developed in purpose to respove [issue #76](https://github.com/troyanskiy/ng2-resource-rest/issues/76)
 
 
