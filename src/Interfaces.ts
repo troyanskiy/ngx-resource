@@ -1,5 +1,5 @@
 import { Type } from '@angular/core';
-import { Request, RequestMethod } from '@angular/http';
+import { Request, RequestMethod, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 import { ResourceModel } from './ResourceModel';
@@ -65,19 +65,19 @@ export interface ResourceActionBase extends ResourceParamsCommon {
 }
 
 export interface ResourceMethod<I, O> {
-  (data?: I, callback?: (res: O) => any): ResourceResult<O>;
+  (data?: I, callback?: (res: O) => any, onError?: (res: Response) => any): ResourceResult<O>;
 }
 
 export interface ResourceMethodPromise<I, O> {
-  (data?: I, callback?: (res: O) => any): Promise<O>;
+  (data?: I, callback?: (res: O) => any, onError?: (res: Response) => any): Promise<O>;
 }
 
 export interface ResourceMethodObservable<I, O> {
-  (data?: I, callback?: (res: O) => any): Observable<O>;
+  (data?: I, callback?: (res: O) => any, onError?: (res: Response) => any): Observable<O>;
 }
 
 export interface ResourceMethodStrict<IB, IP, O> {
-  (body?: IB, params?: IP, callback?: (res: O) => any): ResourceResult<O>;
+  (body?: IB, params?: IP, callback?: (res: O) => any, onError?: (res: Response) => any): ResourceResult<O>;
 }
 
 export interface ResourceModelParamsBase {

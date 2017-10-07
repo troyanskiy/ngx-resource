@@ -23,6 +23,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
       let data = args.length ? args[0] : null;
       let params = args.length > 1 ? args[1] : null;
       let callback = args.length > 2 ? args[2] : null;
+      let onError = args.length > 3 ? args[3] : null;
 
       if (typeof data === 'function') {
         callback = data;
@@ -34,7 +35,7 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
       const options = Object.assign({}, this.getResourceOptions(), methodOptions);
 
-      return this.$resourceAction(data, params, callback, options);
+      return this.$resourceAction(data, params, callback, onError, options);
 
     //   let resourceOptions = this.getResourceOptions();
 		//

@@ -101,7 +101,7 @@ export class Resource {
    * @returns {string|Promise<string>}
    */
   $getPath(methodOptions?: ResourceActionBase): string | Promise<string> {
-    return  this.$path || this.$_getPath(methodOptions) || ResourceGlobalConfig.path || '';
+    return this.$path || this.$_getPath(methodOptions) || ResourceGlobalConfig.path || '';
   }
 
   /**
@@ -230,7 +230,7 @@ export class Resource {
 
   }
 
-  protected $resourceAction(data: any, params: any, callback: () => any, methodOptions: ResourceActionBase): ResourceResult<any> | ResourceModel<Resource> | Promise<any> {
+  protected $resourceAction(data: any, params: any, callback: () => any, onError: (res: Response) => any, methodOptions: ResourceActionBase): ResourceResult<any> | ResourceModel<Resource> | Promise<any> {
 
     this.$_setGlobalsToOptions(methodOptions);
 
@@ -240,10 +240,11 @@ export class Resource {
 
     const shell: IResourceActionShell = <IResourceActionShell>{
       returnInternal: this.$_createReturnData(data, methodOptions),
-      data: data,
-      params: params,
+      data,
+      params,
       options: methodOptions,
-      callback: callback
+      callback,
+      onError
     };
 
     shell.returnExternal = methodOptions.lean ? this.$_createReturnData(data, methodOptions) : shell.returnInternal;
@@ -651,7 +652,12 @@ export class Resource {
           subscriber.next(shell.returnExternal);
 
         },
-        (err: any) => subscriber.error(err),
+        (err: any) => {
+          subscriber.error(err);
+          if (shell.onError) {
+            shell.onError(err);
+          }
+        },
         () => {
           // shell.returnInternal.$resolved = true;
           subscriber.complete();
@@ -864,6 +870,7 @@ interface IResourceActionShell {
   extraOptions?: IResourceActionMainOptions;
   requestOptions?: RequestArgs;
   callback?: (data?: any) => any;
+  onError?: (err?: Response) => any;
 }
 
 interface IResourceActionMainOptions {
