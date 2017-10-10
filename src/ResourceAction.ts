@@ -21,9 +21,19 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
     (<any>target)[propertyKey] = function (...args: any[]): ResourceResult<any> | ResourceModel<Resource> {
 
       let data = args.length ? args[0] : null;
-      let params = args.length > 1 ? args[1] : null;
-      let callback = args.length > 2 ? args[2] : null;
-      let onError = args.length > 3 ? args[3] : null;
+      let params;
+      let callback;
+      let onError;
+
+      if(methodOptions.method == RequestMethod.Get) {
+        params = args.length > 0 ? args[0] : null;
+        callback = args.length > 1 ? args[1] : null;
+        onError = args.length > 2 ? args[2] : null;
+      } else {
+        params = args.length > 1 ? args[1] : null;
+        callback = args.length > 2 ? args[2] : null;
+        onError = args.length > 3 ? args[3] : null;
+      }
 
       if (typeof data === 'function') {
         callback = data;
