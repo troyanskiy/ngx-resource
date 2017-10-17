@@ -20,18 +20,28 @@ export function ResourceAction(methodOptions?: ResourceActionBase) {
 
     (<any>target)[propertyKey] = function (...args: any[]): ResourceResult<any> | ResourceModel<Resource> {
 
-      let data = args.length ? args[0] : null;
-      let params = args.length > 1 ? args[1] : null;
-      let callback = args.length > 2 ? args[2] : null;
-      let onError = args.length > 3 ? args[3] : null;
+      let data: any = null;
+      let params: any = null;
+      let callback: any = null;
+      let onError: any = null;
 
-      if (typeof data === 'function') {
-        callback = data;
-        data = null;
-      } else if (typeof params === 'function') {
-        callback = params;
-        params = null;
-      }
+      args.forEach((arg: any) => {
+
+        if (typeof arg === 'function') {
+          if (callback) {
+            onError = arg;
+          } else {
+            callback = arg;
+          }
+        } else {
+          if (data) {
+            params = arg;
+          } else {
+            data = arg;
+          }
+        }
+
+      });
 
       const options = Object.assign({}, this.getResourceOptions(), methodOptions);
 
