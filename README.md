@@ -2,6 +2,11 @@
 
 [![NPM](https://nodei.co/npm/ngx-resource.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ngx-resource/)
 
+# No longer supported
+I have created new library `rest-core` and `rest-ngx`. It's looks really like `ngx-resource`.
+
+Please try to switch to [`rest-core`](https://github.com/troyanskiy/rest-core) with [`rest-ngx`](https://github.com/troyanskiy/rest-ngx) module.
+
 # ngx-resource
 Resource (REST) Client for Angular 2
 
