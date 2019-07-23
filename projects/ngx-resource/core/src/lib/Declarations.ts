@@ -19,13 +19,11 @@ export interface IResourceParams extends IResourceParamsBase {
   withCredentials?: boolean;
   lean?: boolean;
   mutateBody?: boolean;
-  asPromise?: boolean;
-  asObservable?: boolean;
+  returnAs?: ResourceActionReturnType;
   keepEmptyBody?: boolean;
   requestBodyType?: ResourceRequestBodyType;
   responseBodyType?: ResourceResponseBodyType;
   queryMappingMethod?: ResourceQueryMappingMethod;
-  asResourceResponse?: boolean;
 
   [prop: string]: any;
 }
@@ -82,8 +80,8 @@ export interface IResourceRequest {
 }
 
 export interface IResourceHandlerResponse {
-  promise: Promise<IResourceResponse>;
-  observable: Observable<IResourceResponse>;
+  promise?: Promise<IResourceResponse>;
+  observable?: Observable<IResourceResponse>;
 
   abort?(): void;
 }
@@ -119,7 +117,6 @@ export interface IResourceMethodBase<IB, O, R>
 }
 
 
-
 export interface IResourceMethodStrict<IB, IQ, IP, O>
   extends IResourceMethodStrictBase<IB, IQ, IP, O, Promise<O>> {
 }
@@ -136,7 +133,6 @@ export interface IResourceMethodResultStrict<IB, IQ, IP, O>
 export interface IResourceMethodResult<IB, O>
   extends IResourceMethodBase<IB, O, ResourceResult<O>> {
 }
-
 
 
 // As IResourceResponse
@@ -157,7 +153,6 @@ export interface IResourceMethodResultStrictFull<IB, IQ, IP, O>
 export interface IResourceMethodResultFull<IB, O>
   extends IResourceMethodBase<IB, O, ResourceResult<IResourceResponse<O>>> {
 }
-
 
 
 export type ResourceResult<R extends {}> = R & {
@@ -200,4 +195,10 @@ export enum ResourceQueryMappingMethod {
   JQueryParamsBracket = 3,
 
   None = 99
+}
+
+export enum ResourceActionReturnType {
+  Promise = 'promise',
+  Observable = 'observable',
+  Resource = 'resource'
 }

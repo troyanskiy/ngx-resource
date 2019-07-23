@@ -10,6 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "strictNullChecks": true,
     "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
@@ -24,6 +25,24 @@
       ],
       "@ngx-resource/core/*": [
         "dist/ngx-resource/core/*"
+      ],
+      "@ngx-resource/handler-ngx-http": [
+        "dist/ngx-resource/handler-ngx-http"
+      ],
+      "@ngx-resource/handler-ngx-http/*": [
+        "dist/ngx-resource/handler-ngx-http/*"
+      ],
+      "@ngx-resource/handler-ngx-http-legacy": [
+        "dist/ngx-resource/handler-ngx-http-legacy"
+      ],
+      "@ngx-resource/handler-ngx-http-legacy/*": [
+        "dist/ngx-resource/handler-ngx-http-legacy/*"
+      ],
+      "@ngx-resource/handler-cordova-advanced-http": [
+        "dist/ngx-resource/handler-cordova-advanced-http"
+      ],
+      "@ngx-resource/handler-cordova-advanced-http/*": [
+        "dist/ngx-resource/handler-cordova-advanced-http/*"
       ]
     }
   }

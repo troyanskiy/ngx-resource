@@ -1,4 +1,9 @@
-import { ResourceQueryMappingMethod, ResourceResponseBodyType, TTypePromiseNull } from './Declarations';
+import {
+  ResourceActionReturnType,
+  ResourceQueryMappingMethod,
+  ResourceResponseBodyType,
+  TTypePromiseNull
+} from './Declarations';
 
 export class ResourceGlobalConfig {
   static url: TTypePromiseNull<string> = null;
@@ -13,9 +18,7 @@ export class ResourceGlobalConfig {
   static addTimestamp: boolean | string = false;
   static withCredentials = false;
   static lean: boolean | null = null;
-  static asPromise = true;
-  static asObservable = false;
-  static asResourceResponse = false;
+  static returnAs: ResourceActionReturnType = ResourceActionReturnType.Observable;
   static responseBodyType: ResourceResponseBodyType = ResourceResponseBodyType.Json;
 
 

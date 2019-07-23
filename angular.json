@@ -154,6 +154,77 @@
           }
         }
       }
-    }},
+    },
+    "@ngx-resource/handler-ngx-http": {
+      "projectType": "library",
+      "root": "projects/ngx-resource/handler-ngx-http",
+      "sourceRoot": "projects/ngx-resource/handler-ngx-http/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-resource/handler-ngx-http/tsconfig.lib.json",
+            "project": "projects/ngx-resource/handler-ngx-http/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-resource/handler-ngx-http/src/test.ts",
+            "tsConfig": "projects/ngx-resource/handler-ngx-http/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-resource/handler-ngx-http/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-resource/handler-ngx-http/tsconfig.lib.json",
+              "projects/ngx-resource/handler-ngx-http/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@ngx-resource/handler-cordova-advanced-http": {
+      "projectType": "library",
+      "root": "projects/ngx-resource/handler-cordova-advanced-http",
+      "sourceRoot": "projects/ngx-resource/handler-cordova-advanced-http/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-resource/handler-cordova-advanced-http/tsconfig.lib.json",
+            "project": "projects/ngx-resource/handler-cordova-advanced-http/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-resource/handler-cordova-advanced-http/src/test.ts",
+            "tsConfig": "projects/ngx-resource/handler-cordova-advanced-http/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-resource/handler-cordova-advanced-http/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-resource/handler-cordova-advanced-http/tsconfig.lib.json",
+              "projects/ngx-resource/handler-cordova-advanced-http/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
   "defaultProject": "ngx-resource-mono"
 }

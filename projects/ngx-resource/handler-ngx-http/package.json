@@ -1,7 +1,7 @@
 {
-  "name": "@ngx-resource/core",
+  "name": "@ngx-resource/handler-ngx-http",
   "version": "7.0.0",
-  "description": "Core of resource library",
+  "description": "Resource handler for angular",
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
   "bugs": {
@@ -13,14 +13,20 @@
   },
   "keywords": [
     "ngx-resource",
-    "ngx-resource-core",
     "ngx-resource-rest",
+    "ngx-resource-handler",
+    "ngx-resource-handler-ngx-http",
+    "ngx-resource-handler-http",
     "ng2-resource",
     "ng2-resource-rest",
+    "ng2",
+    "ng2-rest",
     "Angular2",
     "Resource"
   ],
   "peerDependencies": {
-    "rxjs": "^6.0.0"
+    "@angular/common": ">= 6.0.0",
+    "@angular/core": ">= 6.0.0",
+    "@ngx-resource/core": "^7.0.0"
   }
 }

@@ -22,18 +22,21 @@ export abstract class ResourceModel {
   $idField = 'id';
 
   static get(id: string | number): Promise<any> {
+    // tslint:disable-next-line: prefer-immediate-return
     const p = this.getInstance()[this.methodGet]({id});
 
     return p;
   }
 
   static query(query?: any): Promise<any> {
+    // tslint:disable-next-line: prefer-immediate-return
     const p = this.getInstance()[this.methodQuery](query);
 
     return p;
   }
 
   static remove(id: string | number): Promise<void> {
+    // tslint:disable-next-line: prefer-immediate-return
     const p = this.getInstance()[this.methodRemove]({id});
 
     return p;

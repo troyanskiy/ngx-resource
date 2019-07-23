@@ -5,6 +5,7 @@ import {
   IResourceAction,
   IResourceActionInner,
   IResourceResponse,
+  ResourceActionReturnType,
   ResourceQueryMappingMethod,
   ResourceRequestBodyType,
   ResourceRequestMethod
@@ -152,7 +153,7 @@ export class Resource {
       options.returnData = options.actionAttributes.body;
     }
 
-    if (!actionOptions.asPromise) {
+    if (actionOptions.returnAs === ResourceActionReturnType.Resource) {
       options.returnData = actionOptions.expectJsonArray ? [] : actionOptions.resultFactory.call(this, null, options);
     }
 
@@ -166,15 +167,17 @@ export class Resource {
       ResourceHelper.defineReturnDataPropertiesPromise(options.returnData, options.mainObservable.toPromise());
     }
 
-    if (actionOptions.asObservable) {
-      return options.mainObservable.toPromise();
-    }
+    switch (actionOptions.returnAs) {
+      case ResourceActionReturnType.Observable:
+        return options.mainObservable;
 
-    if (actionOptions.asPromise) {
-      return options.mainObservable.toPromise();
-    }
+      case ResourceActionReturnType.Promise:
+        return options.mainObservable.toPromise();
 
-    return options.returnData;
+      default:
+        return options.returnData;
+
+    }
 
   }
 
@@ -202,7 +205,11 @@ export class Resource {
                 o.returnData.$abort = handlerResp.abort;
               }
 
-              return handlerResp.observable || handlerResp.promise;
+              if (handlerResp.observable) {
+                return handlerResp.observable as any;
+              }
+
+              return handlerResp.promise;
 
             });
         }),
@@ -454,7 +461,9 @@ export class Resource {
     }
 
     if (actionOptions.addTimestamp) {
+
       requestOptions.query = requestOptions.query || {};
+
       this.$appendQueryParams(
         requestOptions.query,
         actionOptions.addTimestamp as string,
@@ -541,12 +550,8 @@ export class Resource {
       actionOptions.withCredentials = ResourceGlobalConfig.withCredentials;
     }
 
-    if (ResourceHelper.isNullOrUndefined(actionOptions.asPromise)) {
-      actionOptions.asPromise = ResourceGlobalConfig.asPromise;
-    }
-
-    if (ResourceHelper.isNullOrUndefined(actionOptions.asResourceResponse)) {
-      actionOptions.asResourceResponse = ResourceGlobalConfig.asResourceResponse;
+    if (ResourceHelper.isNullOrUndefined(actionOptions.returnAs)) {
+      actionOptions.returnAs = ResourceGlobalConfig.returnAs;
     }
 
     if (ResourceHelper.isNullOrUndefined(actionOptions.responseBodyType)) {
@@ -556,8 +561,12 @@ export class Resource {
     if (ResourceHelper.isNullOrUndefined(actionOptions.lean)) {
       actionOptions.lean = !!ResourceGlobalConfig.lean;
 
-      if (actionOptions.mutateBody && !actionOptions.asPromise && ResourceHelper.isNullOrUndefined(actionOptions.lean)) {
+      if (actionOptions.mutateBody
+        && actionOptions.returnAs === ResourceActionReturnType.Resource
+        && ResourceHelper.isNullOrUndefined(actionOptions.lean)) {
+
         actionOptions.lean = true;
+
       }
     }
 

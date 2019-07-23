@@ -142,6 +142,7 @@ export class ResourceHelper {
   }
 
   static getRequestOptionsOrThrow(options: IResourceActionInner): IResourceRequest {
+    // tslint:disable-next-line: prefer-immediate-return
     const value = this.getResourceActionInnerOrThrow(options, 'requestOptions');
 
     return value;
@@ -149,6 +150,7 @@ export class ResourceHelper {
 
   // tslint:disable-next-line: no-identical-functions
   static getResolvedOptionsOrThrow(options: IResourceActionInner): IResourceParamsBase {
+    // tslint:disable-next-line: prefer-immediate-return
     const value = this.getResourceActionInnerOrThrow(options, 'resolvedOptions');
 
     return value;
@@ -156,6 +158,7 @@ export class ResourceHelper {
 
   // tslint:disable-next-line: no-identical-functions
   static getActionAttributesOrThrow(options: IResourceActionInner): IResourceActionAttributes {
+    // tslint:disable-next-line: prefer-immediate-return
     const value = this.getResourceActionInnerOrThrow(options, 'actionAttributes');
 
     return value;
@@ -163,6 +166,7 @@ export class ResourceHelper {
 
   // tslint:disable-next-line: no-identical-functions
   static getActionOptionsOrThrow(options: IResourceActionInner): IResourceAction {
+    // tslint:disable-next-line: prefer-immediate-return
     const value = this.getResourceActionInnerOrThrow(options, 'actionOptions');
 
     return value;
