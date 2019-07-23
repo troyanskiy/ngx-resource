@@ -1,38 +1,30 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "noImplicitAny": true,
-    "module": "es2015",
-    "target": "es5",
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "esnext",
+    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "declaration": true,
-//    "inlineSourceMap": true,
-//    "inlineSources": true,
-    "moduleResolution": "node",
-    "noUnusedLocals": true,
-    "types": ["node"],
-    "lib": ["es2015", "dom"]
-  },
-  "files": [
-    "index.ts",
-    "ngx-resource.ts",
-    "./src/Interfaces.ts",
-    "./src/Resource.ts",
-    "./src/ResourceAction.ts",
-    "./src/ResourceCRUD.ts",
-    "./src/ResourceCRUDBase.ts",
-    "./src/ResourceGlobalConfig.ts",
-    "./src/ResourceModel.ts",
-    "./src/ResourceODATA.ts",
-    "./src/ResourceParams.ts",
-    "./src/ResourceProviders.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "bundles"
-  ],
-  "angularCompilerOptions": {
-    "strictMetadataEmit": true,
-    "skipTemplateCodegen": true
+    "importHelpers": true,
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@ngx-resource/core": [
+        "dist/ngx-resource/core"
+      ],
+      "@ngx-resource/core/*": [
+        "dist/ngx-resource/core/*"
+      ]
+    }
   }
 }

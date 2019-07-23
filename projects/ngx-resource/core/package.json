@@ -1,0 +1,26 @@
+{
+  "name": "@ngx-resource/core",
+  "version": "5.4.4",
+  "description": "Core of resource library",
+  "author": "Roman Rosluk <roma@redbox.by>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/troyanskiy/ngx-resource-core/issues"
+  },
+  "peerDependencies": {
+    "rxjs": "^6.0.0"
+  },
+  "keywords": [
+    "ngx-resource",
+    "ngx-resource-core",
+    "ngx-resource-rest",
+    "ng2-resource",
+    "ng2-resource-rest",
+    "Angular2",
+    "Resource"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/troyanskiy/ngx-resource-core.git"
+  }
+}
