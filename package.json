@@ -11,18 +11,21 @@
     "core.lint": "ng lint @ngx-resource/core",
     "core.test": "npm run core.lint && ng test @ngx-resource/core --watch=false --browsers=ChromeHeadless --codeCoverage=true",
     "core.build": "ng build @ngx-resource/core",
-    "core.publish": "npm publish dist/ngx-resource/core",
+    "core.publish": "npm publish dist/ngx-resource/core --tag beta",
     "core.full": "npm run core.test && npm run core.build && npm run core.publish",
     "http.lint": "ng lint @ngx-resource/handler-ngx-http",
     "http.test": "npm run http.lint && ng test @ngx-resource/handler-ngx-http --watch=false --browsers=ChromeHeadless --codeCoverage=true",
     "http.build": "ng build @ngx-resource/handler-ngx-http",
-    "http.publish": "npm publish dist/ngx-resource/handler-ngx-http",
+    "http.publish": "npm publish dist/ngx-resource/handler-ngx-http --tag beta",
     "http.full": "npm run http.test && npm run http.build && npm run http.publish",
     "cordova.lint": "ng lint @ngx-resource/handler-cordova-advanced-http",
     "cordova.test": "npm run cordova.lint && ng test @ngx-resource/handler-cordova-advanced-http --watch=false --browsers=ChromeHeadless --codeCoverage=true",
     "cordova.build": "ng build @ngx-resource/handler-cordova-advanced-http",
-    "cordova.publish": "npm publish dist/ngx-resource/handler-cordova-advanced-http",
-    "cordova.full": "npm run cordova.test && npm run cordova.build && npm run cordova.publish"
+    "cordova.publish": "npm publish dist/ngx-resource/handler-cordova-advanced-http --tag beta",
+    "cordova.full": "npm run cordova.test && npm run cordova.build && npm run cordova.publish",
+
+    "all.build": "npm run core.build && npm run http.build && npm run cordova.build",
+    "all.publish": "npm run core.publish && npm run http.publish && npm run cordova.publish"
   },
   "private": true,
   "dependencies": {
