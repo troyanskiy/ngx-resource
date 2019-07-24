@@ -164,7 +164,7 @@ export class Resource {
     options.mainObservable = this.$_createMainObservable(options);
 
     if (this.$_canSetInternalData(options)) {
-      ResourceHelper.defineReturnDataPropertiesPromise(options.returnData, options.mainObservable.toPromise());
+      ResourceHelper.defineReturnDataPropertiesPromise(options.returnData, this.$_createPromise(options));
     }
 
     switch (actionOptions.returnAs) {
@@ -172,7 +172,7 @@ export class Resource {
         return options.mainObservable;
 
       case ResourceActionReturnType.Promise:
-        return options.mainObservable.toPromise();
+        return this.$_createPromise(options);
 
       default:
         return options.returnData;
@@ -180,6 +180,41 @@ export class Resource {
     }
 
   }
+
+  /**
+   * Converts observable to promise and ads abort method
+   */
+  protected $_createPromise(options: IResourceActionInner): Promise<any> {
+
+    if (!options.promise) {
+      options.promise = new Promise<any>((resolve, reject) => {
+
+        if (!options.mainObservable) {
+          reject(new Error('$_createPromise options.mainObservable missing'));
+
+          return;
+        }
+
+        options.subscription = options.mainObservable.subscribe(
+          resolve,
+          error => {
+            reject(error);
+            options.subscription = null;
+          },
+          () => {
+            options.subscription = null;
+          }
+        );
+
+        ResourceHelper.createNewAbortMethod(options);
+
+      });
+    }
+
+    return options.promise;
+
+  }
+
 
   /**
    * Creates main request observable

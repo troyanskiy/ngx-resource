@@ -360,6 +360,29 @@ export class ResourceHelper {
 
   }
 
+  /**
+   * Creates new abort method from subscription
+   */
+  static createNewAbortMethod(options: IResourceActionInner) {
+    if (options.returnData && options.subscription) {
+
+      const abort = options.returnData.abort;
+
+      options.returnData.abort = () => {
+
+        if (abort) {
+          abort();
+        }
+
+        if (options.subscription) {
+          options.subscription.unsubscribe();
+          options.subscription = null;
+        }
+
+      };
+    }
+  }
+
 
   private static getResourceActionInnerOrThrow(options: IResourceActionInner, param: string): any {
     if (options[param]) {

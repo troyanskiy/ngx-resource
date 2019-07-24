@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 export type TTypePromiseNull<T = {}> = T | Promise<T> | null;
 
@@ -61,6 +61,8 @@ export interface IResourceActionInner {
 
   usedInPath?: { [key: string]: boolean };
   mainObservable?: Observable<any>;
+  subscription?: Subscription | null;
+  promise?: Promise<any>;
   isModel?: boolean;
 
   requestOptions?: IResourceRequest;
