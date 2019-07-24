@@ -118,13 +118,34 @@ export interface IResourceMethodBase<IB, O, R>
   extends IResourceMethodStrictBase<IB, any, any, O, R> {
 }
 
-
+/**
+ * @deprecated use IResourceMethodPromiseStrict instead
+ */
 export interface IResourceMethodStrict<IB, IQ, IP, O>
   extends IResourceMethodStrictBase<IB, IQ, IP, O, Promise<O>> {
 }
 
+/**
+ * @deprecated use IResourceMethodPromise instead
+ */
 export interface IResourceMethod<IB, O>
   extends IResourceMethodBase<IB, O, Promise<O>> {
+}
+
+export interface IResourceMethodPromiseStrict<IB, IQ, IP, O>
+  extends IResourceMethodStrictBase<IB, IQ, IP, O, Promise<O>> {
+}
+
+export interface IResourceMethodPromise<IB, O>
+  extends IResourceMethodBase<IB, O, Promise<O>> {
+}
+
+export interface IResourceMethodObservableStrict<IB, IQ, IP, O>
+  extends IResourceMethodStrictBase<IB, IQ, IP, O, Observable<O>> {
+}
+
+export interface IResourceMethodObservable<IB, O>
+  extends IResourceMethodBase<IB, O, Observable<O>> {
 }
 
 
@@ -139,12 +160,34 @@ export interface IResourceMethodResult<IB, O>
 
 // As IResourceResponse
 
+/**
+ * @deprecated use IResourceMethodPromiseStrictFull instead
+ */
 export interface IResourceMethodStrictFull<IB, IQ, IP, O>
   extends IResourceMethodStrictBase<IB, IQ, IP, O, Promise<IResourceResponse<O>>> {
 }
 
+/**
+ * @deprecated use IResourceMethodPromiseFull instead
+ */
 export interface IResourceMethodFull<IB, O>
   extends IResourceMethodBase<IB, O, Promise<IResourceResponse<O>>> {
+}
+
+export interface IResourceMethodPromiseStrictFull<IB, IQ, IP, O>
+  extends IResourceMethodStrictBase<IB, IQ, IP, O, Promise<IResourceResponse<O>>> {
+}
+
+export interface IResourceMethodPromiseFull<IB, O>
+  extends IResourceMethodBase<IB, O, Promise<IResourceResponse<O>>> {
+}
+
+export interface IResourceMethodObservableStrictFull<IB, IQ, IP, O>
+  extends IResourceMethodStrictBase<IB, IQ, IP, O, Observable<IResourceResponse<O>>> {
+}
+
+export interface IResourceMethodObservableFull<IB, O>
+  extends IResourceMethodBase<IB, O, Observable<IResourceResponse<O>>> {
 }
 
 

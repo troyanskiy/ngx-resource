@@ -1,6 +1,6 @@
 {
   "name": "@ngx-resource/handler-ngx-http",
-  "version": "7.0.0-beta.1",
+  "version": "7.0.0-beta.5",
   "description": "Resource handler for angular",
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
@@ -27,6 +27,6 @@
   "peerDependencies": {
     "@angular/common": ">= 6.0.0",
     "@angular/core": ">= 6.0.0",
-    "@ngx-resource/core": "7.0.0-beta.1"
+    "@ngx-resource/core": "7.0.0-beta.5"
   }
 }

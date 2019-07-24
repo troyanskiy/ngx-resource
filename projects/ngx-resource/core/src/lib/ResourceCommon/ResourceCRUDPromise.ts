@@ -3,10 +3,7 @@ import { ResourceAction } from '../ResourceAction';
 import { IResourceMethodPromise, ResourceRequestMethod } from '../Declarations';
 
 
-/**
- * @deprecated use ResourceCRUDPromise or ResourceCRUDObservable instead
- */
-export abstract class ResourceCRUD<TQuery, TShort, TFull, TQueryResult = TShort[]> extends Resource {
+export abstract class ResourceCRUDPromise<TQuery, TShort, TFull, TQueryResult = TShort[]> extends Resource {
 
   @ResourceAction()
   query: IResourceMethodPromise<TQuery, TQueryResult>;
