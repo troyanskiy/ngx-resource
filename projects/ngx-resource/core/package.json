@@ -1,0 +1,26 @@
+{
+  "name": "@ngx-resource/core",
+  "version": "7.0.0-beta.1",
+  "description": "Core of resource library",
+  "author": "Roman Rosluk <roma@redbox.by>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/troyanskiy/ngx-resource/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/troyanskiy/ngx-resource.git"
+  },
+  "keywords": [
+    "ngx-resource",
+    "ngx-resource-core",
+    "ngx-resource-rest",
+    "ng2-resource",
+    "ng2-resource-rest",
+    "Angular2",
+    "Resource"
+  ],
+  "peerDependencies": {
+    "rxjs": "^6.0.0"
+  }
+}
