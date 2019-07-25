@@ -1,4 +1,4 @@
-[![npm version](https://img.shields.io/npm/v/%40ngx-resource%2Fcore.svg)](https://www.npmjs.com/package/@ngx-resource/core)
+@ngx-resource/core [![npm version](https://img.shields.io/npm/v/%40ngx-resource%2Fcore.svg)](https://www.npmjs.com/package/@ngx-resource/core)
 
 # @ngx-resource/core
 Resource Core is an evolution of ngx-resource lib which provides flexibility for developers. Each developer can implement their own request handlers to easily customize the behavior.
@@ -313,3 +313,48 @@ Implements the standard $.params way of converting
 
 Output: `?a[0][b]=10383&a[0][c][]=2&a[0][c][]=3`
 
+
+
+# @ngx-resource/handler-ngx-http
+
+It's implementation of `ResourceHandler` which uses Angular `HttpClient`
+
+# If you are using Angular 5, please use @ngx-resource/handler-ngx-http 5.x
+
+## How to install and setup it
+```bash
+& npm i --save @ngx-resource/core @ngx-resource/handler-ngx-http
+```
+
+In you app module
+```typescript
+
+// AoT requires an exported function for factories
+export function myHandlerFactory(http: HttpClient) {
+    return new MyResourceHandler(http);
+}
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+
+    // Default ResourceHandler uses class `ResourceHandlerHttpClient`
+    ResourceModule.forRoot()
+    
+    // Or set you own handler
+    //ResourceModule.forRoot({
+    //  handler: { provide: ResourceHandler, useFactory: (myHandlerFactory), deps: [HttpClient] }
+    //})
+  ],
+  declarations: [...],
+  bootstrap: [...],
+  entryComponents: [...],
+  providers: [...]
+})
+export class AppModule {
+}
+```
+
+## [Docs about @ngx-resource/core](https://github.com/troyanskiy/ngx-resource-core/blob/master/README.md)
