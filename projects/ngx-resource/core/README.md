@@ -7,9 +7,9 @@ In fact, `@ngx-resource/core` is an abstract common library which uses `Resource
 All my examples will be based on angular 4.4.4+
 
 ### Known ResourceHandlers
-* [`@ngx-resource/handler-ngx-http`](https://github.com/troyanskiy/ngx-resource-handler-ngx-http). Based on `HttpClient` from `@angular/common/http`. Includes `ResourceModule.forRoot`.
-* [`@ngx-resource/handler-ngx-http-legacy`](https://github.com/troyanskiy/ngx-resource-handler-ngx-http-legacy). Based on `Http` from `@angular/http`. Includes `ResourceModule.forRoot`.
-* [`@ngx-resource/handler-cordova-advanced-http`](https://github.com/troyanskiy/ngx-resource-handler-cordova-advanced-http). Based on [Cordova Plugin Advanced HTTP](`https://github.com/silkimen/cordova-plugin-advanced-http`).
+* `@ngx-resource/handler-ngx-http`. Based on `HttpClient` from `@angular/common/http`. Includes `ResourceModule.forRoot`.
+* `@ngx-resource/handler-ngx-http-legacy`. Based on `Http` from `@angular/http`. Includes `ResourceModule.forRoot`.
+* `@ngx-resource/handler-cordova-advanced-http`. Based on [Cordova Plugin Advanced HTTP](`https://github.com/silkimen/cordova-plugin-advanced-http`).
 * `@ngx-resource/handler-fetch`. Besed on [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API). Not yet created.
 
 
@@ -53,18 +53,18 @@ export class UserResource extends Resource {
   @ResourceAction({
     path: '/{!id}'
   })
-  getUser: IResourceMethod<{id: string}, IUser>; // will call /user/id
+  getUser: IResourceMethodPromise<{id: string}, IUser>; // will call /user/id
   
   @ResourceAction({
     method: ResourceRequestMethod.Post
   })
-  createUser: IResourceMethodStrict<IUser, IUserQuery, IUserPathParams, IUser>;
+  createUser: IResourceMethodPromiseStrict<IUser, IUserQuery, IUserPathParams, IUser>;
   
   @ResoucreAction({
     path: '/test/data',
     asResourceResponse: true
   })
-  testUserRequest: IResourceMethodFull<{id: string}, IUser>; // will call /test/data and receive repsponse object with headers, status and body
+  testUserRequest: IResourceMethodPromiseFull<{id: string}, IUser>; // will call /test/data and receive repsponse object with headers, status and body
   
   constructor(restHandler: ResourceHandler) {
     super(restHandler);
@@ -117,8 +117,7 @@ List of params:
 * `withCredentials?: boolean;` - *default `false`*
 * `lean?: boolean;` - do no add `$` properties on result. Used only with `toPromise: false` *default `false`*
 * `mutateBody?: boolean;` - if need to mutate provided body with response body. *default `false`*
-* `asPromise?: boolean;` - if method should return promise or object, which will be fullfilled after receiving response. *default `true`*
-* `asResourceResponse?: boolean;` - Receive `IResourceResponse` as a body . *default `false`*
+* `returnAs?: ResourceActionReturnType;` - what type response should be returned by action/method . *default `ResourceActionReturnType.Observable`*
 * `keepEmptyBody?: boolean;` - if need to keep empty body object `{}`
 * `requestBodyType?: ResourceRequestBodyType;` - request body type. *default: will be detected automatically*.
 Check for possible body types in the sources of [ResourceRequestBodyType](https://github.com/troyanskiy/ngx-resource-core/blob/master/src/Declarations.ts#L114-L122). Type detection algorithm [check here](https://github.com/troyanskiy/ngx-resource-core/blob/master/src/ResourceHelper.ts#L12-L34).
@@ -171,7 +170,7 @@ export interface IUser {
   groupId: string;
 }
 
-export class GroupResource extends ResourceCRUD<IGroupQuery, Group, Group> {
+export class GroupResource extends ResourceCRUDPromise<IGroupQuery, Group, Group> {
   
   constructor(restHandler: ResourceHandler) {
     super(restHandler);
@@ -204,7 +203,7 @@ export class Group extends ResourceModel {
   
 }
 
-export class UserResource extends ResourceCRUD<IUserQuery, User, User> {
+export class UserResource extends ResourceCRUDPromise<IUserQuery, User, User> {
   
   constructor(restHandler: ResourceHandler) {
       super(restHandler);
@@ -314,7 +313,3 @@ Implements the standard $.params way of converting
 
 Output: `?a[0][b]=10383&a[0][c][]=2&a[0][c][]=3`
 
-
-## Developing Resource Handler
-
-Use the [`ResourceHandler`](https://github.com/troyanskiy/ngx-resource-core/blob/master/src/ResourceHandler.ts) abstract class as parent to create your Handler. Check the sources of the class for the methods to implement.

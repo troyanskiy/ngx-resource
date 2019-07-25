@@ -1,6 +1,6 @@
 {
   "name": "@ngx-resource/handler-cordova-advanced-http",
-  "version": "7.0.0-beta.5",
+  "version": "7.0.0",
   "description": "Resource Handler based on cordova-advanced-http",
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
