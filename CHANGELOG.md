@@ -1,3 +1,24 @@
+## 7.0.0
+
+### Breaking changes:
+#### `ResourceGlobalConfig`
+* removed `asPromise` and `asResourceResponse`
+* added `returnAs` with enum type `ResourceActionReturnType`; Default is `ResourceActionReturnType.Observable`
+
+#### `IResourceParams` and `IResourceAction`
+* removed `asPromise` and `asResourceResponse`
+* added `returnAs` with enum type `ResourceActionReturnType`; Default is `ResourceActionReturnType.Observable`
+
+### Deprecation
+* `IResourceMethod` -> `IResourceMethodPromise`
+* `IResourceMethodStrict` -> `IResourceMethodPromiseStrict`
+* `IResourceMethodFull` -> `IResourceMethodPromiseFull`
+* `IResourceMethodStrictFull` -> `IResourceMethodPromiseStrictFull`
+* `ResourceCRUD` -> `ResourceCRUDPromise`
+
+### New
+* `ResourceCRUDObservable` - same as ResourceCRUDPromise, but typed to Observable
+
 ## 5.4.4
 
 ### Bug fix
