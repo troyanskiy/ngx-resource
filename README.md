@@ -1,4 +1,4 @@
-@ngx-resource/core [![npm version](https://img.shields.io/npm/v/%40ngx-resource%2Fcore.svg)](https://www.npmjs.com/package/@ngx-resource/core)
+### @ngx-resource/core [![npm version](https://img.shields.io/npm/v/%40ngx-resource%2Fcore.svg)](https://www.npmjs.com/package/@ngx-resource/core)
 
 # @ngx-resource/core
 Resource Core is an evolution of ngx-resource lib which provides flexibility for developers. Each developer can implement their own request handlers to easily customize the behavior.
