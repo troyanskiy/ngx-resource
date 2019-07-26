@@ -1,7 +1,7 @@
 {
-  "name": "@ngx-resource/handler-cordova-advanced-http",
-  "version": "7.0.0",
-  "description": "Resource Handler based on cordova-advanced-http",
+  "name": "@ngx-resource/handler-fetch",
+  "version": "7.0.0-beta.1",
+  "description": "Resource handler for fetch",
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
   "bugs": {
@@ -13,15 +13,11 @@
   },
   "keywords": [
     "ngx-resource",
+    "handler-fetch",
     "ngx-resource-rest",
     "ngx-resource-handler",
-    "ngx-resource-handler-resource-cordova-advanced-http",
-    "ng2-resource",
-    "ng2-resource-rest",
-    "ng2",
-    "ng2-rest",
-    "Angular2",
-    "resource-cordova-advanced-http"
+    "ngx-resource-handler-fetch",
+    "Resource"
   ],
   "peerDependencies": {
     "@ngx-resource/core": "^7.0.0",

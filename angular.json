@@ -224,6 +224,41 @@
           }
         }
       }
+    },
+    "@ngx-resource/handler-fetch": {
+      "projectType": "library",
+      "root": "projects/ngx-resource/handler-fetch",
+      "sourceRoot": "projects/ngx-resource/handler-fetch/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-resource/handler-fetch/tsconfig.lib.json",
+            "project": "projects/ngx-resource/handler-fetch/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-resource/handler-fetch/src/test.ts",
+            "tsConfig": "projects/ngx-resource/handler-fetch/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-resource/handler-fetch/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-resource/handler-fetch/tsconfig.lib.json",
+              "projects/ngx-resource/handler-fetch/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "ngx-resource-mono"

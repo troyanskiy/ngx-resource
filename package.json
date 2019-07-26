@@ -23,6 +23,11 @@
     "cordova.build": "ng build @ngx-resource/handler-cordova-advanced-http",
     "cordova.publish": "npm publish dist/ngx-resource/handler-cordova-advanced-http",
     "cordova.full": "npm run cordova.test && npm run cordova.build && npm run cordova.publish",
+    "fetch.lint": "ng lint @ngx-resource/handler-fetch",
+    "fetch.test": "npm run fetch.lint && ng test @ngx-resource/handler-fetch --watch=false --browsers=ChromeHeadless --codeCoverage=true",
+    "fetch.build": "ng build @ngx-resource/handler-fetch",
+    "fetch.publish": "npm publish dist/ngx-resource/handler-fetch --tag beta --access public",
+    "fetch.full": "npm run fetch.test && npm run fetch.build && npm run fetch.publish",
     "all.build": "npm run core.build && npm run http.build && npm run cordova.build",
     "all.publish": "npm run core.publish && npm run http.publish && npm run cordova.publish"
   },

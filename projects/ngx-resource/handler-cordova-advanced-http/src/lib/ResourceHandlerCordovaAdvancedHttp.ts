@@ -7,7 +7,6 @@ import {
   ResourceRequestMethod,
   ResourceResponseBodyType
 } from '@ngx-resource/core';
-import { is } from 'tslint-sonarts/lib/utils/nodes';
 
 
 declare const cordova: any;

@@ -43,6 +43,12 @@
       ],
       "@ngx-resource/handler-cordova-advanced-http/*": [
         "dist/ngx-resource/handler-cordova-advanced-http/*"
+      ],
+      "@ngx-resource/handler-fetch": [
+        "dist/ngx-resource/handler-fetch"
+      ],
+      "@ngx-resource/handler-fetch/*": [
+        "dist/ngx-resource/handler-fetch/*"
       ]
     }
   }
