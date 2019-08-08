@@ -36,5 +36,17 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
-          name: Core module Lint
+          name: Test "@ngx-resource/core"
           command: npm run core.lint
+
+      - run:
+          name: Test "@ngx-resource/handler-ngx-http"
+          command: npm run http.lint
+
+      - run:
+          name: Test "@ngx-resource/handler-cordova-advanced-http"
+          command: npm run cordova.lint
+
+      - run:
+          name: Test "@ngx-resource/handler-fetch"
+          command: npm run fetch.lint

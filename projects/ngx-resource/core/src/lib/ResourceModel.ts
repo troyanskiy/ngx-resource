@@ -1,16 +1,15 @@
-import { ResourceCRUD } from './ResourceCommon/ResourceCRUD';
 import { ResourceHelper } from './ResourceHelper';
+import { ResourceCRUDPromise } from './ResourceCommon/ResourceCRUDPromise';
 
 export abstract class ResourceModel {
 
-  static resourceInstance: ResourceCRUD<any, any, any> | null = null;
+  static resourceInstance: ResourceCRUDPromise<any, any, any> | null = null;
 
   protected static methodQuery = 'query';
   protected static methodGet = 'get';
   protected static methodCreate = 'create';
   protected static methodUpdate = 'update';
   protected static methodRemove = 'remove';
-
 
 
   abstract readonly $resource: any = null;
