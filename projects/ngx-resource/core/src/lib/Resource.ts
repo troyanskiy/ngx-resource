@@ -13,8 +13,11 @@ import {
 import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceHelper } from './ResourceHelper';
 import { ResourceHandler } from './ResourceHandler';
+import { ResourceModule } from './ResourceModule';
 
 export class Resource {
+
+  protected requestHandler: ResourceHandler;
 
   private $url: string | null = null;
   private $pathPrefix: string | null = null;
@@ -24,7 +27,18 @@ export class Resource {
   private $params: {} | null = null;
   private $query: {} | null = null;
 
-  constructor(protected requestHandler: ResourceHandler) {
+  constructor(requestHandler?: ResourceHandler) {
+
+    if (!requestHandler) {
+      requestHandler = ResourceModule.injector.get(ResourceHandler);
+    }
+
+    if (!requestHandler) {
+      throw new Error('ResourceHandler is missing');
+    }
+
+    this.requestHandler = requestHandler;
+
     (this.constructor as any).instance = this;
   }
 
