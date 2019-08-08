@@ -3,3 +3,4 @@
  */
 
 export * from './lib/ResourceHandlerFetch';
+export * from './lib/ResourceModule';

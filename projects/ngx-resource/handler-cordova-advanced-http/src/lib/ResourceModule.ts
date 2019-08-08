@@ -1,7 +1,6 @@
 import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ResourceHandler, ResourceModule as ResourceModuleCore } from '@ngx-resource/core';
-import { ResourceHandlerHttpClient } from './ResourceHandlerHttpClient';
+import { ResourceHandlerCordovaAdvancedHttp } from './ResourceHandlerCordovaAdvancedHttp';
 
 export interface IResourceModuleConfig {
   handler?: Provider;
@@ -15,7 +14,7 @@ export class ResourceModule extends ResourceModuleCore {
    */
   static forRoot(config: IResourceModuleConfig = {}): ModuleWithProviders {
     return ResourceModuleCore.forRoot({
-      handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerHttpClient, deps: [HttpClient]}
+      handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerCordovaAdvancedHttp}
     });
   }
 
@@ -24,7 +23,7 @@ export class ResourceModule extends ResourceModuleCore {
    */
   static forChild(config: IResourceModuleConfig = {}): ModuleWithProviders {
     return ResourceModuleCore.forChild({
-      handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerHttpClient, deps: [HttpClient]}
+      handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerCordovaAdvancedHttp}
     });
   }
 }
