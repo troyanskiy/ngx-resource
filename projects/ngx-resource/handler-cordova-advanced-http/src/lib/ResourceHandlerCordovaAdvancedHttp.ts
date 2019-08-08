@@ -47,8 +47,7 @@ export class ResourceHandlerCordovaAdvancedHttp extends ResourceHandler {
       return {
         promise: this.initDeferPromise
           .then(() => this.handle(req))
-          // tslint:disable-next-line:no-non-null-assertion
-          .then((r: IResourceHandlerResponse) => r.promise!)
+          .then((r: IResourceHandlerResponse) => r.promise || {status: 0})
       };
     }
 
