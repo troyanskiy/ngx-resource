@@ -108,8 +108,7 @@ export class ResourceHandlerHttpClient extends ResourceHandler {
       init.params = new HttpParams({fromObject: req.query});
     }
 
-    // tslint:disable-next-line: no-non-null-assertion
-    return new HttpRequest(method, req.url!, req.body, init);
+    return new HttpRequest(method, req.url || '', req.body, init);
 
   }
 
