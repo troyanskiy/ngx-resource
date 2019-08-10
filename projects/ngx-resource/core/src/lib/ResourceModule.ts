@@ -1,15 +1,12 @@
-import { Injector, ModuleWithProviders, NgModule, Provider } from '@angular/core';
+import { Injector, ModuleWithProviders, NgModule } from '@angular/core';
 import { ResourceHandlerNoop } from './ResourceHandlerNoop';
 import { ResourceHandler } from './ResourceHandler';
-
-export interface IResourceModuleConfig {
-  handler?: Provider;
-}
+import { IResourceModuleConfig } from './Declarations';
 
 @NgModule()
 export class ResourceModule {
 
-  static injector: Injector;
+  static injector: Injector | null = null;
 
   /**
    * For root

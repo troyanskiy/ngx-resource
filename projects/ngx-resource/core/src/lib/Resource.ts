@@ -14,10 +14,29 @@ import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceHelper } from './ResourceHelper';
 import { ResourceHandler } from './ResourceHandler';
 import { ResourceModule } from './ResourceModule';
+import { Optional } from '@angular/core';
 
 export class Resource {
 
-  protected requestHandler: ResourceHandler;
+  protected get requestHandler(): ResourceHandler {
+
+    if (!this._requestHandler) {
+
+      if (!ResourceModule.injector) {
+        throw new Error('ResourceModule.injector is missing');
+      }
+
+      this._requestHandler = ResourceModule.injector.get(ResourceHandler);
+
+      if (!this._requestHandler) {
+        throw new Error('ResourceHandler provider is missing');
+      }
+
+    }
+
+    return this._requestHandler;
+
+  }
 
   private $url: string | null = null;
   private $pathPrefix: string | null = null;
@@ -27,19 +46,17 @@ export class Resource {
   private $params: {} | null = null;
   private $query: {} | null = null;
 
-  constructor(requestHandler?: ResourceHandler) {
+  // tslint:disable-next-line:variable-name
+  private _requestHandler: ResourceHandler | null = null;
 
-    if (!requestHandler) {
-      requestHandler = ResourceModule.injector.get(ResourceHandler);
+  constructor(@Optional() requestHandler?: ResourceHandler) {
+
+    if (requestHandler) {
+      this._requestHandler = requestHandler;
     }
-
-    if (!requestHandler) {
-      throw new Error('ResourceHandler is missing');
-    }
-
-    this.requestHandler = requestHandler;
 
     (this.constructor as any).instance = this;
+
   }
 
   /**

@@ -245,7 +245,7 @@ export class ResourceHandlerCordovaAdvancedHttp extends ResourceHandler {
         case ResourceResponseBodyType.ArrayBuffer:
           const fileReader = new FileReader();
 
-          fileReader.onload = function() {
+          fileReader.onload = function () {
             ret.body = this.result;
 
             if (isError) {

@@ -1,10 +1,7 @@
-import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
-import { ResourceHandler, ResourceModule as ResourceModuleCore } from '@ngx-resource/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { IResourceModuleConfig, ResourceHandler, ResourceModule as ResourceModuleCore } from '@ngx-resource/core';
 import { ResourceHandlerCordovaAdvancedHttp } from './ResourceHandlerCordovaAdvancedHttp';
 
-export interface IResourceModuleConfig {
-  handler?: Provider;
-}
 
 @NgModule()
 export class ResourceModule extends ResourceModuleCore {

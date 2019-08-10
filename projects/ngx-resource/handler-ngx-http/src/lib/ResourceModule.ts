@@ -1,11 +1,7 @@
-import { ModuleWithProviders, NgModule, Provider } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ResourceHandler, ResourceModule as ResourceModuleCore } from '@ngx-resource/core';
+import { IResourceModuleConfig, ResourceHandler, ResourceModule as ResourceModuleCore } from '@ngx-resource/core';
 import { ResourceHandlerHttpClient } from './ResourceHandlerHttpClient';
-
-export interface IResourceModuleConfig {
-  handler?: Provider;
-}
 
 @NgModule()
 export class ResourceModule extends ResourceModuleCore {

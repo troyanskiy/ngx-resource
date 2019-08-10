@@ -1,6 +1,11 @@
 import { Observable, Subscription } from 'rxjs';
+import { Provider } from '@angular/core';
 
 export type TTypePromiseNull<T = {}> = T | Promise<T> | null;
+
+export interface IResourceModuleConfig {
+  handler?: Provider;
+}
 
 export interface IResourceParamsBase {
   url?: string;

@@ -11,9 +11,9 @@ export function ResourceAction(methodOptions?: IResourceAction) {
   }
 
   // tslint:disable-next-line: only-arrow-functions
-  return function(target: Resource, propertyKey: string) {
+  return function (target: Resource, propertyKey: string) {
 
-    (target as any)[propertyKey] = function(...args: any[]): any {
+    (target as any)[propertyKey] = function (...args: any[]): any {
 
       const callbacks: any = args.filter((arg: any) => typeof arg === 'function');
       const data: any = args.filter((arg: any) => typeof arg !== 'function');

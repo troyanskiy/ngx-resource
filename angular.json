@@ -62,7 +62,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngx-resource-mono:build"
+            "browserTarget": "ngx-resource-mono:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {
