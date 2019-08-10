@@ -1,9 +1,4 @@
-import {
-  ResourceActionReturnType,
-  ResourceQueryMappingMethod,
-  ResourceResponseBodyType,
-  TTypePromiseNull
-} from './Declarations';
+import { ResourceActionReturnType, ResourceQueryMappingMethod, ResourceResponseBodyType, TTypePromiseNull } from './Declarations';
 
 export class ResourceGlobalConfig {
   static url: TTypePromiseNull<string> = null;

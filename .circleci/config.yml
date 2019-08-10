@@ -50,3 +50,19 @@ jobs:
       - run:
           name: Test "@ngx-resource/handler-fetch"
           command: npm run fetch.lint
+
+      - run:
+          name: Build "@ngx-resource/core"
+          command: npm run core.build
+
+      - run:
+          name: Build "@ngx-resource/handler-ngx-http"
+          command: npm run http.build
+
+      - run:
+          name: Build "@ngx-resource/handler-cordova-advanced-http"
+          command: npm run cordova.build
+
+      - run:
+          name: Build "@ngx-resource/handler-fetch"
+          command: npm run fetch.build

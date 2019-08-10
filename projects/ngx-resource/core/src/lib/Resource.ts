@@ -14,7 +14,7 @@ import { ResourceGlobalConfig } from './ResourceGlobalConfig';
 import { ResourceHelper } from './ResourceHelper';
 import { ResourceHandler } from './ResourceHandler';
 import { ResourceModule } from './ResourceModule';
-import { Optional } from '@angular/core';
+import { Optional, Type } from '@angular/core';
 
 export class Resource {
 
@@ -26,7 +26,7 @@ export class Resource {
         throw new Error('ResourceModule.injector is missing');
       }
 
-      this._requestHandler = ResourceModule.injector.get(ResourceHandler);
+      this._requestHandler = ResourceModule.injector.get(ResourceHandler as Type<ResourceHandler>);
 
       if (!this._requestHandler) {
         throw new Error('ResourceHandler provider is missing');
