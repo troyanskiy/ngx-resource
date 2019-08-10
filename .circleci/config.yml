@@ -66,3 +66,7 @@ jobs:
       - run:
           name: Build "@ngx-resource/handler-fetch"
           command: npm run fetch.build
+
+      - run:
+          name: Build Project Prod
+          command: ng build --prod
