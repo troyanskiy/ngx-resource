@@ -19,6 +19,7 @@ coverage
 *.metadata.json
 bundles
 dist
+server/node_modules
 
 #################
 ## JetBrains
