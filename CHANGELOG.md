@@ -1,3 +1,7 @@
+## 7.1.0
+* Unnecessary to provide `ResourceHandler` in the resource constructor
+  (@Optional).
+
 ## 7.0.0
 
 ### Breaking changes:

@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { IResourceModuleConfig, ResourceHandler, ResourceModule as ResourceModuleCore } from '@ngx-resource/core';
-import { ResourceHandlerHttpClient } from './ResourceHandlerHttpClient';
+import { ResourceHandlerFetch } from './ResourceHandlerFetch';
+
 
 @NgModule()
 export class ResourceModule extends ResourceModuleCore {
@@ -11,7 +11,7 @@ export class ResourceModule extends ResourceModuleCore {
    */
   static forRoot(config: IResourceModuleConfig = {}): ModuleWithProviders {
     return ResourceModuleCore.forRoot({
-      handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerHttpClient, deps: [HttpClient]}
+      handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerFetch}
     });
   }
 
@@ -20,7 +20,7 @@ export class ResourceModule extends ResourceModuleCore {
    */
   static forChild(config: IResourceModuleConfig = {}): ModuleWithProviders {
     return ResourceModuleCore.forChild({
-      handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerHttpClient, deps: [HttpClient]}
+      handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerFetch}
     });
   }
 }

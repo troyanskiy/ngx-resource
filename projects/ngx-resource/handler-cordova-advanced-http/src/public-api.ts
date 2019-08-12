@@ -3,3 +3,4 @@
  */
 
 export * from './lib/ResourceHandlerCordovaAdvancedHttp';
+export * from './lib/ResourceModule';

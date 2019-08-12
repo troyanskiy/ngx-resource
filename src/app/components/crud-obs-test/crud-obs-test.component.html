@@ -1,0 +1,20 @@
+<h2>crud-obs-test tests!</h2>
+<table>
+  <tr>
+    <th>Method</th>
+    <th>Res Async</th>
+  </tr>
+  <tr>
+    <td>Query</td>
+    <td *ngIf="query$ | async as list; else loading">Loaded {{list.length}}</td>
+  </tr>
+  <tr>
+    <td>Get One</td>
+    <td *ngIf="getOne$ | async as one; else loading">Loaded {{one.title}}</td>
+  </tr>
+</table>
+
+
+<ng-template #loading>
+  <td class="yes">Loading stuff...</td>
+</ng-template>
