@@ -11,6 +11,7 @@ export * from './lib/ResourceHandlerNoop';
 export * from './lib/ResourceHelper';
 export * from './lib/ResourceModel';
 export * from './lib/ResourceParams';
+export * from './lib/ResourceCommon/ResourceCRUDBase';
 export * from './lib/ResourceCommon/ResourceCRUD';
 export * from './lib/ResourceCommon/ResourceCRUDPromise';
 export * from './lib/ResourceCommon/ResourceCRUDObservable';

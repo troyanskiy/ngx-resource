@@ -11,7 +11,7 @@
     "core.lint": "ng lint @ngx-resource/core",
     "core.test": "npm run core.lint && ng test @ngx-resource/core --watch=false --browsers=ChromeHeadless --codeCoverage=true",
     "core.build": "ng build @ngx-resource/core",
-    "core.publish": "npm publish dist/ngx-resource/core",
+    "core.publish": "npm publish dist/ngx-resource/core --access public",
     "core.full": "npm run core.test && npm run core.build && npm run core.publish",
     "http.lint": "ng lint @ngx-resource/handler-ngx-http",
     "http.test": "npm run http.lint && ng test @ngx-resource/handler-ngx-http --watch=false --browsers=ChromeHeadless --codeCoverage=true",

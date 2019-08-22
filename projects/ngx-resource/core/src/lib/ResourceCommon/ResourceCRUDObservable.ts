@@ -1,46 +1,11 @@
-import { Observable } from 'rxjs';
-
-import { Resource } from '../Resource';
-import { ResourceAction } from '../ResourceAction';
-import { IResourceMethodObservable, ResourceRequestMethod } from '../Declarations';
+import { ResourceActionReturnType } from '../Declarations';
+import { ResourceCRUDBase } from './ResourceCRUDBase';
 
 
-export abstract class ResourceCRUDObservable<TQuery, TShort, TFull, TQueryResult = TShort[]> extends Resource {
+export abstract class ResourceCRUDObservable<TQuery, TShort, TFull, TQueryResult = TShort[]>
+  extends ResourceCRUDBase<TQuery, TShort, TFull, TQueryResult,
+    Promise<TQueryResult>, Promise<TFull>, Promise<any>> {
 
-  @ResourceAction()
-  query: IResourceMethodObservable<TQuery, TQueryResult>;
-
-  @ResourceAction({
-    path: '/{!id}'
-  })
-  get: IResourceMethodObservable<{ id: any }, TFull>;
-
-  @ResourceAction({
-    method: ResourceRequestMethod.Post
-  })
-  save: IResourceMethodObservable<TFull, TFull>;
-
-  @ResourceAction({
-    method: ResourceRequestMethod.Put,
-    path: '/{!id}'
-  })
-  update: IResourceMethodObservable<TFull, TFull>;
-
-  @ResourceAction({
-    method: ResourceRequestMethod.Delete,
-    path: '/{!:id}'
-  })
-  remove: IResourceMethodObservable<{ id: any }, any>;
-
-  @ResourceAction({
-    method: ResourceRequestMethod.Patch,
-    path: '/{!id}'
-  })
-  patch: IResourceMethodObservable<{ id: any } & Partial<TFull>, TFull>;
-
-  // Alias to save
-  create(data: TFull, callback?: (res: TFull) => any): Observable<TFull> {
-    return this.save(data, callback);
-  }
+  protected readonly $crudReturnAs = ResourceActionReturnType.Observable;
 
 }
