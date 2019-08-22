@@ -48,13 +48,13 @@ export type TResourceResponseFilter = (item: any, options: IResourceActionInner)
 export type TResourceResultFactory = (item: any, options: IResourceActionInner) => any;
 
 export interface IResourceActionAttributes {
-  body: any;
-  query: any;
-  params: any;
+  body?: any;
+  query?: any;
+  params?: any;
 
-  onSuccess(data: any): any;
+  onSuccess?(data: any): any;
 
-  onError(data: any): any;
+  onError?(data: any): any;
 }
 
 export interface IResourceActionInner {

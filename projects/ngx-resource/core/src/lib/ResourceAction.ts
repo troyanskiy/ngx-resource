@@ -18,12 +18,8 @@ export function ResourceAction(methodOptions?: IResourceAction) {
       const callbacks: any = args.filter((arg: any) => typeof arg === 'function');
       const data: any = args.filter((arg: any) => typeof arg !== 'function');
 
-      const body: any = data[0];
-      const query: any = data[1];
-      const params: any = data[2];
-      const onSuccess: any = callbacks[0];
-      const onError: any = callbacks[1];
-
+      const [body, query, params] = data;
+      const [onSuccess, onError] = callbacks;
 
       const actionOptions: IResourceAction = {...this.getResourceOptions(), ...methodOptions};
 

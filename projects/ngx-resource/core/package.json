@@ -1,6 +1,6 @@
 {
   "name": "@ngx-resource/core",
-  "version": "7.1.0",
+  "version": "7.1.2",
   "description": "Core of resource library",
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
