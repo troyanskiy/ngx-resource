@@ -11,7 +11,7 @@ export class ResourceModule {
   /**
    * For root
    */
-  static forRoot(config: IResourceModuleConfig = {}): ModuleWithProviders {
+  static forRoot(config: IResourceModuleConfig = {}): ModuleWithProviders<ResourceModule> {
     return {
       ngModule: ResourceModule,
       providers: [
@@ -24,7 +24,7 @@ export class ResourceModule {
    * For child
    */
   // tslint:disable-next-line: no-identical-functions
-  static forChild(config: IResourceModuleConfig = {}): ModuleWithProviders {
+  static forChild(config: IResourceModuleConfig = {}): ModuleWithProviders<ResourceModule> {
     return {
       ngModule: ResourceModule,
       providers: [

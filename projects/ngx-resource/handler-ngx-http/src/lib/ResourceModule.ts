@@ -9,7 +9,7 @@ export class ResourceModule extends ResourceModuleCore {
   /**
    * For root
    */
-  static forRoot(config: IResourceModuleConfig = {}): ModuleWithProviders {
+  static forRoot(config: IResourceModuleConfig = {}): ModuleWithProviders<ResourceModuleCore> {
     return ResourceModuleCore.forRoot({
       handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerHttpClient, deps: [HttpClient]}
     });
@@ -18,7 +18,7 @@ export class ResourceModule extends ResourceModuleCore {
   /**
    * For child
    */
-  static forChild(config: IResourceModuleConfig = {}): ModuleWithProviders {
+  static forChild(config: IResourceModuleConfig = {}): ModuleWithProviders<ResourceModuleCore> {
     return ResourceModuleCore.forChild({
       handler: config.handler || {provide: ResourceHandler, useClass: ResourceHandlerHttpClient, deps: [HttpClient]}
     });
