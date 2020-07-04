@@ -157,7 +157,7 @@ export class Resource {
    * Is applied on each element of array or object
    */
   $resultFactory(data: any, options: IResourceActionInner = {}): any {
-    return data || {};
+    return data == null ? {} : data;
   }
 
   $restAction(options: IResourceActionInner) {
