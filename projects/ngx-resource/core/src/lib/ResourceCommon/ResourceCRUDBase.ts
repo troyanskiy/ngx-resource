@@ -2,9 +2,10 @@ import { Resource } from '../Resource';
 import { IResourceAction, IResourceResponse, ResourceActionReturnType, ResourceRequestMethod } from '../Declarations';
 
 
-export abstract class ResourceCRUDBase<TQuery, TShort, TFull, TQueryResult, TRetQuery, TRetFull, TRetAny> extends Resource {
+export abstract class ResourceCRUDBase<TQuery, TShort, TFull, TQueryResult, TRetQuery, TRetFull, TRetAny, TId = any, TReference = {id: TId}> extends Resource {
 
   protected readonly abstract $crudReturnAs: ResourceActionReturnType;
+  protected readonly $idPropertyName: string = "id";
 
   query(query?: TQuery,
         onSuccess?: (data: TQueryResult) => any,
@@ -21,7 +22,7 @@ export abstract class ResourceCRUDBase<TQuery, TShort, TFull, TQueryResult, TRet
 
   }
 
-  get(data: { id: any },
+  get(data: TReference,
       onSuccess?: (data: TFull) => any,
       onError?: (err: IResourceResponse) => any): TRetFull {
 
@@ -32,7 +33,7 @@ export abstract class ResourceCRUDBase<TQuery, TShort, TFull, TQueryResult, TRet
         onError
       },
       actionOptions: this.$_crudBaseGetActionOptions({
-        path: '/{!id}'
+        path: `/{!${this.$idPropertyName}}`
       })
     });
 
@@ -67,13 +68,13 @@ export abstract class ResourceCRUDBase<TQuery, TShort, TFull, TQueryResult, TRet
       },
       actionOptions: this.$_crudBaseGetActionOptions({
         method: ResourceRequestMethod.Put,
-        path: '/{!id}'
+        path: `/{!${this.$idPropertyName}}`
       })
     });
 
   }
 
-  remove(data: { id: any },
+  remove(data: TReference,
          onSuccess?: (data: any) => any,
          onError?: (err: IResourceResponse) => any): TRetAny {
 
@@ -85,13 +86,13 @@ export abstract class ResourceCRUDBase<TQuery, TShort, TFull, TQueryResult, TRet
       },
       actionOptions: this.$_crudBaseGetActionOptions({
         method: ResourceRequestMethod.Delete,
-        path: '/{!id}'
+        path: `/{!${this.$idPropertyName}}`
       })
     });
 
   }
 
-  patch(data: { id: any } & Partial<TFull>,
+  patch(data: TReference & Partial<TFull>,
         onSuccess?: (data: TFull) => any,
         onError?: (err: IResourceResponse) => any): TRetFull {
 
@@ -103,7 +104,7 @@ export abstract class ResourceCRUDBase<TQuery, TShort, TFull, TQueryResult, TRet
       },
       actionOptions: this.$_crudBaseGetActionOptions({
         method: ResourceRequestMethod.Patch,
-        path: '/{!id}'
+        path: `/{!${this.$idPropertyName}}`
       })
     });
 
