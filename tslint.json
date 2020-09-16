@@ -1,6 +1,5 @@
 {
   "extends": [
-    "tslint-sonarts",
     "tslint:recommended"
   ],
   "rules": {

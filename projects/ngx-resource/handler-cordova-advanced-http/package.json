@@ -1,6 +1,6 @@
 {
   "name": "@ngx-resource/handler-cordova-advanced-http",
-  "version": "7.1.0",
+  "version": "10.0.0",
   "description": "Resource Handler based on cordova-advanced-http",
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
@@ -23,7 +23,10 @@
     "Angular2",
     "resource-cordova-advanced-http"
   ],
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "peerDependencies": {
-    "@ngx-resource/core": "^7.1.0"
+    "@ngx-resource/core": "^10.0.0"
   }
 }

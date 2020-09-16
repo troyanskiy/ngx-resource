@@ -1,6 +1,6 @@
 {
   "name": "@ngx-resource/handler-fetch",
-  "version": "7.1.0-beta.1",
+  "version": "10.0.0",
   "description": "Resource handler for fetch",
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
@@ -19,7 +19,10 @@
     "ngx-resource-handler-fetch",
     "Resource"
   ],
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "peerDependencies": {
-    "@ngx-resource/core": "^7.1.0"
+    "@ngx-resource/core": "^10.0.0"
   }
 }
