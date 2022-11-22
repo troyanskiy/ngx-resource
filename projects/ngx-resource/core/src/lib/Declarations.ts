@@ -154,11 +154,11 @@ export interface IResourceMethodObservable<IB, O>
 }
 
 
-export interface IResourceMethodResultStrict<IB, IQ, IP, O>
+export interface IResourceMethodResultStrict<IB, IQ, IP, O extends {}>
   extends IResourceMethodStrictBase<IB, IQ, IP, O, ResourceResult<O>> {
 }
 
-export interface IResourceMethodResult<IB, O>
+export interface IResourceMethodResult<IB, O extends {}>
   extends IResourceMethodBase<IB, O, ResourceResult<O>> {
 }
 
