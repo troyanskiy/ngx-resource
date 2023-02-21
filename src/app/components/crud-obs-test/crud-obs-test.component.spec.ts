@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CrudObsTestComponent } from './crud-obs-test.component';
 
@@ -6,7 +6,7 @@ describe('CrudObsTestComponent', () => {
   let component: CrudObsTestComponent;
   let fixture: ComponentFixture<CrudObsTestComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CrudObsTestComponent ]
     })
