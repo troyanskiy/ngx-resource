@@ -1,3 +1,6 @@
+## Unfortunately I don't have time to maintain the library. So PRs are more than welcome. 
+<br><br>
+
 | @ngx-resource/core | @ngx-resource/handler-ngx-http | @ngx-resource/handler-cordova-advanced-http | @ngx-resource/handler-ngx-http-legacy |
 | --- | --- | --- | --- |
 | [![npm version](https://img.shields.io/npm/v/%40ngx-resource%2Fcore.svg)](https://www.npmjs.com/package/@ngx-resource/core) | [![npm version](https://img.shields.io/npm/v/%40ngx-resource%2Fhandler-ngx-http.svg)](https://www.npmjs.com/package/@ngx-resource/handler-ngx-http) | [![npm version](https://img.shields.io/npm/v/%40ngx-resource%2Fhandler-cordova-advanced-http.svg)](https://www.npmjs.com/package/@ngx-resource/handler-cordova-advanced-http) | [![npm version](https://img.shields.io/npm/v/%40ngx-resource%2Fhandler-ngx-http-legacy.svg)](https://www.npmjs.com/package/@ngx-resource/handler-ngx-http-legacy) | 

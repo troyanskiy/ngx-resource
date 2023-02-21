@@ -12,7 +12,7 @@ export abstract class ResourceModel {
   protected static methodRemove = 'remove';
 
 
-  abstract readonly $resource: any = null;
+  abstract readonly $resource: any;
 
   $resolved = true;
   $promise: Promise<any> | null = null;
