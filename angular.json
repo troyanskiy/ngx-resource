@@ -283,6 +283,5 @@
         }
       }
     }
-  },
-  "defaultProject": "ngx-resource-mono"
+  }
 }
