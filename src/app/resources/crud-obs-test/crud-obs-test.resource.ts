@@ -8,7 +8,7 @@ import { ResourceCRUDObservable, ResourceParams } from '@ngx-resource/core';
   pathPrefix: '/api/crud-test'
 })
 export class CrudObsTestResource extends ResourceCRUDObservable<any, any, any, any> {
-  // TODO: add explicit constructor
-
-
+  constructor() {
+    super();
+  }
 }

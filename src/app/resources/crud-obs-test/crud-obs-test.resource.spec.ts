@@ -6,7 +6,7 @@ describe('CrudObsTestResource', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CrudObsTestResource = TestBed.get(CrudObsTestResource);
+    const service: CrudObsTestResource = TestBed.inject(CrudObsTestResource);
     expect(service).toBeTruthy();
   });
 });
