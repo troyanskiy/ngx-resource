@@ -108,10 +108,13 @@ export class ResourceHandlerHttpClient extends ResourceHandler {
   protected handleResponse(req: IResourceRequest, response: HttpResponse<any> | HttpErrorResponse): IResourceResponse {
 
     const headers: any = {};
-    const keys = response.headers.keys();
-    keys.forEach((key: string) => {
-      headers[key] = response.headers.getAll(key);
-    });
+    const keys = response.headers?.keys();
+
+    if (keys) {
+      keys.forEach((key: string) => {
+        headers[key] = response.headers.getAll(key);
+      });
+    }
 
     return {
       status: response.status,

@@ -1,6 +1,6 @@
 {
   "name": "@ngx-resource/handler-ngx-http",
-  "version": "15.0.0",
+  "version": "15.0.1",
   "description": "Resource handler for angular",
   "author": "Roman Rosluk <roma@redbox.by>",
   "license": "MIT",
