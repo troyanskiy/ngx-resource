@@ -8,6 +8,7 @@ build.xml
 node_modules/*
 npm-debug.log
 *.js
+.angular/
 !config/*
 !karma.conf.js
 !webpack.config.js

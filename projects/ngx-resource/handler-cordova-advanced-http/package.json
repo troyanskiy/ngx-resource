@@ -24,9 +24,9 @@
     "resource-cordova-advanced-http"
   ],
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.7.0"
   },
   "peerDependencies": {
-    "@ngx-resource/core": "^15.0.0"
+    "@ngx-resource/core": "^16.0.0"
   }
 }
